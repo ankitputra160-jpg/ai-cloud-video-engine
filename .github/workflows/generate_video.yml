@@ -49,7 +49,7 @@ jobs:
 
       - name: 🎬 Render Final 16:9 Video
         run: |
-          python3 scripts/render_video.py "${{ github.event.inputs.topic }}" "${{ github.event.inputs.style }}"
+          python3 scripts/render_video.py --topic "${{ github.event.inputs.topic }}" --style "${{ github.event.inputs.style }}" --duration "${{ github.event.inputs.duration }}"
 
       - name: 📤 Upload Final Video as Artifact
         uses: actions/upload-artifact@v4

@@ -1,0 +1,30 @@
+# Ignore downloaded/generated assets (too large for git)
+clips/
+audio/
+output/*.mp4
+output/*.mov
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Logs
+*.log
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets (never commit these!)
+.env
+secrets.json
+*.key

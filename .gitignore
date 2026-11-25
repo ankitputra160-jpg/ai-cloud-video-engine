@@ -3,6 +3,10 @@ clips/
 audio/
 output/*.mp4
 output/*.mov
+.workspace/
+.debug_workspace/
+.test_pipeline_workspace/
+.pytest_cache/
 
 # Python
 __pycache__/

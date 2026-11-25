@@ -1,0 +1,110 @@
+name: 🎬 AI Documentary Video Production Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Documentary Subject / Topic'
+        required: true
+        default: 'The Mystery of Ancient Indian Architecture'
+      language:
+        description: 'Narration Language'
+        required: true
+        default: 'en'
+        type: choice
+        options:
+          - en
+          - hi
+      duration:
+        description: 'Target Duration in Seconds (10 - 600)'
+        required: true
+        default: '60'
+      resolution:
+        description: 'Output Resolution'
+        required: true
+        default: '1080p'
+        type: choice
+        options:
+          - 1080p
+          - 4k
+          - 720p
+      style:
+        description: 'Documentary Tone & Style'
+        required: true
+        default: 'Documentary'
+        type: choice
+        options:
+          - Documentary
+          - Historical
+          - Scientific
+          - Biographical
+
+jobs:
+  produce-documentary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 🛠️ Install System Multimedia Tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg curl jq fonts-dejavu-core fonts-noto-cjk fonts-noto-hinted
+
+      - name: 📦 Install Python Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+
+      - name: 🧪 Run Automated Quality & Integrity Tests
+        run: |
+          python3 -m unittest discover -s tests -p "test_*.py"
+
+      - name: 🎥 Execute End-to-End Documentary Pipeline
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: |
+          python3 -m engine.pipeline \
+            --topic "${{ github.event.inputs.topic }}" \
+            --language "${{ github.event.inputs.language }}" \
+            --duration "${{ github.event.inputs.duration }}" \
+            --resolution "${{ github.event.inputs.resolution }}" \
+            --style "${{ github.event.inputs.style }}" \
+            --output "output/documentary.mp4" \
+            --work-dir ".workspace"
+
+      - name: 📤 Upload Finished Documentary Video Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentary-${{ github.event.inputs.language }}-${{ github.run_number }}
+          path: output/documentary.mp4
+          retention-days: 14
+
+      - name: 📊 Upload QC & Production Manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-dossier-${{ github.run_number }}
+          path: |
+            .workspace/qc_report.json
+            .workspace/storyboard.json
+            .workspace/research_dossier.json
+            .workspace/subtitles.srt
+          retention-days: 14
+
+      - name: 🏆 Job Completion Summary
+        run: |
+          echo "### 🎬 AI Documentary Generation Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "- **Topic:** ${{ github.event.inputs.topic }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Language:** ${{ github.event.inputs.language }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Resolution:** ${{ github.event.inputs.resolution }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **File Size:** $(du -sh output/documentary.mp4 | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Artifact Download:** Ready in GitHub Actions run artifacts" >> $GITHUB_STEP_SUMMARY

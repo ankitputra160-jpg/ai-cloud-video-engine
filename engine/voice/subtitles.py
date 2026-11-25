@@ -19,7 +19,7 @@ class SubtitleGenerator:
     @classmethod
     def generate_srt(cls, manifest: StoryboardManifest, output_path: str) -> str:
         """Create a standard SubRip (.srt) subtitle file from the storyboard manifest."""
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
         current_time = 0.0
         srt_entries: List[str] = []
 

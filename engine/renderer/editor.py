@@ -52,7 +52,7 @@ class VideoEditor:
 
         # 3. Apply subtitles (if requested) and fast-start MP4 packaging
         final_output = self.config.output_path
-        os.makedirs(os.path.dirname(final_output), exist_ok=True)
+        os.makedirs(os.path.dirname(final_output) or ".", exist_ok=True)
 
         if self.config.burn_subtitles and srt_path and os.path.exists(srt_path):
             logger.info("Burning subtitles into final documentary stream...")

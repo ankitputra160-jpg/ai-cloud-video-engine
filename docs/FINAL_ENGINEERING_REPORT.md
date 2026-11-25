@@ -186,7 +186,7 @@ OK (100% Pass Rate)
 
 ## 8. Actual End-to-End Demonstration Results
 
-During the test execution of `test_pipeline.py`:
+### A. Local Integration Test (`test_pipeline.py`)
 - **Topic:** *"The History of Timekeeping"*
 - **Target Duration:** 10.0 seconds
 - **Output File:** `.test_pipeline_workspace/test_doc_output.mp4`
@@ -195,3 +195,16 @@ During the test execution of `test_pipeline.py`:
 - **Audio Channels:** 2 (Stereo 44.1 kHz, 192 kbps AAC)
 - **Subtitles:** Burned into video with yellow/white high-contrast outline
 - **QC Inspection Result:** `PASSED` (0 Issues, 0 Warnings, 0 Black Frames)
+
+### B. Live Cloud Demonstration Run on GitHub Actions
+- **Cloud Run ID:** `45555165513`
+- **Live Run URL:** [GitHub Actions Run 45555165513](https://github.com/ankitputra160-jpg/ai-cloud-video-engine/actions/runs/45555165513)
+- **Topic:** *"The Secrets of Ancient Indian Astronomy"*
+- **Language:** Hindi (`hi`)
+- **Target Duration:** 30 seconds (Actual rendered: 30.04s)
+- **Resolution:** 1920x1080 (1080p Full HD, 25.0 fps)
+- **Video Codec:** H.264 High Profile
+- **Audio Codec:** AAC Stereo (1581 kbps total bitrate)
+- **Final File Size:** 5.66 MB (5,939,330 bytes)
+- **Mobile Delivery:** Successfully downloaded via `trigger_video.py` to local storage with verified playback
+- **QC Inspection Result:** `PASSED` (Duration deviation: 0.04s, 0 critical issues)

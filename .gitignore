@@ -1,6 +1,6 @@
 # Ignore downloaded/generated assets (too large for git)
-clips/
-audio/
+/clips/
+/audio/
 output/*.mp4
 output/*.mov
 .workspace/

@@ -58,10 +58,30 @@ on:
           - auto
           - piper
           - edge
+          - sarvam
+          - elevenlabs
+      llm_mode:
+        description: 'Script LLM Backend'
+        required: false
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - gemini
+          - groq
+          - deterministic
+      preview_only:
+        description: 'Render 3-beat Hook preview only?'
+        required: false
+        default: false
+        type: boolean
       storyboard_file:
         description: 'Optional Pre-Curated Storyboard JSON path'
         required: false
         default: ''
+
+permissions:
+  contents: write
 
 jobs:
   produce-documentary:
@@ -78,15 +98,15 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: 🛠️ Install Multimedia, Devanagari Shaping & Fonts
+      - name: 🛠️ Install Multimedia, Pango, libass9 & Static Devanagari Fonts
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg curl jq fontconfig fonts-dejavu-core fonts-noto-core fonts-lohit-deva libfreetype6-dev libharfbuzz-dev libfribidi-dev libraqm-dev
+          sudo apt-get install -y ffmpeg curl jq fontconfig fonts-dejavu-core fonts-noto-core fonts-lohit-deva libpango-1.0-0 libpangocairo-1.0-0 libharfbuzz0b libharfbuzz-dev libfribidi0 libfribidi-dev libraqm-dev libass9
           mkdir -p ~/.local/share/fonts
           cp -f fonts/*.ttf ~/.local/share/fonts/ || true
           fc-cache -fv | tail -n 10
 
-      - name: 📦 Install Python Dependencies (Including Open-Source Piper TTS)
+      - name: 📦 Install Python Dependencies
         run: |
           python3 -m pip install --upgrade pip
           pip3 install -r requirements.txt
@@ -102,10 +122,16 @@ jobs:
           NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SARVAM_API_KEY: ${{ secrets.SARVAM_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
         run: |
-          SB_FLAG=""
+          EXTRA_FLAGS=""
           if [ -n "${{ github.event.inputs.storyboard_file }}" ]; then
-            SB_FLAG="--storyboard-file ${{ github.event.inputs.storyboard_file }}"
+            EXTRA_FLAGS="$EXTRA_FLAGS --storyboard-file ${{ github.event.inputs.storyboard_file }}"
+          fi
+          if [ "${{ github.event.inputs.preview_only }}" = "true" ]; then
+            EXTRA_FLAGS="$EXTRA_FLAGS --preview-only"
           fi
           PYTHONPATH=. python3 -m engine.pipeline \
             --topic "${{ github.event.inputs.topic }}" \
@@ -115,7 +141,9 @@ jobs:
             --style "${{ github.event.inputs.style }}" \
             --subtitle-style "${{ github.event.inputs.subtitle_style || 'ass_karaoke' }}" \
             --voice-engine "${{ github.event.inputs.voice_engine || 'auto' }}" \
-            $SB_FLAG \
+            --llm-mode "${{ github.event.inputs.llm_mode || 'auto' }}" \
+            $EXTRA_FLAGS \
+            --thumbnail "output/thumbnail.jpg" \
             --output "output/documentary.mp4" \
             --work-dir ".workspace"
 
@@ -123,15 +151,29 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: documentary-${{ github.event.inputs.language }}-${{ github.run_number }}
-          path: output/documentary.mp4
+          path: |
+            output/documentary.mp4
+            output/thumbnail.jpg
           retention-days: 14
 
-      - name: 📊 Upload QC, 2D Script & Production Manifest
+      - name: 🚀 Publish Direct Mobile Download via GitHub Release (Up to 2 GB)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="doc-run-${{ github.run_number }}"
+          gh release create "$TAG" output/documentary.mp4 output/thumbnail.jpg \
+            --title "Documentary #${{ github.run_number }}: ${{ github.event.inputs.topic }}" \
+            --notes "Automated mobile-friendly 1-tap download (bypasses Git 100 MB limit)."
+
+      - name: 📊 Upload QC, Script & Production Manifest
         uses: actions/upload-artifact@v4
         with:
           name: production-dossier-${{ github.run_number }}
           path: |
             .workspace/qc_report.json
+            .workspace/fact_sheet.json
+            .workspace/script.json
             .workspace/storyboard.json
             .workspace/research_dossier.json
             .workspace/2d_script.md
@@ -142,11 +184,11 @@ jobs:
 
       - name: 🏆 Job Completion Summary
         run: |
-          echo "### 🎬 AI Documentary Generation Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "### 🎬 AI Documentary Generation Complete (v3.0)!" >> $GITHUB_STEP_SUMMARY
           echo "- **Topic:** ${{ github.event.inputs.topic }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Style:** ${{ github.event.inputs.style }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Voice Engine:** ${{ github.event.inputs.voice_engine || 'auto' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Language:** ${{ github.event.inputs.language }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Resolution:** ${{ github.event.inputs.resolution }}" >> $GITHUB_STEP_SUMMARY
           echo "- **File Size:** $(du -sh output/documentary.mp4 | cut -f1)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Artifact Download:** Ready in GitHub Actions run artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release / Artifact:** https://github.com/${{ github.repository }}/releases/tag/doc-run-${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY

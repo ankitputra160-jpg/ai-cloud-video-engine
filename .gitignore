@@ -1,10 +1,15 @@
-# Ignore downloaded/generated assets (too large for git)
+# Ignore downloaded/generated assets & Colab caches (too large for git)
 /clips/
 /audio/
 /output/
-output/*.mp4
-output/*.mov
+*.mp4
+*.mov
+*.webm
+bgm_bank/
+voice_ref/
+workspaces/
 .workspace/
+.workspace*/
 .debug_workspace/
 .test_pipeline_workspace/
 .pytest_cache/

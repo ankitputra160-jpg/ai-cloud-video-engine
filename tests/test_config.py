@@ -54,5 +54,22 @@ class TestPipelineConfig(unittest.TestCase):
         self.assertEqual(cfg_4k.profile.width, 3840)
         self.assertEqual(cfg_4k.profile.height, 2160)
 
+    def test_v3_optional_keys_and_llm_modes(self):
+        cfg = PipelineConfig(
+            topic="Test v3",
+            language="hi",
+            llm_mode="local_gemma3",
+            voice_engine="indicf5",
+            hf_token="hf_test_tok",
+            sarvam_api_key="srv_test",
+            elevenlabs_api_key="el_test",
+            preview_only=True,
+        )
+        self.assertEqual(cfg.llm_mode, "local_gemma3")
+        self.assertEqual(cfg.voice_engine, "indicf5")
+        self.assertEqual(cfg.hf_token, "hf_test_tok")
+        self.assertTrue(cfg.preview_only)
+        self.assertTrue(cfg.thumbnail_path.endswith("_thumbnail.jpg"))
+
 if __name__ == "__main__":
     unittest.main()

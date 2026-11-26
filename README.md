@@ -1,153 +1,48 @@
-# 🎬 AI Documentary Video Production Engine v2.0
+# 🎬 AI Documentary Video Production Engine v3.0
 
-> A fully automated, cloud-based AI Documentary Video Production System.
-> Submit any topic from your mobile phone — the entire research, scriptwriting, storyboarding, visual asset retrieval, narration, sound design, FFmpeg rendering, and quality control executes in the cloud.
+> A fully autonomous, modular AI Documentary Video Production System (Dhruv Rathee pacing + expressive Hinglish storytelling).  
+> Run from your mobile phone on **Google Colab GPU (L4 / T4)** or **GitHub Actions**, with crash-proof Google Drive checkpointing and 1080p/4K Faststart + Auto-Thumbnail delivery.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ankitputra160-jpg/ai-cloud-video-engine/blob/main/colab_documentary_engine.ipynb)
 
 ---
 
-## ☁️ Google Colab + Google Drive Cloud Storage (Option 2)
+## 🌟 v3.0 Key Upgrades
 
-If you prefer using **Google Colab** with free Cloud GPU and saving your documentaries directly to your **Google Drive**:
-
-1. Tap **[Open in Colab](https://colab.research.google.com/github/ankitputra160-jpg/ai-cloud-video-engine/blob/main/colab_documentary_engine.ipynb)**.
-2. Run **Step 1** to set up dependencies.
-3. Run **Step 2** to connect your Google Drive.
-4. Enter your **Topic**, **Language** (`hi`/`en`), and **Duration**, then click ▶️.
-5. The completed Full HD video will be saved directly into `Google Drive > MyDrive > AI_Documentaries` and will be instantly playable in your Google Drive phone app!
-
----
-
-## 🌟 Key Capabilities
-
-- 📱 **Mobile-First Client:** Submit topics, monitor progress, and download finished documentaries with a single command or GitHub Web UI. Zero rendering computation on mobile.
-- 🔬 **Stage A: Autonomous Research:** Dynamic factual research from Wikipedia and open knowledge bases with source tracking and timeline extraction.
-- ✍️ **Stage B: Narrative Scriptwriting:** Automatic structure generation (Opening Hook, Genesis, Breakthrough, Mastery, Climax, Legacy) in **English** and **Hindi**.
-- 📋 **Stage C: Dynamic Storyboard:** Scene-by-scene schemas with visual prompts, transition cues, duration scaling, and subtitle alignments.
-- 🎥 **Stage D: Multi-Tier Visual Retrieval:**
-  - Pexels 4K/HD stock footage
-  - Pixabay stock video
-  - Wikimedia Commons public domain & CC media archives (100% free, no API key needed!)
-  - Cinematic Motion Graphic Generator (smooth Ken Burns motion, atmospheric lighting, vignette, and typography — never blank colored placeholders)
-- 🎙️ **Stage E: Natural AI Voiceover & Subtitles:** Edge Neural TTS in English (`en-US-ChristopherNeural`) and Hindi (`hi-IN-MadhurNeural`) with duration alignment and automatic `.srt` subtitle generation.
-- 🎵 **Stage F: Audio Production & Ducking:** Thematic musical harmonies matched to chapter mood, scene sound effects, and speech-aware music ducking.
-- 🎞️ **Stage G: FFmpeg Assembly:** Frame rate stabilization (25fps), resolution normalization (1080p Full HD & optional 4K), subtitle burning, and faststart MP4 output.
-- 🛡️ **Stage H: Automated Quality Inspection (QC):** Full stream validation, duration tolerance checking, black frame detection (`blackdetect`), and certified `qc_report.json`.
+1. **Fact-Proof Multi-Source Research (`engine/research.py`):** Wikipedia (`EN -> HI`), Wikidata, DuckDuckGo, Google News RSS, and `Trafilatura` clean scraping → locks `fact_sheet.json`.
+2. **Spontaneous 3-Pass Hinglish Script + `HindiHumanizerCritic` (`engine/scriptwriter.py`, `engine/text/humanizer.py`):**
+   - Local **Gemma-3-12B/27B** (`llama.cpp`) default + optional Gemini/Groq APIs (chapter-batched up to 25 minutes).
+   - Inspired by `blader/humanizer`: purges textbook AI words (`महज़`, `निष्कर्षतः`, `पुनरीक्षण`) and places Pattern Interrupts every 35–40s.
+3. **Dual-Layer `Speak vs. Show` Span-ID Sync (`engine/text/pronunciation.py`, `engine/voice/aligner.py`, `engine/voice/subtitles.py`):**
+   - TTS receives spoken Devanagari (`"पाँच सौ करोड़ रुपये"`, `"सुप्रीम कोर्ट"`), while subtitles display `"₹500 Cr"` and `"Supreme Court"` synced via **`ctc-forced-aligner` (`facebook/mms-300m`)** with Span-ID chunk locking.
+4. **Expressive Prosody (`Emotion Tag Router` + 4-Mood Bank):**
+   - Parses `[pause:Xs]`, `[fear]`, `[angry]`, `[slow]`, `[fast]` cleanly → sample-rate-safe FFmpeg DSP + room-tone silence → `IndicF5` / `Indic Parler-TTS` / `Qwen3-TTS` / `Sarvam` / `ElevenLabs` / `Edge` / `Piper`.
+   - Self-bootstraps 4 copyright-free mood clips (`ref_neutral`, `ref_suspense`, `ref_angry`, `ref_fast`) once onto Google Drive.
+5. **Hybrid `45:25:25:5` Visuals & Static Hindi Safety:**
+   - **Real Sources (45%):** PIB India, Internet Archive, Openverse, Wikimedia Commons, NASA, Pexels, Pixabay + `OpenCLIP` semantic check + Ken Burns + subtle film grain.
+   - **2D Investigative Cards (25%):** Playwright HTML/CSS Newspaper Cuttings with animated yellow highlighter sweep, `rembg` Quote Cards, and Map/Stat Cards.
+   - **AI Visuals (25% Still + 5% Hero I2V):** `FLUX.1-schnell` (anti-virtual camera prompt) + `LTX-Video 0.9.7-distilled FP8` strictly on Hero Hooks.
+   - Static hinted `NotoSansDevanagari` TTFs + `libass` + zero FFmpeg `drawtext` on Hindi text.
+6. **Hardware `h264_nvenc`, Checkpoint Resume & Auto-Thumbnail (`engine/checkpoint.py`, `engine/renderer/`):**
+   - Audio-First `0.001s` timing lock (zero frame drift), Google Drive auto-resume, `-14 LUFS LRA=6` audio mastering, `sidechaincompress` CC0 BGM bank, real Foley SFX, `AutoThumbnailGenerator`, and GitHub Releases 2 GB upload.
 
 ---
 
-## 🏗️ System Architecture
+## ☁️ Google Colab Quick Start
 
-```
-Mobile Phone (Controller)
-       │
-       ▼ (trigger_video.py / GitHub API)
-GitHub Actions Cloud Runner (Ubuntu Latest)
-       │
-       ├─► Stage A: Topic Research (Wikipedia API / Knowledge Bases)
-       ├─► Stage B: Scriptwriter (Chaptering, Pacing & Word Count)
-       ├─► Stage C: Storyboard Engine (Scene Specs & Queries)
-       ├─► Stage D: Visual Asset Manager (Pexels / Pixabay / Commons / Motion Canvas)
-       ├─► Stage E: Voiceover & Subtitle Engine (Neural TTS, SRT Sync)
-       ├─► Stage F: Audio Production (BGM Harmonies, SFX, Speech Ducking)
-       ├─► Stage G: FFmpeg Video Editor (Assembly, Subtitle Burn, 1080p/4K)
-       └─► Stage H: Quality Control Inspector (Integrity, Blackframe, Duration Checks)
-       │
-       ▼ (Automated Artifact Upload)
-Mobile Download / Gallery Delivery
-```
-
----
-
-## 🚀 Quick Start (Mobile Trigger)
-
-### 1. Submit from Mobile Terminal
-Run the injection-safe mobile trigger script:
-
-```bash
-# English 60-second Documentary (1080p Full HD)
-python3 trigger_video.py --topic "The Secrets of the Indus Valley Civilization" --language en --duration 60 --resolution 1080p
-
-# Hindi 60-second Documentary
-python3 trigger_video.py --topic "प्राचीन भारतीय खगोल विज्ञान का इतिहास" --language hi --duration 60 --resolution 1080p
-
-# Short 15-second Quick Documentary
-python3 trigger_video.py --topic "Origins of the Steam Engine" --language en --duration 15
-```
-
-The script triggers GitHub Actions in the cloud, monitors progress in real-time, and automatically downloads the finished `.mp4` directly to your phone's storage.
-
-### 2. Trigger via GitHub Web UI
-1. Go to **Actions** → **🎬 AI Documentary Video Production Pipeline**
-2. Click **Run workflow**
-3. Select Topic, Language (`en` or `hi`), Duration (10 - 600s), and Resolution
-4. Click **Run workflow**
+1. Open [colab_documentary_engine.ipynb](https://colab.research.google.com/github/ankitputra160-jpg/ai-cloud-video-engine/blob/main/colab_documentary_engine.ipynb) in Colab (**Runtime → Change runtime type → L4 or T4 GPU**).
+2. Add your Hugging Face token (`HF_TOKEN`) in Colab Secrets (🔑) after accepting terms for `ai4bharat/IndicF5` & `black-forest-labs/FLUX.1-schnell` (plus optional `GEMINI_API_KEY`, `GROQ_API_KEY`, `SARVAM_API_KEY`, `ELEVENLABS_API_KEY`).
+3. Run **Step 1** (setup), **Step 2** (Mount Google Drive + cache CC0 BGM bank), and **Step 3** (Enter Topic → Generate!).
 
 ---
 
 ## 🧪 Automated Test Suite
 
-The engine includes a dedicated 25-test suite covering unit tests and end-to-end integration:
-
 ```bash
-# Run all tests
-python3 -m unittest discover -s tests -p "test_*.py" -v
+PYTHONPATH=. python3 -W error::SyntaxWarning -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-### Test Coverage Summary:
-- `tests/test_config.py`: Parameter validation, duration bounds, shell sanitization.
-- `tests/test_research.py`: Wikipedia parsing, timeline & entity extraction.
-- `tests/test_scriptwriter.py`: English & Hindi chapter composition, pacing.
-- `tests/test_storyboard.py`: Schema validation, JSON serialization (**Fix for Bug 1**).
-- `tests/test_assets.py`: Provider hierarchy, Pexels validation (**Bug 7/8**), Motion Visuals (**Bug 4**).
-- `tests/test_audio.py`: Stereo BGM (**Bug 2**), SFX synthesis, Speech Ducking (**Bug 10**).
-- `tests/test_voice.py`: Speech tempo alignment, SRT timestamp generation.
-- `tests/test_renderer.py`: Safe FFmpeg process wrapper (**Bug 9**), media probe.
-- `tests/test_qc.py`: Stream inspection, black frame detection (**Bug 12**).
-- `tests/test_pipeline.py`: Full end-to-end documentary production and verification.
-
----
-
-## ⚙️ Configuration & Environment Variables
-
-| Variable | Description | Required? |
-|---|---|---|
-| `PEXELS_API_KEY` | Pexels Video API Key (Free tier: 200 req/hr) | Optional (Commons & Motion Graphics used if unset) |
-| `PIXABAY_API_KEY` | Pixabay API Key | Optional |
-| `GITHUB_TOKEN` | GitHub CLI authentication token | Required for `gh` triggering |
-
-Add optional keys in repository settings:  
-👉 `Settings → Secrets and variables → Actions → New repository secret`
-
----
-
-## 📁 Repository Structure
-
-```
-ai-cloud-video-engine/
-├── .github/workflows/
-│   └── generate_documentary.yml  # Cloud GitHub Actions workflow
-├── engine/                       # Core Documentary Package
-│   ├── config.py                 # Configuration & limits
-│   ├── research.py               # Stage A: Research
-│   ├── scriptwriter.py           # Stage B: Scriptwriting
-│   ├── storyboard.py             # Stage C: Storyboarding
-│   ├── assets/                   # Stage D: Visual Assets (Pexels, Commons, Motion)
-│   ├── voice/                    # Stage E: Voiceover & Subtitles
-│   ├── audio/                    # Stage F: Audio Production & Ducking
-│   ├── renderer/                 # Stage G: FFmpeg Video Editor
-│   ├── qc/                       # Stage H: Automated Quality Control
-│   └── pipeline.py               # Master Orchestrator
-├── tests/                        # Automated Test Suite (25 Tests)
-├── docs/                         # Technical Audit & Architecture Reports
-│   └── AUDIT_REPORT.md           # 12 Critical Bugs & Technical Audit
-├── trigger_video.py              # Hardened Mobile Trigger CLI
-├── requirements.txt              # Cloud Runner Dependencies
-└── README.md
-```
-
----
+Legacy engine backup is preserved safely on GitHub branch & tag **`backup-v1`**.
 
 ## 📄 License
-MIT License. Built for autonomous AI media production.
+MIT License.

@@ -41,15 +41,17 @@ def trigger_workflow(
     subtitle_style: str = "ass_karaoke",
     voice_engine: str = "auto",
     storyboard_file: Optional[str] = None,
+    llm_mode: str = "auto",
+    preview_only: bool = False,
 ) -> None:
     print("\n" + "="*60)
     print("🚀 DISPATCHING AI DOCUMENTARY PIPELINE TO CLOUD")
     print("="*60)
     print(f"   📋 Topic: {topic}")
     print(f"   🌐 Language: {language}")
-    print(f"   ⏱️ Target Duration: {duration}s")
+    print(f"   ⏱️ Target Duration: {duration}s | Preview: {preview_only}")
     print(f"   🖥️ Resolution: {resolution}")
-    print(f"   🎨 Style: {style} | Subtitles: {subtitle_style} | Voice: {voice_engine}")
+    print(f"   🎨 Style: {style} | Subtitles: {subtitle_style} | Voice: {voice_engine} | LLM: {llm_mode}")
 
     cmd = [
         "gh", "workflow", "run", WORKFLOW,
@@ -61,6 +63,8 @@ def trigger_workflow(
         "-f", f"style={style}",
         "-f", f"subtitle_style={subtitle_style}",
         "-f", f"voice_engine={voice_engine}",
+        "-f", f"llm_mode={llm_mode}",
+        "-f", f"preview_only={'true' if preview_only else 'false'}",
     ]
     if storyboard_file:
         cmd.extend(["-f", f"storyboard_file={storyboard_file}"])
@@ -166,7 +170,9 @@ def main():
     parser.add_argument("--resolution", default="1080p", choices=["1080p", "4k", "720p"], help="Video resolution")
     parser.add_argument("--style", default="Documentary", help="Style (Documentary, 2D Animation, Vox Explainer, Historical, Scientific)")
     parser.add_argument("--subtitle-style", default="ass_karaoke", choices=["ass_karaoke", "pill_box", "srt_classic"], help="Subtitle style preset")
-    parser.add_argument("--voice-engine", default="auto", choices=["auto", "piper", "edge"], help="Open-source Piper or Edge Neural voice")
+    parser.add_argument("--voice-engine", default="auto", choices=["auto", "piper", "edge", "sarvam", "elevenlabs"], help="Cloud/Open-source voice engine")
+    parser.add_argument("--llm-mode", default="auto", choices=["auto", "gemini", "groq", "deterministic"], help="Script LLM mode")
+    parser.add_argument("--preview-only", action="store_true", help="Render quick 3-beat hook preview")
     parser.add_argument("--storyboard-file", default=None, help="Optional curated storyboard JSON in repo")
     parser.add_argument("--output-dir", default=DEFAULT_DOWNLOAD_DIR, help="Local directory to save output")
     args = parser.parse_args()
@@ -187,6 +193,8 @@ def main():
         subtitle_style=args.subtitle_style,
         voice_engine=args.voice_engine,
         storyboard_file=args.storyboard_file,
+        llm_mode=args.llm_mode,
+        preview_only=args.preview_only,
     )
 
     # 2. Get Run ID

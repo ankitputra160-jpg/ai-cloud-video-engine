@@ -25,6 +25,7 @@ class WikimediaCommonsProvider(VisualAssetProvider):
         self.fps = fps
         self._last_req_ts = 0.0
         self._query_cache: Dict[str, List[Dict[str, str]]] = {}
+        self._file_cache: Dict[str, str] = {}
 
     @property
     def name(self) -> str:
@@ -80,25 +81,30 @@ class WikimediaCommonsProvider(VisualAssetProvider):
             return None
 
         ext = ".png" if ".png" in lower else ".jpg"
-        tmp_img = target_path + f".direct{ext}"
-        if self._download_file(media_url, tmp_img, min_bytes=10000):
-            anim = animate_image_to_video(
-                tmp_img,
-                target_path,
-                duration=duration,
-                width=self.width,
-                height=self.height,
-                fps=self.fps,
-                camera=camera,
-                date_badge=date_badge,
-            )
-            if os.path.exists(tmp_img):
-                os.remove(tmp_img)
-            if anim:
-                return target_path
-        elif os.path.exists(tmp_img):
-            os.remove(tmp_img)
-        return None
+        cache_dir = os.path.dirname(target_path) or "."
+        cached_path = self._file_cache.get(media_url)
+
+        if not (cached_path and os.path.exists(cached_path) and os.path.getsize(cached_path) >= 10000):
+            url_hash = str(abs(hash(media_url)))
+            dl_path = os.path.join(cache_dir, f"cached_{url_hash}{ext}")
+            if self._download_file(media_url, dl_path, min_bytes=10000):
+                self._file_cache[media_url] = dl_path
+                cached_path = dl_path
+            else:
+                if os.path.exists(dl_path):
+                    os.remove(dl_path)
+                return None
+
+        return animate_image_to_video(
+            cached_path,
+            target_path,
+            duration=duration,
+            width=self.width,
+            height=self.height,
+            fps=self.fps,
+            camera=camera,
+            date_badge=date_badge,
+        )
 
     def fetch_video(
         self,

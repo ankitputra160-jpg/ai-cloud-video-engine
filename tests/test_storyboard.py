@@ -51,5 +51,13 @@ class TestStoryboardEngine(unittest.TestCase):
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
 
+    def test_curated_cjp_19min_storyboard_load(self):
+        cjp_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "storyboards", "cjp_protest_2026_hi.json")
+        if os.path.exists(cjp_path):
+            loaded = StoryboardManifest.load_json(cjp_path)
+            self.assertEqual(loaded.language, "hi")
+            self.assertEqual(len(loaded.scenes), 76)
+            self.assertAlmostEqual(loaded.total_duration, 1140.0, delta=0.5)
+
 if __name__ == "__main__":
     unittest.main()

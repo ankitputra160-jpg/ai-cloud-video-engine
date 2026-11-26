@@ -59,8 +59,16 @@ class PollinationsAIProvider(VisualAssetProvider):
             logger.debug(f"Pollinations generation skipped: {e}")
 
         if os.path.exists(tmp_img) and os.path.getsize(tmp_img) > 15000:
+            # Trim bottom 9% watermark strip (pollinations.ai badge) cleanly before Ken Burns animation
+            cropped_img = target_path + ".clean.jpg"
+            import subprocess
+            subprocess.run(
+                ["ffmpeg", "-y", "-loglevel", "error", "-i", tmp_img, "-vf", "crop=iw:ih*0.91:0:0", cropped_img],
+                capture_output=True,
+            )
+            anim_src = cropped_img if (os.path.exists(cropped_img) and os.path.getsize(cropped_img) > 5000) else tmp_img
             anim = animate_image_to_video(
-                tmp_img,
+                anim_src,
                 target_path,
                 duration=min_duration,
                 width=self.width,
@@ -69,8 +77,9 @@ class PollinationsAIProvider(VisualAssetProvider):
                 camera=camera,
                 date_badge=date_badge,
             )
-            if os.path.exists(tmp_img):
-                os.remove(tmp_img)
+            for tmpf in (tmp_img, cropped_img):
+                if os.path.exists(tmpf):
+                    os.remove(tmpf)
             if anim:
                 logger.info("Pollinations custom 2D artwork animated successfully.")
                 return target_path

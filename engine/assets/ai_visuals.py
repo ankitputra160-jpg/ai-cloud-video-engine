@@ -172,7 +172,7 @@ class CinematicMotionVisualProvider(VisualAssetProvider):
             # Accent top bar inside card
             draw.rectangle([pad_x + 48, pad_y + 42, pad_x + 180, pad_y + 50], fill=accent_hex)
 
-            font_path = resolve_devanagari_font("Baloo2-Bold.ttf" if contains_devanagari(title) else "NotoSansDevanagari-Bold.ttf")
+            font_path = resolve_devanagari_font("Baloo2-Bold.ttf") or resolve_devanagari_font("Khand-Bold.ttf")
             use_raqm = check_raqm_support()
             font_size = max(36, int(self.height * 0.052))
 

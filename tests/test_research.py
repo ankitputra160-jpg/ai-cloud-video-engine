@@ -78,5 +78,21 @@ class TestResearchEngine(unittest.TestCase):
                 saved = json.load(f)
             self.assertEqual(saved["news_items"][0]["source"], "The Hindu")
 
+    def test_unrelated_wikipedia_homonym_is_rejected(self):
+        self.assertFalse(
+            ResearchEngine._is_wiki_result_relevant(
+                "2026 Supreme Court 500 Cr Investigation",
+                "Luigi Mangione",
+                "American suspect arrested in 2024 criminal case",
+            )
+        )
+        self.assertTrue(
+            ResearchEngine._is_wiki_result_relevant(
+                "Supreme Court of India",
+                "Supreme Court of India",
+                "Highest judicial forum and final court of appeal in India",
+            )
+        )
+
 if __name__ == "__main__":
     unittest.main()

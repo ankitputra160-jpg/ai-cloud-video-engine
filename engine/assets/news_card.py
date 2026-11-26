@@ -255,7 +255,8 @@ class InvestigativeCardGenerator:
             px, py = int(self.width * 0.11), int(self.height * 0.18)
             draw.rounded_rectangle([px, py, self.width - px, self.height - py], radius=20, fill=card_bg, outline=accent, width=6)
 
-            font_path = resolve_devanagari_font("NotoSansDevanagari-Bold.ttf")
+            # Use dual-script TTF (Baloo2-Bold / Khand-Bold cover BOTH Latin A-Z and Devanagari + ₹!)
+            font_path = resolve_devanagari_font("Baloo2-Bold.ttf") or resolve_devanagari_font("Khand-Bold.ttf")
             use_raqm = check_raqm_support()
             kw = {"layout_engine": ImageFont.Layout.RAQM} if use_raqm else {}
             title_f = ImageFont.truetype(font_path, max(38, self.height // 19), **kw) if font_path else ImageFont.load_default()

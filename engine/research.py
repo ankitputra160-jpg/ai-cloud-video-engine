@@ -101,18 +101,34 @@ class ResearchEngine:
             logger.warning(f"Network lookup failed for {url}: {e}")
         return None
 
+    @staticmethod
+    def _is_wiki_result_relevant(query_text: str, page_title: str, snippet: str = "") -> bool:
+        """Prevent unrelated fuzzy Wikipedia hits (e.g. random crimes/people) on news topics."""
+        stop = {"the", "secrets", "history", "story", "mystery", "and", "for", "with", "from", "case", "investigation", "full", "timeline", "report"}
+        q_tokens = [
+            t.lower() for t in re.findall(r"[A-Za-z]{3,}", query_text)
+            if t.lower() not in stop
+        ]
+        if not q_tokens:
+            return True
+        hay = f"{page_title} {re.sub(r'<[^>]+>', ' ', snippet)}".lower()
+        hits = sum(1 for tok in q_tokens if tok in hay)
+        required = 2 if len(q_tokens) >= 2 else 1
+        return hits >= required
+
     def _search_wiki(self, host: str, query_text: str) -> Optional[Dict[str, Any]]:
-        """Search a Wikipedia host and return top result metadata."""
+        """Search a Wikipedia host and return top result only if genuinely relevant to topic."""
         cleaned = re.sub(r"\b(the secrets of|history of|mystery of|story of|poori kahani|kaise)\b", "", query_text, flags=re.IGNORECASE).strip()
         for candidate in (query_text, cleaned):
             if not candidate:
                 continue
             q = urllib.parse.quote(candidate)
-            url = f"https://{host}/w/api.php?action=query&list=search&srsearch={q}&srlimit=3&format=json&utf8=1"
+            url = f"https://{host}/w/api.php?action=query&list=search&srsearch={q}&srlimit=4&format=json&utf8=1"
             data = self._http_get_json(url)
             results = data.get("query", {}).get("search", []) if data else []
-            if results:
-                return results[0]
+            for res in results:
+                if self._is_wiki_result_relevant(candidate, res.get("title", ""), res.get("snippet", "")):
+                    return res
         return None
 
     def _fetch_langlink(self, en_title: str, target_lang: str = "hi") -> Optional[str]:
@@ -317,10 +333,12 @@ class ResearchEngine:
         elif en_match:
             best_title = en_match["title"]
 
-        # 2. Fetch full extract from primary host
-        article = self._fetch_full_extract(active_host, best_title)
-        if article["has_data"]:
-            sources.append(article["source_url"])
+        # 2. Fetch full extract ONLY when Wikipedia actually matched topic cleanly
+        article = {"summary": "", "full_text": "", "source_url": "", "has_data": False}
+        if en_match or contains_devanagari(topic):
+            article = self._fetch_full_extract(active_host, best_title)
+            if article["has_data"]:
+                sources.append(article["source_url"])
 
         # Supplement with English full extract if Hindi article is brief
         en_article = None
@@ -332,19 +350,12 @@ class ResearchEngine:
         summary_text = article["summary"] or (en_article["summary"] if en_article else "")
         full_text = article["full_text"] or summary_text
 
-        if not full_text:
-            full_text = f"{topic} represents an important subject of historical, scientific, and cultural exploration."
-            summary_text = full_text
-
-        # Clean citation markers [1], [23]
         full_clean = re.sub(r"\[\d+\]", "", full_text)
         summary_clean = normalize_devanagari(re.sub(r"\[\d+\]", "", summary_text))
 
-        # 3. Extract sections, key facts, timeline dates, and entities
-        sections = self._parse_sections(full_clean)
-        facts = self._extract_facts(full_clean, topic)
+        sections = self._parse_sections(full_clean) if full_clean else []
+        facts = self._extract_facts(full_clean, topic) if full_clean else []
 
-        # Enrich with English facts / optional DDG if needed for long-form scripts
         if en_article and len(facts) < 12 and en_article["full_text"]:
             en_clean = re.sub(r"\[\d+\]", "", en_article["full_text"])
             for ef in self._extract_facts(en_clean, topic):
@@ -355,16 +366,24 @@ class ResearchEngine:
             if snippet not in facts:
                 facts.append(snippet)
 
-        timeline = self._extract_timeline(full_clean + "\n" + (en_article["full_text"] if en_article else ""))
-        entity_source = (en_article["full_text"] if en_article and en_article["full_text"] else full_clean)
-        entities = self._extract_entities(entity_source, en_title if en_match else best_title)
         news_items = self._fetch_rss_news(en_title if (en_title and self.language == "en") else topic)
-        quotes = self._extract_quotes(full_clean + "\n" + (en_article["full_text"] if en_article else ""), best_title)
-
-        for ni in news_items[:3]:
+        for ni in news_items[:4]:
             headline = ni.get("headline", "")
             if headline and headline not in facts:
-                facts.append(f"{headline} ({ni.get('source', 'News')}, {ni.get('date', '')})".strip())
+                facts.insert(0, f"{headline} ({ni.get('source', 'News')}, {ni.get('date', '')})".strip())
+
+        if not facts:
+            facts = [
+                f"{topic} represents an important subject of public debate and investigation.",
+                f"Official records and media reports trace key developments around {topic}.",
+            ]
+        if not summary_clean:
+            summary_clean = normalize_devanagari(facts[0])
+
+        timeline = self._extract_timeline(full_clean + "\n" + (en_article["full_text"] if en_article else "") + "\n" + " ".join(facts))
+        entity_source = (en_article["full_text"] if en_article and en_article["full_text"] else (full_clean or topic))
+        entities = self._extract_entities(entity_source, en_title if en_match else best_title)
+        quotes = self._extract_quotes(full_clean + "\n" + (en_article["full_text"] if en_article else ""), best_title)
 
         return ResearchDossier(
             topic=topic,

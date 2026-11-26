@@ -32,7 +32,7 @@ def safe_run_command(cmd_args: list, check: bool = True) -> Tuple[int, str, str]
         print(f"❌ Unexpected error executing {cmd_args[0]}: {e}")
         sys.exit(1)
 
-def trigger_workflow(topic: str, language: str, duration: int, resolution: str, style: str) -> None:
+def trigger_workflow(topic: str, language: str, duration: int, resolution: str, style: str, subtitle_style: str = "ass_karaoke") -> None:
     print("\n" + "="*60)
     print("🚀 DISPATCHING AI DOCUMENTARY PIPELINE TO CLOUD")
     print("="*60)
@@ -40,7 +40,7 @@ def trigger_workflow(topic: str, language: str, duration: int, resolution: str, 
     print(f"   🌐 Language: {language}")
     print(f"   ⏱️ Target Duration: {duration}s")
     print(f"   🖥️ Resolution: {resolution}")
-    print(f"   🎨 Style: {style}")
+    print(f"   🎨 Style: {style} | Subtitles: {subtitle_style}")
 
     cmd = [
         "gh", "workflow", "run", WORKFLOW,
@@ -49,7 +49,8 @@ def trigger_workflow(topic: str, language: str, duration: int, resolution: str, 
         "-f", f"language={language}",
         "-f", f"duration={str(duration)}",
         "-f", f"resolution={resolution}",
-        "-f", f"style={style}"
+        "-f", f"style={style}",
+        "-f", f"subtitle_style={subtitle_style}"
     ]
     safe_run_command(cmd, check=True)
     print("✅ Cloud workflow successfully triggered!")
@@ -74,7 +75,7 @@ def get_latest_run_id() -> Tuple[int, str, str]:
         print(f"❌ Failed to parse workflow runs: {e}")
         sys.exit(1)
 
-def wait_for_completion(run_id: int, max_wait_seconds: int = 1200) -> bool:
+def wait_for_completion(run_id: int, max_wait_seconds: int = 5400) -> bool:
     """Poll GitHub Actions run status with progressive backoff and spinner."""
     print(f"\n⏳ Monitoring Cloud Worker Job #{run_id} (Timeout: {max_wait_seconds}s)...")
     start_time = time.time()
@@ -149,9 +150,10 @@ def main():
     parser = argparse.ArgumentParser(description="Trigger AI Documentary Generation on GitHub Cloud")
     parser.add_argument("--topic", default="The History of Ancient Indian Astronomy", help="Documentary subject")
     parser.add_argument("--language", default="en", choices=["en", "hi"], help="Narration language (en / hi)")
-    parser.add_argument("--duration", type=int, default=60, help="Target duration in seconds (10 to 600)")
-    parser.add_argument("--resolution", default="1080p", choices=["1080p", "4k"], help="Video resolution")
-    parser.add_argument("--style", default="Documentary", help="Visual/Narration style")
+    parser.add_argument("--duration", type=int, default=60, help="Target duration in seconds (10 to 1500 / 25 min)")
+    parser.add_argument("--resolution", default="1080p", choices=["1080p", "4k", "720p"], help="Video resolution")
+    parser.add_argument("--style", default="Documentary", help="Style (Documentary, 2D Animation, Vox Explainer, Historical, Scientific)")
+    parser.add_argument("--subtitle-style", default="ass_karaoke", choices=["ass_karaoke", "pill_box", "srt_classic"], help="Subtitle style preset")
     parser.add_argument("--output-dir", default=DEFAULT_DOWNLOAD_DIR, help="Local directory to save output")
     args = parser.parse_args()
 
@@ -167,7 +169,8 @@ def main():
         language=args.language,
         duration=args.duration,
         resolution=args.resolution,
-        style=args.style
+        style=args.style,
+        subtitle_style=args.subtitle_style
     )
 
     # 2. Get Run ID

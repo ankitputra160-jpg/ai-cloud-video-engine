@@ -1,14 +1,15 @@
 """
-tests/test_voice.py - Tests for Voiceover Synthesis & Subtitle Generation
+tests/test_voice.py - Tests for Voiceover Synthesis, Word-Synced SRT & Hindi ASS Karaoke Subtitles
 """
-import unittest
 import os
 import tempfile
+import unittest
 from engine.config import PipelineConfig
-from engine.voice.tts import VoiceEngine
-from engine.voice.subtitles import SubtitleGenerator
-from engine.storyboard import StoryboardManifest, SceneDefinition
 from engine.renderer.ffmpeg_utils import get_duration
+from engine.storyboard import SceneDefinition, StoryboardManifest
+from engine.voice.subtitles import SubtitleGenerator
+from engine.voice.tts import VoiceEngine
+
 
 class TestVoiceEngine(unittest.TestCase):
     def setUp(self):
@@ -35,33 +36,60 @@ class TestVoiceEngine(unittest.TestCase):
         dur = get_duration(aligned_wav)
         self.assertAlmostEqual(dur, 4.0, delta=0.2)
 
-    def test_srt_generation(self):
+    def test_srt_and_ass_karaoke_generation(self):
         manifest = StoryboardManifest(
-            topic="Space", language="en", target_duration=10,
+            topic="Space",
+            language="hi",
+            target_duration=10,
             scenes=[
                 SceneDefinition(
-                    scene_id="scene_01", chapter_index=1, title="Intro",
-                    narration="First sentence of space history.", visual_description="Stars",
-                    footage_queries=["space"], ai_prompt="space prompt", duration=5.0,
-                    transition="fade", bgm_mood="epic", sfx_tag="wind",
-                    subtitle_text="First sentence of space history."
+                    scene_id="scene_01",
+                    chapter_index=1,
+                    title="Intro",
+                    narration="प्राचीन भारतीय विज्ञान की यह अद्भुत खोज इतिहास बन गई।",
+                    visual_description="Stars",
+                    footage_queries=["space"],
+                    ai_prompt="space prompt",
+                    duration=5.0,
+                    transition="fade",
+                    bgm_mood="epic",
+                    sfx_tag="wind",
+                    subtitle_text="प्राचीन भारतीय विज्ञान की यह अद्भुत खोज इतिहास बन गई।",
                 ),
                 SceneDefinition(
-                    scene_id="scene_02", chapter_index=2, title="Orbit",
-                    narration="Second sentence in orbit.", visual_description="Earth",
-                    footage_queries=["earth"], ai_prompt="earth prompt", duration=5.0,
-                    transition="crossfade", bgm_mood="inspiring", sfx_tag="chime",
-                    subtitle_text="Second sentence in orbit."
-                )
-            ]
+                    scene_id="scene_02",
+                    chapter_index=2,
+                    title="Orbit",
+                    narration="आर्यभट्ट ने ग्रहों की गति की सटीक गणना की।",
+                    visual_description="Earth",
+                    footage_queries=["earth"],
+                    ai_prompt="earth prompt",
+                    duration=5.0,
+                    transition="crossfade",
+                    bgm_mood="inspiring",
+                    sfx_tag="chime",
+                    subtitle_text="आर्यभट्ट ने ग्रहों की गति की सटीक गणना की।",
+                ),
+            ],
         )
+
         srt_file = os.path.join(self.temp_dir, "test.srt")
         SubtitleGenerator.generate_srt(manifest, srt_file)
         self.assertTrue(os.path.exists(srt_file))
         with open(srt_file, "r", encoding="utf-8") as f:
-            content = f.read()
-        self.assertIn("00:00:00,300 -->", content)
-        self.assertIn("First sentence of space history.", content)
+            srt_content = f.read()
+        self.assertIn("-->", srt_content)
+        self.assertIn("प्राचीन भारतीय विज्ञान", srt_content)
+
+        ass_file = os.path.join(self.temp_dir, "test.ass")
+        SubtitleGenerator.generate_ass(manifest, ass_file, style_mode="ass_karaoke")
+        self.assertTrue(os.path.exists(ass_file))
+        with open(ass_file, "r", encoding="utf-8-sig") as f:
+            ass_content = f.read()
+        self.assertIn("Noto Sans Devanagari", ass_content)
+        self.assertIn("\\kf", ass_content)
+        self.assertIn("आर्यभट्ट", ass_content)
+
 
 if __name__ == "__main__":
     unittest.main()

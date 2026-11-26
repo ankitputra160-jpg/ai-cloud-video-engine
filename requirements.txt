@@ -1,5 +1,8 @@
-# Production dependencies for AI Documentary Video Engine
+# Production dependencies for AI Documentary Video Engine v2.5
 requests>=2.31.0
 edge-tts>=6.1.10
-Pillow>=10.0.0
+Pillow>=10.2.0
+regex>=2023.12.25
+ddgs>=6.0.0
+indic-nlp-library>=0.92
 pytest>=8.0.0

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "status": "WARNING",
+  "target_duration": 30.0,
+  "actual_duration": 30.04,
+  "width": 1920,
+  "height": 1080,
+  "fps": 25.0,
+  "has_video_stream": true,
+  "has_audio_stream": true,
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "file_size_bytes": 5939330,
+  "black_frame_seconds": 11.16,
+  "issues": [],
+  "warnings": [
+    "Excessive black frame duration detected (11.2s)."
+  ]
+}

@@ -109,8 +109,8 @@ class QualityInspector:
         if dur_diff > max(3.0, expected_duration * 0.15):
             warnings.append(f"Duration variance: expected {expected_duration}s, actual {actual_dur:.1f}s (diff: {dur_diff:.1f}s)")
 
-        # 5. Black frame check using blackdetect
-        black_seconds = self._check_black_frames(video_path)
+        # 5. Black frame check using blackdetect (scaled timeout for up to 25-min renders)
+        black_seconds = self._check_black_frames(video_path, timeout=max(45, int(expected_duration * 0.5)))
         if black_seconds > max(1.5, expected_duration * 0.25):
             warnings.append(f"Excessive black frame duration detected ({black_seconds:.1f}s).")
 
@@ -138,7 +138,7 @@ class QualityInspector:
         logger.info(f"QC Result: {status} (Issues: {len(issues)}, Warnings: {len(warnings)})")
         return report
 
-    def _check_black_frames(self, video_path: str) -> float:
+    def _check_black_frames(self, video_path: str, timeout: int = 60) -> float:
         """Scan video for uninterrupted black frame sequences."""
         cmd = [
             "ffmpeg", "-i", video_path,
@@ -146,7 +146,7 @@ class QualityInspector:
             "-f", "null", "-"
         ]
         try:
-            res = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+            res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
             black_dur = 0.0
             for line in res.stderr.splitlines():
                 if "black_duration:" in line:

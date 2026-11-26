@@ -37,6 +37,16 @@ class TestResearchEngine(unittest.TestCase):
         d_dict = dossier.to_dict()
         self.assertEqual(d_dict["topic"], "Origins of Aviation")
         self.assertIn("sources", d_dict)
+        self.assertIn("english_title", d_dict)
+
+    def test_hindi_sentence_extraction(self):
+        hindi_text = (
+            "प्राचीन भारत में आर्यभट्ट ने वर्ष 499 में खगोल विज्ञान का अद्भुत ग्रंथ लिखा। "
+            "सूर्य सिद्धांत की गणना आज भी सटीक मानी जाती है।"
+        )
+        facts = self.engine._extract_facts(hindi_text, "Astronomy")
+        self.assertTrue(len(facts) >= 2)
+        self.assertTrue(any("आर्यभट्ट" in f for f in facts))
 
 if __name__ == "__main__":
     unittest.main()

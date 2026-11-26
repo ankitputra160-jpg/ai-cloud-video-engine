@@ -36,6 +36,11 @@ class TestVoiceEngine(unittest.TestCase):
         dur = get_duration(aligned_wav)
         self.assertAlmostEqual(dur, 4.0, delta=0.2)
 
+        mastered_wav = os.path.join(self.temp_dir, "mastered.wav")
+        self.engine._master_voice_track(aligned_wav, mastered_wav)
+        self.assertTrue(os.path.exists(mastered_wav))
+        self.assertTrue(os.path.getsize(mastered_wav) > 1000)
+
     def test_srt_and_ass_karaoke_generation(self):
         manifest = StoryboardManifest(
             topic="Space",

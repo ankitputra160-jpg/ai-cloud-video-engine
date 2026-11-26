@@ -30,9 +30,11 @@ class TestPipelineConfig(unittest.TestCase):
         self.assertTrue(cfg_2d.is_2d_style)
         self.assertEqual(cfg_2d.subtitle_style, "ass_karaoke")
 
-        cfg_doc = PipelineConfig(topic="Test", style="Documentary", subtitle_style="pill_box")
+        cfg_doc = PipelineConfig(topic="Test", style="Documentary", subtitle_style="pill_box", voice_engine="piper")
         self.assertFalse(cfg_doc.is_2d_style)
         self.assertEqual(cfg_doc.subtitle_style, "pill_box")
+        self.assertEqual(cfg_doc.voice_engine, "piper")
+        self.assertIn("piper_onnx_url", cfg_doc.voice_settings)
 
     def test_language_and_voice(self):
         cfg_en = PipelineConfig(topic="Test", language="en")

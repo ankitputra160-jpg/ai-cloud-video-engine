@@ -1,5 +1,6 @@
-# Production dependencies for AI Documentary Video Engine v2.5
+# Production dependencies for AI Documentary Video Engine v2.6
 requests>=2.31.0
+piper-tts>=1.2.0
 edge-tts>=6.1.10
 Pillow>=10.2.0
 regex>=2023.12.25

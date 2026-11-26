@@ -49,11 +49,24 @@ on:
           - ass_karaoke
           - pill_box
           - srt_classic
+      voice_engine:
+        description: 'Open-Source / Neural Voice Engine'
+        required: false
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - piper
+          - edge
+      storyboard_file:
+        description: 'Optional Pre-Curated Storyboard JSON path'
+        required: false
+        default: ''
 
 jobs:
   produce-documentary:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
 
     steps:
       - name: 📥 Checkout Repository
@@ -73,7 +86,7 @@ jobs:
           cp -f fonts/*.ttf ~/.local/share/fonts/ || true
           fc-cache -fv | tail -n 10
 
-      - name: 📦 Install Python Dependencies
+      - name: 📦 Install Python Dependencies (Including Open-Source Piper TTS)
         run: |
           python3 -m pip install --upgrade pip
           pip3 install -r requirements.txt
@@ -90,6 +103,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
+          SB_FLAG=""
+          if [ -n "${{ github.event.inputs.storyboard_file }}" ]; then
+            SB_FLAG="--storyboard-file ${{ github.event.inputs.storyboard_file }}"
+          fi
           PYTHONPATH=. python3 -m engine.pipeline \
             --topic "${{ github.event.inputs.topic }}" \
             --language "${{ github.event.inputs.language }}" \
@@ -97,6 +114,8 @@ jobs:
             --resolution "${{ github.event.inputs.resolution }}" \
             --style "${{ github.event.inputs.style }}" \
             --subtitle-style "${{ github.event.inputs.subtitle_style || 'ass_karaoke' }}" \
+            --voice-engine "${{ github.event.inputs.voice_engine || 'auto' }}" \
+            $SB_FLAG \
             --output "output/documentary.mp4" \
             --work-dir ".workspace"
 
@@ -118,6 +137,7 @@ jobs:
             .workspace/2d_script.md
             .workspace/subtitles.srt
             .workspace/subtitles.ass
+          if-no-files-found: ignore
           retention-days: 14
 
       - name: 🏆 Job Completion Summary
@@ -125,6 +145,7 @@ jobs:
           echo "### 🎬 AI Documentary Generation Complete!" >> $GITHUB_STEP_SUMMARY
           echo "- **Topic:** ${{ github.event.inputs.topic }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Style:** ${{ github.event.inputs.style }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Voice Engine:** ${{ github.event.inputs.voice_engine || 'auto' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Language:** ${{ github.event.inputs.language }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Resolution:** ${{ github.event.inputs.resolution }}" >> $GITHUB_STEP_SUMMARY
           echo "- **File Size:** $(du -sh output/documentary.mp4 | cut -f1)" >> $GITHUB_STEP_SUMMARY

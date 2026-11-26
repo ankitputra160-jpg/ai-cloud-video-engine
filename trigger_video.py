@@ -32,7 +32,16 @@ def safe_run_command(cmd_args: list, check: bool = True) -> Tuple[int, str, str]
         print(f"❌ Unexpected error executing {cmd_args[0]}: {e}")
         sys.exit(1)
 
-def trigger_workflow(topic: str, language: str, duration: int, resolution: str, style: str, subtitle_style: str = "ass_karaoke") -> None:
+def trigger_workflow(
+    topic: str,
+    language: str,
+    duration: int,
+    resolution: str,
+    style: str,
+    subtitle_style: str = "ass_karaoke",
+    voice_engine: str = "auto",
+    storyboard_file: Optional[str] = None,
+) -> None:
     print("\n" + "="*60)
     print("🚀 DISPATCHING AI DOCUMENTARY PIPELINE TO CLOUD")
     print("="*60)
@@ -40,7 +49,7 @@ def trigger_workflow(topic: str, language: str, duration: int, resolution: str, 
     print(f"   🌐 Language: {language}")
     print(f"   ⏱️ Target Duration: {duration}s")
     print(f"   🖥️ Resolution: {resolution}")
-    print(f"   🎨 Style: {style} | Subtitles: {subtitle_style}")
+    print(f"   🎨 Style: {style} | Subtitles: {subtitle_style} | Voice: {voice_engine}")
 
     cmd = [
         "gh", "workflow", "run", WORKFLOW,
@@ -50,8 +59,11 @@ def trigger_workflow(topic: str, language: str, duration: int, resolution: str, 
         "-f", f"duration={str(duration)}",
         "-f", f"resolution={resolution}",
         "-f", f"style={style}",
-        "-f", f"subtitle_style={subtitle_style}"
+        "-f", f"subtitle_style={subtitle_style}",
+        "-f", f"voice_engine={voice_engine}",
     ]
+    if storyboard_file:
+        cmd.extend(["-f", f"storyboard_file={storyboard_file}"])
     safe_run_command(cmd, check=True)
     print("✅ Cloud workflow successfully triggered!")
     time.sleep(6)  # Allow GitHub Actions API to register the job
@@ -154,6 +166,8 @@ def main():
     parser.add_argument("--resolution", default="1080p", choices=["1080p", "4k", "720p"], help="Video resolution")
     parser.add_argument("--style", default="Documentary", help="Style (Documentary, 2D Animation, Vox Explainer, Historical, Scientific)")
     parser.add_argument("--subtitle-style", default="ass_karaoke", choices=["ass_karaoke", "pill_box", "srt_classic"], help="Subtitle style preset")
+    parser.add_argument("--voice-engine", default="auto", choices=["auto", "piper", "edge"], help="Open-source Piper or Edge Neural voice")
+    parser.add_argument("--storyboard-file", default=None, help="Optional curated storyboard JSON in repo")
     parser.add_argument("--output-dir", default=DEFAULT_DOWNLOAD_DIR, help="Local directory to save output")
     args = parser.parse_args()
 
@@ -170,7 +184,9 @@ def main():
         duration=args.duration,
         resolution=args.resolution,
         style=args.style,
-        subtitle_style=args.subtitle_style
+        subtitle_style=args.subtitle_style,
+        voice_engine=args.voice_engine,
+        storyboard_file=args.storyboard_file,
     )
 
     # 2. Get Run ID

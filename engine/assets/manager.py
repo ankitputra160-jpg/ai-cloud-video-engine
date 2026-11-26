@@ -67,58 +67,73 @@ class VisualAssetManager:
             found_path = None
             source_used = None
 
-            for provider in self.providers:
-                if not provider.is_available():
-                    continue
-                if isinstance(provider, NasaMediaProvider) and not provider.is_topic_relevant(scene.footage_queries):
-                    continue
+            # Attempt curated real archival photograph / video URL first if specified on scene
+            if getattr(scene, "preferred_media_url", None):
+                logger.info(f"[{scene.scene_id}] Fetching curated real media URL...")
+                direct_res = self.wikimedia.fetch_direct_url_as_video(
+                    scene.preferred_media_url,
+                    raw_path,
+                    duration=scene.duration,
+                    camera=scene.camera,
+                    date_badge=scene.on_screen_date,
+                )
+                if direct_res and os.path.exists(direct_res) and os.path.getsize(direct_res) > 5000:
+                    found_path = direct_res
+                    source_used = "curated_archival_media"
 
-                logger.info(f"[{scene.scene_id}] Trying provider: {provider.name}")
-                if isinstance(provider, WikimediaCommonsProvider):
-                    result = provider.fetch_video(
-                        scene.footage_queries,
-                        raw_path,
-                        min_duration=scene.duration,
-                        used_urls=used_urls,
-                        camera=scene.camera,
-                        date_badge=scene.on_screen_date,
-                        prefer_images=self.config.is_2d_style,
-                    )
-                elif isinstance(provider, NasaMediaProvider):
-                    result = provider.fetch_video(
-                        scene.footage_queries,
-                        raw_path,
-                        min_duration=scene.duration,
-                        used_urls=used_urls,
-                        camera=scene.camera,
-                        date_badge=scene.on_screen_date,
-                    )
-                elif isinstance(provider, PollinationsAIProvider):
-                    result = provider.fetch_video(
-                        scene.footage_queries,
-                        raw_path,
-                        min_duration=scene.duration,
-                        ai_prompt=scene.ai_prompt,
-                        camera=scene.camera,
-                        date_badge=scene.on_screen_date,
-                        seed=100 + idx,
-                    )
-                elif isinstance(provider, CinematicMotionVisualProvider):
-                    result = provider.generate_motion_clip(
-                        raw_path,
-                        title=scene.title,
-                        duration=scene.duration,
-                        mood=scene.bgm_mood,
-                        camera=scene.camera,
-                        date_badge=scene.on_screen_date,
-                    )
-                else:
-                    result = provider.fetch_video(scene.footage_queries, raw_path, min_duration=scene.duration)
+            if not found_path:
+                for provider in self.providers:
+                    if not provider.is_available():
+                        continue
+                    if isinstance(provider, NasaMediaProvider) and not provider.is_topic_relevant(scene.footage_queries):
+                        continue
 
-                if result and os.path.exists(result) and os.path.getsize(result) > 1000:
-                    found_path = result
-                    source_used = provider.name
-                    break
+                    logger.info(f"[{scene.scene_id}] Trying provider: {provider.name}")
+                    if isinstance(provider, WikimediaCommonsProvider):
+                        result = provider.fetch_video(
+                            scene.footage_queries,
+                            raw_path,
+                            min_duration=scene.duration,
+                            used_urls=used_urls,
+                            camera=scene.camera,
+                            date_badge=scene.on_screen_date,
+                            prefer_images=self.config.is_2d_style,
+                        )
+                    elif isinstance(provider, NasaMediaProvider):
+                        result = provider.fetch_video(
+                            scene.footage_queries,
+                            raw_path,
+                            min_duration=scene.duration,
+                            used_urls=used_urls,
+                            camera=scene.camera,
+                            date_badge=scene.on_screen_date,
+                        )
+                    elif isinstance(provider, PollinationsAIProvider):
+                        result = provider.fetch_video(
+                            scene.footage_queries,
+                            raw_path,
+                            min_duration=scene.duration,
+                            ai_prompt=scene.ai_prompt,
+                            camera=scene.camera,
+                            date_badge=scene.on_screen_date,
+                            seed=100 + idx,
+                        )
+                    elif isinstance(provider, CinematicMotionVisualProvider):
+                        result = provider.generate_motion_clip(
+                            raw_path,
+                            title=scene.title,
+                            duration=scene.duration,
+                            mood=scene.bgm_mood,
+                            camera=scene.camera,
+                            date_badge=scene.on_screen_date,
+                        )
+                    else:
+                        result = provider.fetch_video(scene.footage_queries, raw_path, min_duration=scene.duration)
+
+                    if result and os.path.exists(result) and os.path.getsize(result) > 1000:
+                        found_path = result
+                        source_used = provider.name
+                        break
 
             if not found_path:
                 logger.info(f"[{scene.scene_id}] Generating 2D editorial motion backdrop...")

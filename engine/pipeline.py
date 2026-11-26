@@ -15,7 +15,7 @@ from engine.assets.manager import VisualAssetManager
 from engine.audio.bgm import BackgroundMusicEngine
 from engine.audio.mixer import AudioProductionMixer
 from engine.audio.sfx import SoundEffectsEngine
-from engine.config import PipelineConfig, SUPPORTED_SUBTITLE_STYLES
+from engine.config import PipelineConfig, SUPPORTED_SUBTITLE_STYLES, SUPPORTED_VOICE_ENGINES
 from engine.qc.inspector import QCReport, QualityInspector
 from engine.renderer.editor import VideoEditor
 from engine.research import ResearchDossier, ResearchEngine
@@ -47,51 +47,57 @@ class DocumentaryPipeline:
         logger.info(f"⏱️ Target Duration: {self.config.duration}s | Language: {self.config.language} | Resolution: {self.config.resolution}")
         logger.info(f"{'='*60}")
 
-        # -------------------------------------------------------------
-        # STAGE A: Deep Multi-Source Research
-        # -------------------------------------------------------------
-        logger.info("\n--- STAGE A: Deep Multi-Source Topic Research ---")
-        research_engine = ResearchEngine(timeout=self.config.http_timeout, language=self.config.language)
-        dossier: ResearchDossier = research_engine.search_topic(self.config.topic)
-
-        dossier_path = os.path.join(self.work_dir, "research_dossier.json")
-        with open(dossier_path, "w", encoding="utf-8") as f:
-            json.dump(dossier.to_dict(), f, indent=2, ensure_ascii=False)
-        logger.info(f"✅ Research completed: '{dossier.title}' ({len(dossier.key_facts)} facts gathered)")
-
-        # -------------------------------------------------------------
-        # STAGE B: Documentary & 2D Script Generation
-        # -------------------------------------------------------------
-        logger.info("\n--- STAGE B: Narrative & 2D Scriptwriting ---")
-        writer = ScriptWriter(
-            language=self.config.language,
-            words_per_minute=self.config.voice_settings.get("words_per_minute", 130),
-            style=self.config.style,
-            gemini_api_key=self.config.gemini_api_key,
-            groq_api_key=self.config.groq_api_key,
-        )
-        script: DocumentaryScript = writer.generate_script(dossier, self.config.duration)
-
-        script_path = os.path.join(self.work_dir, "script.json")
-        with open(script_path, "w", encoding="utf-8") as f:
-            json.dump(script.to_dict(), f, indent=2, ensure_ascii=False)
-
-        script_md_path = os.path.join(self.work_dir, "2d_script.md")
-        with open(script_md_path, "w", encoding="utf-8") as f:
-            f.write(script.to_2d_markdown())
-
-        logger.info(f"✅ Script composed: {len(script.chapters)} scenes, {script.total_words} words")
-
-        # -------------------------------------------------------------
-        # STAGE C: Dynamic Storyboard Planning
-        # -------------------------------------------------------------
-        logger.info("\n--- STAGE C: Dynamic Storyboard Schema Planning ---")
-        sb_engine = StoryboardEngine()
-        manifest: StoryboardManifest = sb_engine.generate_storyboard(script)
-
         manifest_path = os.path.join(self.work_dir, "storyboard.json")
-        manifest.save_json(manifest_path)
-        logger.info(f"✅ Storyboard created: {len(manifest.scenes)} scenes, total {manifest.total_duration:.1f}s")
+
+        if self.config.storyboard_file and os.path.exists(self.config.storyboard_file):
+            logger.info(f"\n--- STAGES A-C: Loading Curated Verified Storyboard ({self.config.storyboard_file}) ---")
+            manifest: StoryboardManifest = StoryboardManifest.load_json(self.config.storyboard_file)
+            manifest.save_json(manifest_path)
+            logger.info(f"✅ Curated Storyboard loaded: {len(manifest.scenes)} scenes, total {manifest.total_duration:.1f}s")
+        else:
+            # -------------------------------------------------------------
+            # STAGE A: Deep Multi-Source Research
+            # -------------------------------------------------------------
+            logger.info("\n--- STAGE A: Deep Multi-Source Topic Research ---")
+            research_engine = ResearchEngine(timeout=self.config.http_timeout, language=self.config.language)
+            dossier: ResearchDossier = research_engine.search_topic(self.config.topic)
+
+            dossier_path = os.path.join(self.work_dir, "research_dossier.json")
+            with open(dossier_path, "w", encoding="utf-8") as f:
+                json.dump(dossier.to_dict(), f, indent=2, ensure_ascii=False)
+            logger.info(f"✅ Research completed: '{dossier.title}' ({len(dossier.key_facts)} facts gathered)")
+
+            # -------------------------------------------------------------
+            # STAGE B: Documentary & 2D Script Generation
+            # -------------------------------------------------------------
+            logger.info("\n--- STAGE B: Narrative & 2D Scriptwriting ---")
+            writer = ScriptWriter(
+                language=self.config.language,
+                words_per_minute=self.config.voice_settings.get("words_per_minute", 130),
+                style=self.config.style,
+                gemini_api_key=self.config.gemini_api_key,
+                groq_api_key=self.config.groq_api_key,
+            )
+            script: DocumentaryScript = writer.generate_script(dossier, self.config.duration)
+
+            script_path = os.path.join(self.work_dir, "script.json")
+            with open(script_path, "w", encoding="utf-8") as f:
+                json.dump(script.to_dict(), f, indent=2, ensure_ascii=False)
+
+            script_md_path = os.path.join(self.work_dir, "2d_script.md")
+            with open(script_md_path, "w", encoding="utf-8") as f:
+                f.write(script.to_2d_markdown())
+
+            logger.info(f"✅ Script composed: {len(script.chapters)} scenes, {script.total_words} words")
+
+            # -------------------------------------------------------------
+            # STAGE C: Dynamic Storyboard Planning
+            # -------------------------------------------------------------
+            logger.info("\n--- STAGE C: Dynamic Storyboard Schema Planning ---")
+            sb_engine = StoryboardEngine()
+            manifest = sb_engine.generate_storyboard(script)
+            manifest.save_json(manifest_path)
+            logger.info(f"✅ Storyboard created: {len(manifest.scenes)} scenes, total {manifest.total_duration:.1f}s")
 
         # -------------------------------------------------------------
         # STAGE D: Visual Asset Generation & Retrieval
@@ -201,6 +207,8 @@ def main():
     parser.add_argument("--language", default="en", choices=["en", "hi"], help="Narration language")
     parser.add_argument("--resolution", default="1080p", choices=["1080p", "4k", "720p"], help="Output resolution")
     parser.add_argument("--subtitle-style", default="ass_karaoke", choices=list(SUPPORTED_SUBTITLE_STYLES), help="Subtitle render preset")
+    parser.add_argument("--voice-engine", default="auto", choices=list(SUPPORTED_VOICE_ENGINES), help="Voice synthesizer (auto / piper / edge)")
+    parser.add_argument("--storyboard-file", default=None, help="Optional pre-curated storyboard JSON path")
     parser.add_argument("--output", default="output/final_documentary.mp4", help="Output file path")
     parser.add_argument("--work-dir", default=".workspace", help="Scratch directory for intermediate assets")
     args = parser.parse_args()
@@ -212,6 +220,8 @@ def main():
         language=args.language,
         resolution=args.resolution,
         subtitle_style=args.subtitle_style,
+        voice_engine=args.voice_engine,
+        storyboard_file=args.storyboard_file,
         output_path=args.output,
         work_dir=args.work_dir,
     )

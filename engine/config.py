@@ -25,6 +25,12 @@ SUPPORTED_SUBTITLE_STYLES: Tuple[str, ...] = (
     "srt_classic",
 )
 
+SUPPORTED_VOICE_ENGINES: Tuple[str, ...] = (
+    "auto",
+    "piper",
+    "edge",
+)
+
 @dataclass
 class ResolutionProfile:
     name: str
@@ -40,18 +46,24 @@ PROFILES: Dict[str, ResolutionProfile] = {
     "720p": ResolutionProfile(name="720p", width=1280, height=720, video_bitrate="3M", crf=24, fps=25),
 }
 
-VOICE_CONFIGS = {
+VOICE_CONFIGS: Dict[str, Dict[str, Any]] = {
     "en": {
         "primary": "en-US-ChristopherNeural",
         "secondary": "en-US-EricNeural",
         "female": "en-US-AriaNeural",
         "words_per_minute": 140,
+        "piper_model": "en_US-lessac-medium",
+        "piper_onnx_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx",
+        "piper_json_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json",
     },
     "hi": {
         "primary": "hi-IN-MadhurNeural",
         "secondary": "hi-IN-SwaraNeural",
         "female": "hi-IN-SwaraNeural",
-        "words_per_minute": 120,
+        "words_per_minute": 125,
+        "piper_model": "hi_IN-rohan-medium",
+        "piper_onnx_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/hi/hi_IN/rohan/medium/hi_IN-rohan-medium.onnx",
+        "piper_json_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/hi/hi_IN/rohan/medium/hi_IN-rohan-medium.onnx.json",
     }
 }
 
@@ -67,6 +79,8 @@ class PipelineConfig:
     enable_qc: bool = True
     burn_subtitles: bool = True
     subtitle_style: str = "ass_karaoke"
+    voice_engine: str = "auto"
+    storyboard_file: Optional[str] = None
 
     # API Keys loaded safely from environment (all optional for free-tier execution)
     pexels_api_key: Optional[str] = field(default=None)
@@ -80,30 +94,28 @@ class PipelineConfig:
     max_retries: int = 3
 
     def __post_init__(self):
-        # Sanitize topic
         self.topic = self.sanitize_topic(self.topic)
 
-        # Validate duration (supports up to 25 minutes / 1500 seconds)
         if self.duration < MIN_DURATION_SECONDS:
             self.duration = MIN_DURATION_SECONDS
         elif self.duration > MAX_DURATION_SECONDS:
             self.duration = MAX_DURATION_SECONDS
 
-        # Validate language
         self.language = self.language.lower()
         if self.language not in ("en", "hi"):
             self.language = "en"
 
-        # Validate resolution
         self.resolution = self.resolution.lower()
         if self.resolution not in PROFILES:
             self.resolution = "1080p"
 
-        # Normalize subtitle style
         if self.subtitle_style not in SUPPORTED_SUBTITLE_STYLES:
             self.subtitle_style = "ass_karaoke"
 
-        # Load API keys from environment if not explicitly set
+        self.voice_engine = self.voice_engine.lower()
+        if self.voice_engine not in SUPPORTED_VOICE_ENGINES:
+            self.voice_engine = "auto"
+
         if not self.pexels_api_key:
             self.pexels_api_key = os.environ.get("PEXELS_API_KEY", "").strip() or None
         if not self.pixabay_api_key:
@@ -115,7 +127,6 @@ class PipelineConfig:
         if not self.groq_api_key:
             self.groq_api_key = os.environ.get("GROQ_API_KEY", "").strip() or None
 
-        # Create work & output directory
         Path(self.work_dir).mkdir(parents=True, exist_ok=True)
         Path(self.output_path).parent.mkdir(parents=True, exist_ok=True)
 

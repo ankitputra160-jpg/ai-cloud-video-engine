@@ -27,6 +27,7 @@ class SceneDefinition:
     layout: str = "hero"
     camera: str = "push_in"
     on_screen_date: str = ""
+    preferred_media_url: Optional[str] = None
 
     # Asset & Word-Timing tracking populated during stages D & E
     video_asset_path: Optional[str] = None

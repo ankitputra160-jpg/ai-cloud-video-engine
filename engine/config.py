@@ -5,7 +5,7 @@ import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Any, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 MAX_DURATION_SECONDS = 1500  # 25 minutes max runtime
 MIN_DURATION_SECONDS = 10
@@ -27,9 +27,23 @@ SUPPORTED_SUBTITLE_STYLES: Tuple[str, ...] = (
 
 SUPPORTED_VOICE_ENGINES: Tuple[str, ...] = (
     "auto",
+    "indicf5",
+    "indic_parler",
+    "qwen3_tts",
+    "sarvam",
+    "elevenlabs",
     "piper",
     "edge",
 )
+
+SUPPORTED_LLM_MODES: Tuple[str, ...] = (
+    "auto",
+    "local_gemma3",
+    "gemini",
+    "groq",
+    "deterministic",
+)
+
 
 @dataclass
 class ResolutionProfile:
@@ -39,6 +53,7 @@ class ResolutionProfile:
     video_bitrate: str
     crf: int
     fps: int = 25
+
 
 PROFILES: Dict[str, ResolutionProfile] = {
     "1080p": ResolutionProfile(name="1080p", width=1920, height=1080, video_bitrate="6M", crf=22, fps=25),
@@ -64,8 +79,9 @@ VOICE_CONFIGS: Dict[str, Dict[str, Any]] = {
         "piper_model": "hi_IN-rohan-medium",
         "piper_onnx_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/hi/hi_IN/rohan/medium/hi_IN-rohan-medium.onnx",
         "piper_json_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/hi/hi_IN/rohan/medium/hi_IN-rohan-medium.onnx.json",
-    }
+    },
 }
+
 
 @dataclass
 class PipelineConfig:
@@ -82,12 +98,24 @@ class PipelineConfig:
     voice_engine: str = "auto"
     storyboard_file: Optional[str] = None
 
-    # API Keys loaded safely from environment (all optional for free-tier execution)
+    # v3.0 Modular & Cloud GPU parameters (all optional with clean defaults)
+    llm_mode: str = "auto"
+    voice_bank_dir: Optional[str] = None
+    bgm_bank_dir: Optional[str] = None
+    enable_ai_video: bool = True
+    preview_only: bool = False
+    generate_thumbnail: bool = True
+    thumbnail_path: Optional[str] = None
+
+    # API Keys & Tokens loaded safely from environment (all optional)
     pexels_api_key: Optional[str] = field(default=None)
     pixabay_api_key: Optional[str] = field(default=None)
     nasa_api_key: Optional[str] = field(default=None)
     gemini_api_key: Optional[str] = field(default=None)
     groq_api_key: Optional[str] = field(default=None)
+    hf_token: Optional[str] = field(default=None)
+    sarvam_api_key: Optional[str] = field(default=None)
+    elevenlabs_api_key: Optional[str] = field(default=None)
 
     # Network & Retry limits
     http_timeout: int = 15
@@ -116,16 +144,27 @@ class PipelineConfig:
         if self.voice_engine not in SUPPORTED_VOICE_ENGINES:
             self.voice_engine = "auto"
 
-        if not self.pexels_api_key:
-            self.pexels_api_key = os.environ.get("PEXELS_API_KEY", "").strip() or None
-        if not self.pixabay_api_key:
-            self.pixabay_api_key = os.environ.get("PIXABAY_API_KEY", "").strip() or None
-        if not self.nasa_api_key:
-            self.nasa_api_key = os.environ.get("NASA_API_KEY", "").strip() or None
-        if not self.gemini_api_key:
-            self.gemini_api_key = os.environ.get("GEMINI_API_KEY", "").strip() or None
-        if not self.groq_api_key:
-            self.groq_api_key = os.environ.get("GROQ_API_KEY", "").strip() or None
+        self.llm_mode = (self.llm_mode or "auto").lower()
+        if self.llm_mode not in SUPPORTED_LLM_MODES:
+            self.llm_mode = "auto"
+
+        env_map = (
+            ("pexels_api_key", "PEXELS_API_KEY"),
+            ("pixabay_api_key", "PIXABAY_API_KEY"),
+            ("nasa_api_key", "NASA_API_KEY"),
+            ("gemini_api_key", "GEMINI_API_KEY"),
+            ("groq_api_key", "GROQ_API_KEY"),
+            ("hf_token", "HF_TOKEN"),
+            ("sarvam_api_key", "SARVAM_API_KEY"),
+            ("elevenlabs_api_key", "ELEVENLABS_API_KEY"),
+        )
+        for attr_name, env_key in env_map:
+            if not getattr(self, attr_name, None):
+                setattr(self, attr_name, os.environ.get(env_key, "").strip() or None)
+
+        if not self.thumbnail_path:
+            base_no_ext = os.path.splitext(self.output_path)[0]
+            self.thumbnail_path = f"{base_no_ext}_thumbnail.jpg"
 
         Path(self.work_dir).mkdir(parents=True, exist_ok=True)
         Path(self.output_path).parent.mkdir(parents=True, exist_ok=True)
@@ -135,9 +174,9 @@ class PipelineConfig:
         """Strip control characters, excessive whitespace, and dangerous shell metacharacters."""
         if not topic:
             return "General Documentary"
-        cleaned = re.sub(r'[\r\n\t]+', ' ', topic)
-        cleaned = re.sub(r'[^\w\s\-\.,\']', '', cleaned, flags=re.UNICODE)
-        cleaned = ' '.join(cleaned.split())
+        cleaned = re.sub(r"[\r\n\t]+", " ", topic)
+        cleaned = re.sub(r"[^\w\s\-\.,\']", "", cleaned, flags=re.UNICODE)
+        cleaned = " ".join(cleaned.split())
         return cleaned[:150].strip() or "General Documentary"
 
     @property

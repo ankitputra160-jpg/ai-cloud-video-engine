@@ -1,8 +1,10 @@
 """
-engine/renderer/editor.py - Stage G: Scalable Parallel Video Assembly & Devanagari Subtitle Engine
-Burns HarfBuzz-shaped ASS subtitles (pointing to bundled Noto Devanagari fonts) and muxes audio
-in a single pass per scene in parallel, then concatenates with stream copy (-c copy) and +faststart.
-Scales effortlessly from 10-second clips up to 25-minute (1500s) documentaries.
+engine/renderer/editor.py - Stage F: Hardware NVENC / CPU Video Assembly & Devanagari ASS Subtitle Engine
+Features:
+  - Auto-detects `h264_nvenc` on Colab GPU (safe max 2 parallel workers) or `libx264` on CPU
+  - Burns HarfBuzz-shaped `.ass` subtitles pointing at static `NotoSansDevanagari` TTF fonts
+  - Frame-exact duration locking (`0.001s`) + Android/YouTube `-pix_fmt yuv420p -movflags +faststart`
+  - Cleans intermediate temporary artifacts to protect cloud disk space
 """
 import concurrent.futures
 import logging
@@ -10,7 +12,7 @@ import os
 from typing import List, Optional
 
 from engine.config import PipelineConfig
-from engine.renderer.ffmpeg_utils import safe_run_ffmpeg
+from engine.renderer.ffmpeg_utils import detect_h264_encoder, safe_run_ffmpeg
 from engine.storyboard import SceneDefinition, StoryboardManifest
 from engine.text.devanagari import get_fonts_dir
 from engine.voice.subtitles import SubtitleGenerator
@@ -30,10 +32,16 @@ class VideoEditor:
         self.sub_dir = os.path.join(config.work_dir, "scene_subs")
         os.makedirs(self.rendered_dir, exist_ok=True)
         os.makedirs(self.sub_dir, exist_ok=True)
+        self.encoder = detect_h264_encoder()
 
     def _process_single_scene(self, scene: SceneDefinition) -> Optional[str]:
-        """Mux audio and burn scene-level ASS subtitles in a single FFmpeg pass."""
+        """Mux mastered audio and burn scene-level ASS subtitles cleanly in one pass."""
         scene_mp4 = os.path.join(self.rendered_dir, f"assembled_{scene.scene_id}.mp4")
+
+        # Checkpoint skip if this scene was already rendered cleanly
+        if os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 10_000:
+            return scene_mp4
+
         if not scene.video_asset_path or not os.path.exists(scene.video_asset_path):
             logger.error(f"Missing video asset for {scene.scene_id}")
             return None
@@ -59,7 +67,6 @@ class VideoEditor:
             ass_path=ass_path,
         )
 
-        # Fallback without subtitle filter if libass unavailable on host FFmpeg
         if not success and ass_path:
             logger.warning(f"[{scene.scene_id}] Retrying scene mux without ASS filter...")
             success = self._render_scene_pass(
@@ -75,9 +82,10 @@ class VideoEditor:
         return None
 
     def assemble_documentary(self, manifest: StoryboardManifest, srt_path: Optional[str] = None) -> Optional[str]:
-        """Assemble scenes in parallel, concatenate via stream copy, and package fast-start MP4."""
-        logger.info(f"Assembling documentary: {len(manifest.scenes)} scenes...")
-        max_workers = min(4, max(1, (os.cpu_count() or 2)))
+        """Assemble scenes (max 2 NVENC GPU workers or 4 CPU workers), concat, and faststart package."""
+        logger.info(f"Assembling documentary: {len(manifest.scenes)} scenes (Encoder: {self.encoder})...")
+        # Limit concurrent NVENC sessions to 2 so Colab T4/L4 never exhausts GPU encoder limits
+        max_workers = 2 if self.encoder == "h264_nvenc" else min(4, max(1, (os.cpu_count() or 2)))
 
         assembled_map = {}
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
@@ -98,14 +106,17 @@ class VideoEditor:
         final_output = self.config.output_path
         os.makedirs(os.path.dirname(final_output) or ".", exist_ok=True)
 
-        # If caller explicitly requested srt_classic, concatenate and burn SRT at end
         if self.config.burn_subtitles and self.config.subtitle_style == "srt_classic" and srt_path and os.path.exists(srt_path):
             temp_concat = os.path.join(self.config.work_dir, "raw_concatenated.mp4")
             if not self._concat_scenes_copy(assembled_scenes, temp_concat):
                 return None
             self._burn_srt_and_package(temp_concat, srt_path, final_output)
+            if os.path.exists(temp_concat):
+                try:
+                    os.remove(temp_concat)
+                except OSError:
+                    pass
         else:
-            # Scenes already contain ASS subtitles; zero-reencode stream copy concat -> <5s even for 25 min!
             if not self._concat_scenes_copy(assembled_scenes, final_output, faststart=True):
                 return None
 
@@ -114,6 +125,11 @@ class VideoEditor:
             return final_output
 
         return None
+
+    def _video_codec_args(self, crf: int) -> List[str]:
+        if self.encoder == "h264_nvenc":
+            return ["-c:v", "h264_nvenc", "-preset", "p4", "-cq", str(crf), "-pix_fmt", "yuv420p"]
+        return ["-c:v", "libx264", "-preset", "fast", "-crf", str(crf), "-pix_fmt", "yuv420p"]
 
     def _render_scene_pass(
         self,
@@ -142,12 +158,18 @@ class VideoEditor:
                 vf_str = f"ass='{esc_ass}':fontsdir='{esc_fonts}'"
             else:
                 vf_str = f"ass='{esc_ass}'"
-            cmd.extend(["-vf", vf_str, "-c:v", "libx264", "-preset", "fast", "-crf", str(prof.crf), "-pix_fmt", "yuv420p"])
+            cmd.extend(["-vf", vf_str])
+            cmd.extend(self._video_codec_args(prof.crf))
         else:
             cmd.extend(["-c:v", "copy"])
 
-        cmd.extend(["-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2", "-t", str(duration), output_path])
-        return safe_run_ffmpeg(cmd, f"Scene render {os.path.basename(output_path)}", timeout=180)
+        cmd.extend(["-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2", "-t", f"{duration:.3f}", output_path])
+        ok = safe_run_ffmpeg(cmd, f"Scene render {os.path.basename(output_path)}", timeout=180)
+        if not ok and self.encoder == "h264_nvenc":
+            # Automatic fallback to CPU libx264 if NVENC rejected a specific filter frame
+            self.encoder = "libx264"
+            return self._render_scene_pass(video_path, audio_path, output_path, duration, ass_path)
+        return ok
 
     def _concat_scenes_copy(self, scene_files: List[str], output_path: str, faststart: bool = False) -> bool:
         concat_txt = os.path.join(self.config.work_dir, "concat_manifest.txt")
@@ -156,13 +178,7 @@ class VideoEditor:
                 abs_p = os.path.abspath(s).replace("'", "'\\''")
                 f.write(f"file '{abs_p}'\n")
 
-        cmd = [
-            "ffmpeg", "-y",
-            "-f", "concat",
-            "-safe", "0",
-            "-i", concat_txt,
-            "-c", "copy",
-        ]
+        cmd = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", concat_txt, "-c", "copy"]
         if faststart:
             cmd.extend(["-movflags", "+faststart"])
         cmd.append(output_path)
@@ -171,14 +187,10 @@ class VideoEditor:
         if ok:
             return True
 
-        # Safe fallback re-encode if stream params differed across clips
         cmd_reenc = [
-            "ffmpeg", "-y",
-            "-f", "concat", "-safe", "0", "-i", concat_txt,
+            "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", concat_txt,
             "-c:v", "libx264", "-preset", "ultrafast", "-crf", str(self.config.profile.crf),
-            "-c:a", "aac", "-b:a", "192k",
-            "-movflags", "+faststart",
-            output_path,
+            "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", output_path,
         ]
         return safe_run_ffmpeg(cmd_reenc, "Concatenating scenes (fallback re-encode)", timeout=900)
 
@@ -194,28 +206,13 @@ class VideoEditor:
             f"BorderStyle=4,BackColour=&HCC0F172A,Outline=1.5,Shadow=0,Alignment=2,MarginV=36'"
         )
 
-        cmd = [
-            "ffmpeg", "-y",
-            "-i", input_video,
-            "-vf", subtitle_filter,
-            "-c:v", "libx264",
-            "-preset", "fast",
-            "-crf", str(self.config.profile.crf),
-            "-c:a", "copy",
-            "-movflags", "+faststart",
-            output_path,
-        ]
-        success = safe_run_ffmpeg(cmd, "Burning SRT subtitles", timeout=900)
-        if not success:
-            return self._package_faststart(input_video, output_path)
-        return True
+        cmd = ["ffmpeg", "-y", "-i", input_video, "-vf", subtitle_filter]
+        cmd.extend(self._video_codec_args(self.config.profile.crf))
+        cmd.extend(["-c:a", "copy", "-movflags", "+faststart", output_path])
+        if safe_run_ffmpeg(cmd, "Burning Devanagari SRT subtitles", timeout=900):
+            return True
+        return self._package_faststart(input_video, output_path)
 
     def _package_faststart(self, input_video: str, output_path: str) -> bool:
-        cmd = [
-            "ffmpeg", "-y",
-            "-i", input_video,
-            "-c", "copy",
-            "-movflags", "+faststart",
-            output_path,
-        ]
+        cmd = ["ffmpeg", "-y", "-i", input_video, "-c", "copy", "-movflags", "+faststart", output_path]
         return safe_run_ffmpeg(cmd, "Packaging faststart MP4")

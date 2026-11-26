@@ -84,10 +84,24 @@ class CinematicMotionVisualProvider(VisualAssetProvider):
         if os.path.exists(card_img):
             os.remove(card_img)
 
-        # Fallback FFmpeg gradient with bright balanced luminance (prevents blackdetect false positives)
-        font_path = resolve_devanagari_font()
-        font_opt = f":fontfile='{font_path}'" if font_path else ""
-        safe_text = self._escape_text(clean_title)
+        # Fallback FFmpeg gradient + libass static Devanagari overlay (never drawtext on Hindi!)
+        from engine.text.devanagari import get_fonts_dir
+        ass_tmp = output_path + ".title.ass"
+        lines_txt = "\\N".join(wrap_indic_text(clean_title, max_graphemes=28, max_lines=3)).replace("{", "").replace("}", "")
+        ass_body = (
+            "[Script Info]\nScriptType: v4.00+\nPlayResX: 1920\nPlayResY: 1080\n\n"
+            "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, "
+            "BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, "
+            "Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
+            "Style: CardCenter,Noto Sans Devanagari Bold,56,&H00FFFFFF,&H00FFFFFF,&H00000000,&HAA0F172A,"
+            "-1,0,0,0,100,100,0,0,4,18,0,5,100,100,40,1\n\n"
+            "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
+            f"Dialogue: 0,0:00:00.00,0:00:{min(59.9, dur):05.2f},CardCenter,,0,0,0,,{lines_txt}\n"
+        )
+        with open(ass_tmp, "w", encoding="utf-8-sig") as f:
+            f.write(ass_body)
+        esc_ass = os.path.abspath(ass_tmp).replace("\\", "/").replace(":", "\\:")
+        esc_fonts = os.path.abspath(get_fonts_dir()).replace("\\", "/").replace(":", "\\:")
 
         filter_script = (
             f"format=yuv420p,"
@@ -95,10 +109,8 @@ class CinematicMotionVisualProvider(VisualAssetProvider):
             f"r='50 + (X/{self.width})*70 + 20*sin(2*PI*(T/{dur}))':"
             f"g='45 + (Y/{self.height})*55 + 20*cos(2*PI*(T/{dur}))':"
             f"b='80 + 30*sin(2*PI*(T/{dur} + X/{self.width}))',"
-            f"vignette=PI/6:mode=backward,"
-            f"drawtext=text='{safe_text}'{font_opt}:"
-            f"fontcolor=white@0.95:fontsize=52:x=(w-text_w)/2:y=(h-text_h)/2:"
-            f"shadowcolor=black@0.85:shadowx=3:shadowy=3"
+            f"vignette=PI/6:mode=backward,noise=alls=4:allf=t,"
+            f"ass='{esc_ass}':fontsdir='{esc_fonts}'"
         )
 
         cmd = [
@@ -113,12 +125,16 @@ class CinematicMotionVisualProvider(VisualAssetProvider):
 
         try:
             res = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            if os.path.exists(ass_tmp):
+                os.remove(ass_tmp)
             if res.returncode == 0 and os.path.exists(output_path) and os.path.getsize(output_path) > 1000:
                 logger.info(f"Cinematic motion graphic rendered: {output_path}")
                 return output_path
             logger.warning(f"FFmpeg motion visual error: {res.stderr[-300:]}")
             return self._fallback_simple_motion(output_path, dur, c2)
         except Exception as e:
+            if os.path.exists(ass_tmp):
+                os.remove(ass_tmp)
             logger.error(f"Failed to generate motion visual: {e}")
             return self._fallback_simple_motion(output_path, dur, c2)
 
@@ -156,7 +172,7 @@ class CinematicMotionVisualProvider(VisualAssetProvider):
             # Accent top bar inside card
             draw.rectangle([pad_x + 48, pad_y + 42, pad_x + 180, pad_y + 50], fill=accent_hex)
 
-            font_path = resolve_devanagari_font("Baloo2-Bold.ttf" if contains_devanagari(title) else "NotoSansDevanagari-VF.ttf")
+            font_path = resolve_devanagari_font("Baloo2-Bold.ttf" if contains_devanagari(title) else "NotoSansDevanagari-Bold.ttf")
             use_raqm = check_raqm_support()
             font_size = max(36, int(self.height * 0.052))
 

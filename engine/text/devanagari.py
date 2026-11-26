@@ -36,16 +36,19 @@ def get_fonts_dir() -> str:
     return os.path.join(repo_root, "fonts")
 
 
-def resolve_devanagari_font(preferred: str = "NotoSansDevanagari-VF.ttf") -> Optional[str]:
-    """Locate a valid Devanagari font file from repo fonts/ or Linux system fonts."""
+def resolve_devanagari_font(preferred: str = "NotoSansDevanagari-Bold.ttf") -> Optional[str]:
+    """Locate a valid static Devanagari TTF font from repo fonts/ or Linux system fonts."""
     fonts_dir = get_fonts_dir()
     candidates = [
         os.path.join(fonts_dir, preferred),
-        os.path.join(fonts_dir, "NotoSansDevanagari-VF.ttf"),
+        os.path.join(fonts_dir, "NotoSansDevanagari-Bold.ttf"),
+        os.path.join(fonts_dir, "NotoSansDevanagari-SemiBold.ttf"),
+        os.path.join(fonts_dir, "NotoSansDevanagari-Regular.ttf"),
         os.path.join(fonts_dir, "Baloo2-Bold.ttf"),
         os.path.join(fonts_dir, "Khand-Bold.ttf"),
-        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
+        os.path.join(fonts_dir, "NotoSansDevanagari-VF.ttf"),
         "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
         "/system/fonts/NotoSansDevanagari-Regular.ttf",
     ]
     for path in candidates:

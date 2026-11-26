@@ -18,9 +18,12 @@ class TestDevanagariEngine(unittest.TestCase):
     def test_bundled_fonts_exist(self):
         fonts_dir = get_fonts_dir()
         self.assertTrue(os.path.isdir(fonts_dir))
-        font_path = resolve_devanagari_font("NotoSansDevanagari-VF.ttf")
+        font_path = resolve_devanagari_font("NotoSansDevanagari-Bold.ttf")
         self.assertIsNotNone(font_path)
         self.assertTrue(os.path.exists(font_path))
+        self.assertNotIn("-VF.ttf", font_path)
+        with open(font_path, "rb") as f:
+            self.assertNotIn(b"fvar", f.read(8192))
 
     def test_matra_normalization_and_grapheme_clusters(self):
         # "विज्ञान और प्रक्रिया" in decomposed form -> NFC must keep matras bound

@@ -103,14 +103,18 @@ class ResearchEngine:
 
     @staticmethod
     def _is_wiki_result_relevant(query_text: str, page_title: str, snippet: str = "") -> bool:
-        """Prevent unrelated fuzzy Wikipedia hits (e.g. random crimes/people) on news topics."""
-        stop = {"the", "secrets", "history", "story", "mystery", "and", "for", "with", "from", "case", "investigation", "full", "timeline", "report"}
+        """Prevent unrelated fuzzy Wikipedia hits (e.g. random biographies mentioning 'court' in a footnote)."""
+        stop = {"the", "secrets", "history", "story", "mystery", "and", "for", "with", "from", "case", "investigation", "full", "timeline", "report", "origins"}
         q_tokens = [
             t.lower() for t in re.findall(r"[A-Za-z]{3,}", query_text)
             if t.lower() not in stop
         ]
         if not q_tokens:
             return True
+        title_low = (page_title or "").lower()
+        title_hits = sum(1 for tok in q_tokens if tok in title_low)
+        if title_hits == 0:
+            return False
         hay = f"{page_title} {re.sub(r'<[^>]+>', ' ', snippet)}".lower()
         hits = sum(1 for tok in q_tokens if tok in hay)
         required = 2 if len(q_tokens) >= 2 else 1

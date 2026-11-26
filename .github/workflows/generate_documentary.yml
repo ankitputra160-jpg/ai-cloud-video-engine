@@ -68,8 +68,10 @@ jobs:
       - name: 🛠️ Install Multimedia, Devanagari Shaping & Fonts
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg curl jq fonts-dejavu-core fonts-noto-core fonts-noto-sans-devanagari libfreetype6-dev libharfbuzz-dev libfribidi-dev libraqm-dev
-          fc-cache -fv
+          sudo apt-get install -y ffmpeg curl jq fontconfig fonts-dejavu-core fonts-noto-core fonts-lohit-deva libfreetype6-dev libharfbuzz-dev libfribidi-dev libraqm-dev
+          mkdir -p ~/.local/share/fonts
+          cp -f fonts/*.ttf ~/.local/share/fonts/ || true
+          fc-cache -fv | tail -n 10
 
       - name: 📦 Install Python Dependencies
         run: |

@@ -3,6 +3,20 @@
 > A fully automated, cloud-based AI Documentary Video Production System.
 > Submit any topic from your mobile phone — the entire research, scriptwriting, storyboarding, visual asset retrieval, narration, sound design, FFmpeg rendering, and quality control executes in the cloud.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ankitputra160-jpg/ai-cloud-video-engine/blob/main/colab_documentary_engine.ipynb)
+
+---
+
+## ☁️ Google Colab + Google Drive Cloud Storage (Option 2)
+
+If you prefer using **Google Colab** with free Cloud GPU and saving your documentaries directly to your **Google Drive**:
+
+1. Tap **[Open in Colab](https://colab.research.google.com/github/ankitputra160-jpg/ai-cloud-video-engine/blob/main/colab_documentary_engine.ipynb)**.
+2. Run **Step 1** to set up dependencies.
+3. Run **Step 2** to connect your Google Drive.
+4. Enter your **Topic**, **Language** (`hi`/`en`), and **Duration**, then click ▶️.
+5. The completed Full HD video will be saved directly into `Google Drive > MyDrive > AI_Documentaries` and will be instantly playable in your Google Drive phone app!
+
 ---
 
 ## 🌟 Key Capabilities

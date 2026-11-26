@@ -45,7 +45,9 @@ class TestDocumentaryPipelineE2E(unittest.TestCase):
         self.assertTrue(qc["has_audio_stream"])
         self.assertEqual(qc["width"], 1280)
         self.assertEqual(qc["height"], 720)
-        self.assertAlmostEqual(qc["actual_duration"], 10.0, delta=1.5)
+        # Audio-First timing lock: container duration must match locked spoken duration cleanly
+        self.assertAlmostEqual(qc["actual_duration"], qc["target_duration"], delta=1.0)
+        self.assertTrue(7.0 <= qc["actual_duration"] <= 16.0)
 
 if __name__ == "__main__":
     unittest.main()

@@ -427,15 +427,21 @@ class ScriptWriter:
             is_interrupt = (i % 3 == 0)
 
             if i == 0:
-                tagged = (
-                    f"[slow]Wait — how did {dossier.title} suddenly reshape everything we thought we knew?[/slow] "
-                    f"[pause:0.4s] Let's trace what actually happened."
-                )
+                if sec_per_ch <= 7.0:
+                    tagged = f"[slow]How did {dossier.title} change our world?[/slow] [pause:0.25s]"
+                else:
+                    tagged = (
+                        f"[slow]Wait — how did {dossier.title} suddenly reshape everything we thought we knew?[/slow] "
+                        f"[pause:0.4s] Let's trace what actually happened."
+                    )
             elif i == num_chapters - 1:
-                tagged = (
-                    f"[slow]Looking back at {dossier.title}, one pattern is crystal clear.[/slow] "
-                    f"[pause:0.35s] Every decision still echoes today."
-                )
+                if sec_per_ch <= 7.0:
+                    tagged = f"And its impact on history still echoes today."
+                else:
+                    tagged = (
+                        f"[slow]Looking back at {dossier.title}, one pattern is crystal clear.[/slow] "
+                        f"[pause:0.35s] Every decision still echoes today."
+                    )
             else:
                 fact_piece = facts[(i - 1) % len(facts)].strip()
                 if not fact_piece.endswith((".", "!", "?")):
@@ -515,15 +521,21 @@ class ScriptWriter:
             is_interrupt = (i % 3 == 0)
 
             if i == 0:
-                tagged = (
-                    f"[fear]ज़रा रुकिए — {subject} की असली कहानी वो नहीं है जो आपने ऊपर-ऊपर से सुनी है।[/fear] "
-                    f"[pause:0.45s] आइए इसे बिल्कुल आसान भाषा में समझते हैं।"
-                )
+                if sec_per_ch <= 7.0:
+                    tagged = f"[fear]ज़रा सोचिए — {subject} की असली कहानी क्या है?[/fear] [pause:0.25s]"
+                else:
+                    tagged = (
+                        f"[fear]ज़रा रुकिए — {subject} की असली कहानी वो नहीं है जो आपने ऊपर-ऊपर से सुनी है।[/fear] "
+                        f"[pause:0.45s] आइए इसे बिल्कुल आसान भाषा में समझते हैं।"
+                    )
             elif i == num_chapters - 1:
-                tagged = (
-                    f"[slow]तो सीधा निष्कर्ष यही है — {subject} की यह पूरी कहानी हमें बहुत कुछ सोचने पर मजबूर करती है।[/slow] "
-                    f"[pause:0.35s] अब फैसला आपका है।"
-                )
+                if sec_per_ch <= 7.0:
+                    tagged = f"और यहीं से शुरू होता है असली बदलाव।"
+                else:
+                    tagged = (
+                        f"[slow]तो सीधा निष्कर्ष यही है — {subject} की यह पूरी कहानी हमें बहुत कुछ सोचने पर मजबूर करती है।[/slow] "
+                        f"[pause:0.35s] अब फैसला आपका है।"
+                    )
             elif hindi_facts and (i - 1) < len(hindi_facts):
                 raw_fact = humanize_hindi_rule_based(hindi_facts[i - 1], add_connector=is_interrupt, beat_index=i)
                 tagged = f"[slow]{raw_fact}[/slow]" if is_interrupt else raw_fact

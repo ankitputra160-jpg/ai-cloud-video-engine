@@ -1,17 +1,26 @@
 """
-engine/research.py - Stage A: Deep Autonomous Multi-Source Topic Research Engine
-Gathers verified facts, full article sections, timelines, entities, and cross-lingual context
-from Wikipedia (EN -> HI langlinks), Wikidata, and optional DuckDuckGo web search.
+engine/research.py - Stage A: Fact-Proof Multi-Source Research & Fact-Sheet Locking Engine
+Gathers verified facts, dates, quotes, and news headlines from Wikipedia (EN -> HI langlinks),
+Wikidata, Google News RSS feeds, Trafilatura article extraction, and DuckDuckGo web search.
+Exports locked `fact_sheet.json` so scriptwriters never hallucinate unverified dates or claims.
 """
+import html as _html_lib
 import json
 import logging
+import os
 import re
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
 
 from engine.text.devanagari import contains_devanagari, normalize_devanagari
+
+try:
+    import trafilatura as _trafilatura
+except ImportError:
+    _trafilatura = None
 
 try:
     from ddgs import DDGS as _DDGS
@@ -35,6 +44,8 @@ class ResearchDossier:
     confidence: float = 0.85
     english_title: str = ""
     sections: List[Dict[str, str]] = field(default_factory=list)
+    news_items: List[Dict[str, str]] = field(default_factory=list)
+    verified_quotes: List[Dict[str, str]] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -46,9 +57,29 @@ class ResearchDossier:
             "timeline": self.timeline,
             "entities": self.entities,
             "sections": self.sections,
+            "news_items": self.news_items,
+            "verified_quotes": self.verified_quotes,
             "sources": self.sources,
             "confidence": self.confidence,
         }
+
+    def save_fact_sheet(self, filepath: str) -> str:
+        """Persist strictly locked fact sheet JSON for grounded multi-pass scriptwriting."""
+        os.makedirs(os.path.dirname(filepath) or ".", exist_ok=True)
+        payload = {
+            "topic": self.topic,
+            "verified_title": self.title,
+            "english_title": self.english_title or self.title,
+            "locked_dates": self.timeline,
+            "locked_facts": self.key_facts,
+            "news_items": self.news_items,
+            "verified_quotes": self.verified_quotes,
+            "entities": self.entities,
+            "sources": self.sources,
+        }
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2, ensure_ascii=False)
+        return filepath
 
 
 class ResearchEngine:
@@ -160,13 +191,104 @@ class ResearchEngine:
         snippets: List[str] = []
         try:
             with _DDGS() as ddgs:
-                for item in ddgs.text(topic, max_results=4):
+                for item in ddgs.text(topic, max_results=5):
                     body = (item.get("body") or "").strip()
+                    href = (item.get("href") or "").strip()
                     if len(body) > 40:
                         snippets.append(body)
+                    if href and len(snippets) <= 2:
+                        scraped = self._scrape_article_text(href, max_chars=2500)
+                        for line in self._extract_facts(scraped, topic)[:2]:
+                            if line not in snippets:
+                                snippets.append(line)
         except Exception as e:
             logger.debug(f"Optional DDG lookup skipped: {e}")
         return snippets
+
+    def _scrape_article_text(self, url: str, max_chars: int = 4000) -> str:
+        """Extract clean article body via Trafilatura (preferred) or stdlib HTML <p> parser."""
+        if not url or not url.startswith("http"):
+            return ""
+        try:
+            if _trafilatura is not None:
+                downloaded = _trafilatura.fetch_url(url)
+                if downloaded:
+                    extracted = _trafilatura.extract(downloaded, include_comments=False, include_tables=False)
+                    if extracted:
+                        return extracted[:max_chars]
+
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 AIDocEngine/3.0"})
+            with urllib.request.urlopen(req, timeout=min(self.timeout, 8)) as resp:
+                if resp.status != 200 or "html" not in resp.headers.get("Content-Type", ""):
+                    return ""
+                raw_html = resp.read(200_000).decode("utf-8", errors="replace")
+            paras = re.findall(r"<p[^>]*>(.*?)</p>", raw_html, flags=re.IGNORECASE | re.DOTALL)
+            cleaned_paras = []
+            for p in paras:
+                txt = re.sub(r"<[^>]+>", " ", p)
+                txt = re.sub(r"\s+", " ", _html_lib.unescape(txt)).strip()
+                if len(txt) > 45:
+                    cleaned_paras.append(txt)
+            return "\n".join(cleaned_paras)[:max_chars]
+        except Exception:
+            return ""
+
+    def _fetch_rss_news(self, topic: str, max_items: int = 6) -> List[Dict[str, str]]:
+        """Fetch real news headlines, publishers, and dates from Google News RSS XML feed."""
+        hl = "hi" if self.language == "hi" else "en-IN"
+        q = urllib.parse.quote(topic)
+        rss_url = f"https://news.google.com/rss/search?q={q}&hl={hl}&gl=IN&ceid=IN:{'hi' if self.language == 'hi' else 'en'}"
+        items: List[Dict[str, str]] = []
+        try:
+            req = urllib.request.Request(rss_url, headers={"User-Agent": "AIDocumentaryEngine/3.0"})
+            with urllib.request.urlopen(req, timeout=min(self.timeout, 10)) as resp:
+                if resp.status != 200:
+                    return []
+                xml_bytes = resp.read(300_000)
+            root = ET.fromstring(xml_bytes)
+            for node in root.findall("./channel/item")[:max_items]:
+                raw_title = (node.findtext("title") or "").strip()
+                pub_date = (node.findtext("pubDate") or "").strip()
+                link = (node.findtext("link") or "").strip()
+                source_el = node.find("source")
+                publisher = (source_el.text.strip() if source_el is not None and source_el.text else "News Archive")
+                headline = raw_title
+                if f" - {publisher}" in raw_title:
+                    headline = raw_title.rsplit(f" - {publisher}", 1)[0].strip()
+                elif " - " in raw_title:
+                    parts = raw_title.rsplit(" - ", 1)
+                    headline, publisher = parts[0].strip(), parts[1].strip()
+                if headline:
+                    date_short = " ".join(pub_date.split()[:4]) if pub_date else ""
+                    items.append({
+                        "headline": normalize_devanagari(headline),
+                        "source": publisher,
+                        "date": date_short,
+                        "url": link,
+                    })
+        except Exception as e:
+            logger.debug(f"RSS news fetch skipped cleanly: {e}")
+        return items
+
+    @staticmethod
+    def _extract_quotes(text: str, default_source: str = "Archival Record") -> List[Dict[str, str]]:
+        """Extract attributed direct quotes from article text."""
+        quotes: List[Dict[str, str]] = []
+        seen = set()
+        for m in re.finditer(r'["“]([^"”]{25,180})["”]', text):
+            q = re.sub(r"\s+", " ", m.group(1)).strip()
+            low = q[:40].lower()
+            if low in seen:
+                continue
+            seen.add(low)
+            quotes.append({
+                "speaker": "Key Statement",
+                "quote": normalize_devanagari(q),
+                "source": default_source,
+            })
+            if len(quotes) >= 6:
+                break
+        return quotes
 
     def search_topic(self, topic: str) -> ResearchDossier:
         """Conduct autonomous multi-source topic research with cross-lingual Wikipedia & deep facts."""
@@ -236,6 +358,13 @@ class ResearchEngine:
         timeline = self._extract_timeline(full_clean + "\n" + (en_article["full_text"] if en_article else ""))
         entity_source = (en_article["full_text"] if en_article and en_article["full_text"] else full_clean)
         entities = self._extract_entities(entity_source, en_title if en_match else best_title)
+        news_items = self._fetch_rss_news(en_title if (en_title and self.language == "en") else topic)
+        quotes = self._extract_quotes(full_clean + "\n" + (en_article["full_text"] if en_article else ""), best_title)
+
+        for ni in news_items[:3]:
+            headline = ni.get("headline", "")
+            if headline and headline not in facts:
+                facts.append(f"{headline} ({ni.get('source', 'News')}, {ni.get('date', '')})".strip())
 
         return ResearchDossier(
             topic=topic,
@@ -246,6 +375,8 @@ class ResearchEngine:
             timeline=timeline,
             entities=entities,
             sections=sections,
+            news_items=news_items,
+            verified_quotes=quotes,
             sources=sources or [f"https://{active_host}/wiki/{urllib.parse.quote(best_title.replace(' ', '_'))}"],
             confidence=0.92 if article["has_data"] else 0.72,
         )

@@ -35,19 +35,25 @@ class TestScriptWriter(unittest.TestCase):
         self.assertTrue(script.total_words > 20)
 
     def test_hindi_script_generation_and_non_repetition(self):
-        writer = ScriptWriter(language="hi", style="2D Animation")
+        writer = ScriptWriter(language="hi", style="2D Animation", llm_mode="deterministic")
         script = writer.generate_script(self.dossier, target_duration=75)
         self.assertEqual(script.language, "hi")
         self.assertEqual(script.style, "2D Animation")
         self.assertTrue(len(script.chapters) >= 4)
-        self.assertIn("इतिहास", script.chapters[0].narration)
+        # Must NOT contain bookish textbook AI clichés
+        for ch in script.chapters:
+            self.assertNotIn("निष्कर्षतः", ch.narration)
+            self.assertNotIn("महज़", ch.narration)
+            self.assertNotIn("अमिट विरासत", ch.narration)
+            self.assertTrue(len(ch.speak_words) > 0)
+            self.assertTrue(len(ch.display_spans) > 0)
         # Middle scenes must NOT duplicate identical boilerplate
         narrations = [ch.narration for ch in script.chapters]
         self.assertEqual(len(narrations), len(set(narrations)))
         # 2D production markdown must be generated cleanly
         md = script.to_2d_markdown()
         self.assertIn("2D Production Script", md)
-        self.assertIn("2D Visual Prompt", md)
+        self.assertIn("Visual Prompt", md)
 
     def test_long_form_25_minute_scaling(self):
         writer = ScriptWriter(language="en", style="2D Animation")

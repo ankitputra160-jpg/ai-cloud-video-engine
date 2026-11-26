@@ -48,5 +48,35 @@ class TestResearchEngine(unittest.TestCase):
         self.assertTrue(len(facts) >= 2)
         self.assertTrue(any("आर्यभट्ट" in f for f in facts))
 
+    def test_rss_parsing_and_fact_sheet_locking(self):
+        import os, tempfile, json
+        from unittest.mock import patch, MagicMock
+        rss_xml = (
+            b'<?xml version="1.0" encoding="UTF-8"?>'
+            b'<rss><channel><item>'
+            b'<title>Supreme Court hears electoral petition - The Hindu</title>'
+            b'<link>https://example.com/news1</link>'
+            b'<pubDate>Wed, 15 Jan 2026 10:00:00 GMT</pubDate>'
+            b'<source>The Hindu</source>'
+            b'</item></channel></rss>'
+        )
+        mock_resp = MagicMock()
+        mock_resp.status = 200
+        mock_resp.read.return_value = rss_xml
+        mock_resp.__enter__.return_value = mock_resp
+        with patch("urllib.request.urlopen", return_value=mock_resp):
+            news = self.engine._fetch_rss_news("Supreme Court")
+        self.assertEqual(len(news), 1)
+        self.assertEqual(news[0]["source"], "The Hindu")
+        self.assertEqual(news[0]["headline"], "Supreme Court hears electoral petition")
+
+        dossier = ResearchDossier(topic="CJP Protest", title="CJP Protest", summary="Summary", news_items=news)
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "fact_sheet.json")
+            dossier.save_fact_sheet(p)
+            with open(p, "r", encoding="utf-8") as f:
+                saved = json.load(f)
+            self.assertEqual(saved["news_items"][0]["source"], "The Hindu")
+
 if __name__ == "__main__":
     unittest.main()

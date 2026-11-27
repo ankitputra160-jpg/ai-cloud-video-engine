@@ -108,10 +108,13 @@ jobs:
           cp -f fonts/*.ttf ~/.local/share/fonts/ || true
           fc-cache -fv | tail -n 10
 
-      - name: 📦 Install Python Dependencies
+      - name: 📦 Install Python Dependencies & Playwright Chromium
         run: |
           python3 -m pip install --upgrade pip
           pip3 install -r requirements.txt
+          pip3 install playwright
+          playwright install chromium
+          sudo playwright install-deps chromium || true
 
       - name: 🧪 Run Automated Quality & Integrity Tests
         run: |
@@ -128,6 +131,7 @@ jobs:
           FISH_API_KEY: ${{ secrets.FISH_API_KEY }}
           FISH_REFERENCE_ID: ${{ secrets.FISH_REFERENCE_ID }}
           SARVAM_API_KEY: ${{ secrets.SARVAM_API_KEY }}
+          SARVAM_SPEAKER: kabir
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
           CARTESIA_VOICE_ID: ${{ secrets.CARTESIA_VOICE_ID }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
@@ -164,12 +168,11 @@ jobs:
           retention-days: 14
 
       - name: 🚀 Publish Direct Mobile Download via GitHub Release (Up to 2 GB)
-        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="doc-run-${{ github.run_number }}"
-          gh release create "$TAG" output/documentary.mp4 output/thumbnail.jpg \
+          gh release create "$TAG" output/documentary.mp4 output/thumbnail.jpg .workspace/qc_report.json \
             --title "Documentary #${{ github.run_number }}: ${{ github.event.inputs.topic }}" \
             --notes "Automated mobile-friendly 1-tap download (bypasses Git 100 MB limit)."
 

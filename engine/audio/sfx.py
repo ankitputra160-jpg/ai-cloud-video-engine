@@ -58,9 +58,14 @@ class SoundEffectsEngine:
         # Place bundled Foley clips at beat transition timestamps when available
         events: List[tuple] = []
         primary_clip = resolve_sfx_clip(tag)
+        first_beat_vtype = str(visual_beats[0].get("visual_type", "")) if visual_beats else ""
         if primary_clip:
             events.append((0.02, primary_clip, 0.85))
-            if "paper_rustle" in primary_clip:
+            if "paper_rustle" in primary_clip or "news_card" in first_beat_vtype:
+                if "paper_rustle" not in primary_clip:
+                    pr_clip = resolve_sfx_clip("paper_rustle")
+                    if pr_clip:
+                        events.append((0.03, pr_clip, 0.78))
                 marker_clip = resolve_sfx_clip("marker_stroke")
                 if marker_clip:
                     events.append((0.45, marker_clip, 0.75))

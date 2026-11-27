@@ -17,7 +17,7 @@ import time
 from typing import Any, Dict
 
 from engine.assets.manager import VisualAssetManager
-from engine.audio.bgm import BackgroundMusicEngine
+from engine.audio.bgm import BackgroundMusicEngine, bootstrap_cc0_bgm_bank
 from engine.audio.mixer import AudioProductionMixer
 from engine.audio.sfx import SoundEffectsEngine
 from engine.checkpoint import CheckpointManager
@@ -173,6 +173,24 @@ class DocumentaryPipeline:
         voice_dir = os.path.join(self.work_dir, "voice_tracks")
         os.makedirs(audio_dir, exist_ok=True)
         bgm_bank_dir = getattr(self.config, "bgm_bank_dir", None)
+        if not bgm_bank_dir or not os.path.isdir(bgm_bank_dir):
+            bgm_bank_dir = bgm_bank_dir or os.path.join(self.work_dir, "bgm_bank")
+            try:
+                bootstrap_cc0_bgm_bank(bgm_bank_dir, timeout=self.config.http_timeout)
+            except Exception as e:
+                logger.warning(f"CC0 BGM auto-bootstrap skipped cleanly: {e}")
+        else:
+            # Ensure all 4 mood folders exist and are populated if bank dir is empty
+            has_any_track = any(
+                fname.lower().endswith((".mp3", ".wav", ".ogg", ".oga", ".m4a"))
+                for _, _, files in os.walk(bgm_bank_dir)
+                for fname in files
+            )
+            if not has_any_track:
+                try:
+                    bootstrap_cc0_bgm_bank(bgm_bank_dir, timeout=self.config.http_timeout)
+                except Exception as e:
+                    logger.warning(f"CC0 BGM auto-bootstrap skipped cleanly: {e}")
         bgm_scene_map = BackgroundMusicEngine.build_continuous_scene_bgms(
             manifest.scenes, audio_dir, bgm_bank_dir=bgm_bank_dir, crossfade_sec=2.0
         )
@@ -243,7 +261,13 @@ class DocumentaryPipeline:
         # -------------------------------------------------------------
         logger.info("\n--- STAGE H: Quality Inspection & Auto-Thumbnail ---")
         qc_inspector = QualityInspector(self.config)
-        qc_report: QCReport = qc_inspector.inspect_video(final_video, expected_duration=manifest.total_duration)
+        qc_sub_path = ass_path if os.path.exists(ass_path) else (srt_path if os.path.exists(srt_path) else None)
+        qc_report: QCReport = qc_inspector.inspect_video(
+            final_video,
+            expected_duration=manifest.total_duration,
+            subtitle_path=qc_sub_path,
+            manifest=manifest,
+        )
         qc_path = os.path.join(self.work_dir, "qc_report.json")
         qc_report.save_json(qc_path)
 

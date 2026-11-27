@@ -241,7 +241,7 @@ class TestVoiceEngine(unittest.TestCase):
             sarv_body = json.loads(seen_requests[-1][2].decode("utf-8"))
             self.assertEqual(sarv_body["model"], "bulbul:v3")
             self.assertEqual(sarv_body["language_code"], "hi-IN")
-            self.assertEqual(sarv_body["speaker"], "shubh")
+            self.assertEqual(sarv_body["speaker"], "kabir")
 
         # 2. Verify Multi-Provider Waterfall: if Fish raises 429/error, cascades cleanly to Sarvam
         manifest = StoryboardManifest(
@@ -285,6 +285,59 @@ class TestVoiceEngine(unittest.TestCase):
             out_manifest = ve_wf.synthesize_storyboard_narration(manifest)
         self.assertTrue(os.path.exists(out_manifest.scenes[0].voice_asset_path))
         self.assertGreater(os.path.getsize(out_manifest.scenes[0].voice_asset_path), 4000)
+
+    def test_sarvam_failure_falls_back_to_edge_tts(self):
+        """When SARVAM_API_KEY fails or hits quota, Edge-TTS runs automatically before Piper."""
+        import wave
+        from unittest.mock import patch
+
+        cfg = PipelineConfig(
+            topic="Sarvam Fallback",
+            language="hi",
+            work_dir=os.path.join(self.temp_dir, "sarvam_fb_ws"),
+            voice_engine="sarvam",
+            sarvam_api_key="bad_or_exhausted_key",
+        )
+        ve = VoiceEngine(cfg)
+        manifest = StoryboardManifest(
+            topic="Fallback",
+            language="hi",
+            target_duration=4,
+            scenes=[
+                SceneDefinition(
+                    scene_id="scene_01",
+                    chapter_index=1,
+                    title="Hook",
+                    narration="सावधान हो जाइए।",
+                    visual_description="Phone call",
+                    footage_queries=["phone"],
+                    ai_prompt="phone",
+                    duration=3.0,
+                    transition="fade",
+                    bgm_mood="mysterious",
+                    sfx_tag="deep_sub_hit",
+                    subtitle_text="सावधान हो जाइए।",
+                )
+            ],
+        )
+
+        def _fake_edge(text, out_wav):
+            with wave.open(out_wav, "wb") as w:
+                w.setnchannels(2)
+                w.setsampwidth(2)
+                w.setframerate(44100)
+                w.writeframes(b"\x10\x00\x10\x00" * 44100)
+            return True, [{"text": "सावधान", "start": 0.1, "end": 0.5}, {"text": "हो", "start": 0.5, "end": 0.7}, {"text": "जाइए।", "start": 0.7, "end": 1.0}]
+
+        with patch.object(ve, "_generate_sarvam_speech", return_value=False) as mock_sarvam, \
+             patch.object(ve, "_generate_edge_speech", side_effect=_fake_edge) as mock_edge, \
+             patch.object(ve, "_generate_piper_speech", return_value=False) as mock_piper:
+            out_m = ve.synthesize_storyboard_narration(manifest)
+
+        mock_sarvam.assert_called()
+        mock_edge.assert_called()
+        mock_piper.assert_not_called()
+        self.assertTrue(os.path.exists(out_m.scenes[0].voice_asset_path))
 
 
 if __name__ == "__main__":

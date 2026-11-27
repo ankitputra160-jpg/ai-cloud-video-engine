@@ -1,0 +1,109 @@
+{
+  "topic": "डिजिटल अरेस्ट और AI वॉइस क्लोनिंग स्कैम का काला जाल: कैसे पढ़े-लिखे लोग भी एक कॉल पर अपनी जिंदगी भर की कमाई गँवा रहे हैं?",
+  "verified_title": "Digital Arrest & AI Voice Cloning Scams in India (MHA/I4C, PIB, TRAI & Supreme Court Record)",
+  "english_title": "Digital Arrest and AI Voice Cloning Scam India",
+  "locked_dates": [
+    {
+      "year": "2024",
+      "event": "MHA/I4C tracked over 1,23,600 digital arrest complaints with approx ₹1,935 Crore lost across India."
+    },
+    {
+      "year": "Aug 2024",
+      "event": "Ludhiana industrialist S.P. Oswal (Vardhman Group Chairman) lost ₹7 Crore in a 2-day Skype digital arrest scam; Police recovered ₹5.25 Crore."
+    },
+    {
+      "year": "2024-2026",
+      "event": "TRAI, DoT, and PIB issued repeated advisories warning that no agency issues arrest warrants or interrogates via WhatsApp/Skype video calls."
+    },
+    {
+      "year": "2025-2026",
+      "event": "Supreme Court of India took suo motu cognizance, calling digital arrest syndicates 'Digital Dacoity' and directing RBI, CBI, I4C, and Interpol action."
+    }
+  ],
+  "locked_facts": [
+    "MHA और I4C (Indian Cyber Crime Coordination Centre) के आधिकारिक आँकड़ों के अनुसार 2024 में 1,23,600 से ज़्यादा डिजिटल अरेस्ट शिकायतें दर्ज हुईं और करीब ₹1,935 Crore का नुकसान हुआ।",
+    "PIB और गृह मंत्रालय ने स्पष्ट किया है कि भारतीय कानून (BNSS) में 'डिजिटल अरेस्ट' नाम की कोई कानूनी प्रक्रिया नहीं है और कोई भी सरकारी एजेंसी WhatsApp या Skype वीडियो कॉल पर अरेस्ट वारंट नहीं भेजती।",
+    "TRAI और दूरसंचार विभाग (DoT) ने चेतावनी दी है कि वे कभी भी मोबाइल नंबर बंद करने की धमकी देकर कॉल नहीं करते और न ही CBI या नारकोटिक्स से कॉल ट्रांसफर करते हैं।",
+    "अगस्त 2024 में लुधियाना के 82 वर्षीय उद्योगपति और पद्म भूषण से सम्मानित S.P. Oswal (Vardhman Group) को फर्जी CBI और नकली Supreme Court सुनवाई दिखाकर 2 दिन Skype कॉल पर रखकर ₹7 Crore ठग लिए गए; लुधियाना पुलिस ने ₹5.25 Crore फ्रीज़ कर वापस दिलाए।",
+    "देश भर में कई बुज़ुर्ग डॉक्टरों और रिटायर्ड अधिकारियों को 48 से 72 घंटे तक लगातार Skype या WhatsApp वीडियो कॉल पर बंधक बनाकर जीवन भर की जमा-पूँजी 'RBI Escrow' या 'Safe Account' में ट्रांसफर करवाई गई।",
+    "सुप्रीम कोर्ट ने स्वतः संज्ञान (suo motu) लेते हुए इन गिरोहों को 'Digital Dacoity' कहा और CBI, I4C, Interpol तथा RBI को म्यूल अकाउंट्स और बैंक लापरवाही पर सख्त SOP बनाने का निर्देश दिया।",
+    "McAfee इंडिया की 'The Artificial Imposter' रिपोर्ट के अनुसार AI वॉइस क्लोनिंग के लिए सोशल मीडिया रील या वॉइस नोट से सिर्फ़ 3 से 5 सेकंड का ऑडियो काफी होता है।",
+    "McAfee सर्वे में 47% भारतीय वयस्कों ने AI वॉइस स्कैम का सामना किया या पीड़ित को जाना, 69% लोग असली और AI आवाज़ में फर्क नहीं कर पाए, और 83% पीड़ितों ने पैसे गँवाए।",
+    "स्कैमर्स तीन मनोवैज्ञानिक हथियारों का इस्तेमाल करते हैं: Authority (वर्दी और नकली थाना), Urgency (तुरंत गिरफ्तारी की धमकी), और Isolation (किसी को न बताने का दबाव)।",
+    "ठगी होने पर तुरंत राष्ट्रीय साइबर हेल्पलाइन 1930 पर कॉल करें, cybercrime.gov.in पर रिपोर्ट करें, और संदिग्ध कॉल/मैसेज की शिकायत Sanchar Saathi के Chakshu पोर्टल पर करें।"
+  ],
+  "news_items": [
+    {
+      "headline": "Ludhiana industrialist S.P. Oswal duped of ₹7 Crore in 2-day Skype 'digital arrest' scam; ₹5.25 Crore recovered",
+      "source": "The Indian Express",
+      "date": "Sep 2024",
+      "url": "https://indianexpress.com/"
+    },
+    {
+      "headline": "Over 1.23 lakh digital arrest complaints, ₹1,935 Crore lost: MHA & I4C alert citizens to dial 1930",
+      "source": "PIB & The Hindu",
+      "date": "2024-2025",
+      "url": "https://pib.gov.in/"
+    },
+    {
+      "headline": "Supreme Court calls digital arrest syndicates 'Digital Dacoity', directs RBI SOPs & CBI-Interpol probe",
+      "source": "LiveLaw / Bar and Bench",
+      "date": "2025-2026",
+      "url": "https://www.livelaw.in/"
+    },
+    {
+      "headline": "TRAI & DoT Advisory: No government agency conducts interrogation or sends arrest warrants on WhatsApp/Skype video calls",
+      "source": "PIB / DoT",
+      "date": "2025",
+      "url": "https://pib.gov.in/"
+    },
+    {
+      "headline": "McAfee Report: Just 3 seconds of audio enough for AI voice cloning; 69% Indians fail to spot fake voice",
+      "source": "The Indian Express / McAfee",
+      "date": "2024",
+      "url": "https://indianexpress.com/"
+    }
+  ],
+  "verified_quotes": [
+    {
+      "speaker": "Supreme Court of India (Suo Motu Bench)",
+      "quote": "Digital arrest rackets amount to 'Digital Dacoity' targeting innocent and elderly citizens; perpetrators must be dealt with firmly.",
+      "source": "LiveLaw / The Hindu"
+    },
+    {
+      "speaker": "PIB & MHA (I4C) Public Advisory",
+      "quote": "There is no provision of 'Digital Arrest' under Indian law. Police, CBI or ED never interrogate or issue warrants via Skype or WhatsApp video calls.",
+      "source": "pib.gov.in / cybercrime.gov.in"
+    },
+    {
+      "speaker": "TRAI & Department of Telecommunications",
+      "quote": "TRAI never calls citizens to threaten SIM disconnection or transfer calls to law enforcement. Report fraud calls on 1930 or Sanchar Saathi Chakshu.",
+      "source": "sancharsaathi.gov.in"
+    }
+  ],
+  "entities": [
+    "MHA",
+    "I4C",
+    "PIB",
+    "TRAI",
+    "DoT",
+    "1930",
+    "CBI",
+    "Supreme Court",
+    "RBI",
+    "S.P. Oswal",
+    "Ludhiana",
+    "McAfee",
+    "Sanchar Saathi",
+    "Chakshu"
+  ],
+  "sources": [
+    "https://pib.gov.in/",
+    "https://cybercrime.gov.in/",
+    "https://sancharsaathi.gov.in/",
+    "https://www.thehindu.com/",
+    "https://indianexpress.com/",
+    "https://www.livelaw.in/",
+    "https://www.barandbench.com/"
+  ]
+}

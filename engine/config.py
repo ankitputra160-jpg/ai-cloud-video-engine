@@ -120,6 +120,7 @@ class PipelineConfig:
     groq_api_key: Optional[str] = field(default=None)
     hf_token: Optional[str] = field(default=None)
     sarvam_api_key: Optional[str] = field(default=None)
+    sarvam_speaker: Optional[str] = field(default=None)
     fish_api_key: Optional[str] = field(default=None)
     fish_reference_id: Optional[str] = field(default=None)
     cartesia_api_key: Optional[str] = field(default=None)
@@ -165,6 +166,7 @@ class PipelineConfig:
             ("groq_api_key", "GROQ_API_KEY"),
             ("hf_token", "HF_TOKEN"),
             ("sarvam_api_key", "SARVAM_API_KEY"),
+            ("sarvam_speaker", "SARVAM_SPEAKER"),
             ("fish_api_key", "FISH_API_KEY"),
             ("fish_reference_id", "FISH_REFERENCE_ID"),
             ("cartesia_api_key", "CARTESIA_API_KEY"),

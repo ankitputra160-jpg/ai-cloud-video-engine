@@ -37,7 +37,9 @@ class PIBIndiaProvider(VisualAssetProvider):
         india_civic_terms = (
             "india", "supreme court", "parliament", "minister", "cji", "election",
             "protest", "delhi", "mumbai", "cabinet", "pib", "government", "commission",
-            "pradhan", "modi", "court", "budget", "isro", "policy",
+            "pradhan", "modi", "court", "budget", "isro", "policy", "cyber", "cybercrime",
+            "digital arrest", "scam", "police", "cbi", "trai", "telecom", "mha",
+            "home ministry", "i4c", "1930", "rbi", "fraud", "ludhiana", "high court",
         )
         return any(tok in joined for tok in india_civic_terms)
 

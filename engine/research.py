@@ -205,24 +205,41 @@ class ResearchEngine:
         return sections[:16]
 
     def _fetch_ddg_facts(self, topic: str) -> List[str]:
-        """Optionally enrich research using keyless DuckDuckGo web search."""
-        if _DDGS is None:
-            return []
+        """Optionally enrich research using keyless DuckDuckGo web search (or HTML Lite fallback)."""
         snippets: List[str] = []
-        try:
-            with _DDGS() as ddgs:
-                for item in ddgs.text(topic, max_results=5):
-                    body = (item.get("body") or "").strip()
-                    href = (item.get("href") or "").strip()
-                    if len(body) > 40:
-                        snippets.append(body)
-                    if href and len(snippets) <= 2:
-                        scraped = self._scrape_article_text(href, max_chars=2500)
-                        for line in self._extract_facts(scraped, topic)[:2]:
-                            if line not in snippets:
-                                snippets.append(line)
-        except Exception as e:
-            logger.debug(f"Optional DDG lookup skipped: {e}")
+        if _DDGS is not None:
+            try:
+                with _DDGS() as ddgs:
+                    for item in ddgs.text(topic, max_results=5):
+                        body = (item.get("body") or "").strip()
+                        href = (item.get("href") or "").strip()
+                        if len(body) > 40:
+                            snippets.append(body)
+                        if href and len(snippets) <= 2:
+                            scraped = self._scrape_article_text(href, max_chars=2500)
+                            for line in self._extract_facts(scraped, topic)[:2]:
+                                if line not in snippets:
+                                    snippets.append(line)
+            except Exception as e:
+                logger.debug(f"Optional DDG lookup skipped: {e}")
+        if not snippets:
+            try:
+                q = urllib.parse.quote(topic)
+                req = urllib.request.Request(
+                    f"https://html.duckduckgo.com/html/?q={q}",
+                    headers={"User-Agent": "Mozilla/5.0 AIDocEngine/3.0"},
+                )
+                with urllib.request.urlopen(req, timeout=min(self.timeout, 10)) as resp:
+                    raw = resp.read(250_000).decode("utf-8", errors="replace")
+                for m in re.finditer(r'class="result__snippet"[^>]*>(.*?)</a>', raw, flags=re.IGNORECASE | re.DOTALL):
+                    txt = re.sub(r"<[^>]+>", " ", m.group(1))
+                    txt = re.sub(r"\s+", " ", _html_lib.unescape(txt)).strip()
+                    if len(txt) > 40 and txt not in snippets:
+                        snippets.append(txt)
+                    if len(snippets) >= 5:
+                        break
+            except Exception:
+                pass
         return snippets
 
     def _scrape_article_text(self, url: str, max_chars: int = 4000) -> str:

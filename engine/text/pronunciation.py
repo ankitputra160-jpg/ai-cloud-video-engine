@@ -72,7 +72,29 @@ ENGLISH_TO_DEVANAGARI: Dict[str, str] = {
     "youtube": "यूट्यूब",
     "google": "गूगल",
     "whatsapp": "व्हाट्सएप",
+    "skype": "स्काइप",
     "twitter": "ट्विटर",
+    "trai": "ट्राई",
+    "dot": "डी ओ टी",
+    "mha": "एम एच ए",
+    "i4c": "आई फोर सी",
+    "rbi": "आर बी आई",
+    "cyber": "साइबर",
+    "cybercrime": "साइबर क्राइम",
+    "digital": "डिजिटल",
+    "arrest": "अरेस्ट",
+    "digital arrest": "डिजिटल अरेस्ट",
+    "cloning": "क्लोनिंग",
+    "voice": "वॉइस",
+    "scam": "स्कैम",
+    "narcotics": "नारकोटिक्स",
+    "customs": "कस्टम्स",
+    "money": "मनी",
+    "laundering": "लॉन्ड्रिंग",
+    "video": "वीडियो",
+    "call": "कॉल",
+    "ludhiana": "लुधियाना",
+    "livelaw": "लाइवलॉ",
     "media": "मीडिया",
     "viral": "वायरल",
     "breaking": "ब्रेकिंग",
@@ -232,7 +254,9 @@ def _convert_grouped_token_to_speak(token: str) -> str:
     if " " in t:
         return " ".join(english_word_to_devanagari(p) for p in t.split())
 
-    # Plain digits / year
+    # Plain digits / year (special case for 1930 National Cyber Crime Helpline)
+    if t == "1930":
+        return "उन्नीस तीस"
     if re.fullmatch(r"\d[\d,]*(?:\.\d+)?", t):
         return number_str_to_hindi(t)
 

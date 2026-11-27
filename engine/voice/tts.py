@@ -573,29 +573,40 @@ class VoiceEngine:
         pace_map = {"fear": 0.90, "slow": 0.88, "angry": 1.06, "fast": 1.12, "neutral": 0.98}
         lang_code = "hi-IN" if self.config.language == "hi" else "en-IN"
         is_fem = "female" in self.voice_name.lower()
-        try:
-            # Official Sarvam Bulbul v3 REST schema
-            body = {
-                "text": text[:2400],
-                "language_code": lang_code,
-                "model": "bulbul:v3",
-                "speaker": "simran" if is_fem else "shubh",
-                "pace": pace_map.get(emotion, 0.98),
-                "speech_sample_rate": 24000,
-                "enable_preprocessing": True,
-            }
-            req = urllib.request.Request(
-                "https://api.sarvam.ai/text-to-speech",
-                data=json.dumps(body).encode("utf-8"),
-                headers={"api-subscription-key": api_key, "Content-Type": "application/json"},
-            )
-            with urllib.request.urlopen(req, timeout=25) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                audios = data.get("audios") or []
-                if audios:
-                    return self._save_audio_bytes_to_wav(base64.b64decode(audios[0]), ".sarvam.wav", out_wav)
-        except Exception as e:
-            logger.debug(f"Sarvam AI TTS skipped: {e}")
+        male_speaker = (
+            getattr(self.config, "sarvam_speaker", None)
+            or os.environ.get("SARVAM_SPEAKER", "").strip()
+            or "kabir"
+        )
+        for attempt in range(2):
+            try:
+                # Official Sarvam Bulbul v3 REST schema
+                body = {
+                    "text": text[:2400],
+                    "language_code": lang_code,
+                    "model": "bulbul:v3",
+                    "speaker": "simran" if is_fem else male_speaker,
+                    "pace": pace_map.get(emotion, 0.98),
+                    "speech_sample_rate": 24000,
+                    "enable_preprocessing": True,
+                }
+                req = urllib.request.Request(
+                    "https://api.sarvam.ai/text-to-speech",
+                    data=json.dumps(body).encode("utf-8"),
+                    headers={"api-subscription-key": api_key, "Content-Type": "application/json"},
+                )
+                with urllib.request.urlopen(req, timeout=40) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    audios = data.get("audios") or []
+                    if audios:
+                        return self._save_audio_bytes_to_wav(base64.b64decode(audios[0]), ".sarvam.wav", out_wav)
+                break
+            except Exception as e:
+                err_str = str(e)
+                if attempt == 0 and ("timed out" in err_str.lower() or "502" in err_str or "503" in err_str):
+                    continue
+                logger.warning(f"Sarvam AI TTS failed/skipped (falling back cleanly): {e}")
+                break
         return False
 
     def _generate_fish_speech(
@@ -847,8 +858,8 @@ class VoiceEngine:
                 )
                 r_path = ref_file if (ref_file and os.path.exists(ref_file)) else self._ref_bank.get("neutral", "")
 
-                # Valid Multi-Provider Waterfall (preferred engine first, graceful cascade on failure/quota)
-                default_chain = ["fish", "sarvam", "cartesia", "elevenlabs", "indicf5", "qwen3_tts", "indic_parler", "piper", "edge"]
+                # Valid Multi-Provider Waterfall (preferred engine first, Edge-TTS hi-IN-MadhurNeural backup before Piper)
+                default_chain = ["fish", "sarvam", "cartesia", "elevenlabs", "indicf5", "qwen3_tts", "indic_parler", "edge", "piper"]
                 order = [engine_pref] + [p for p in default_chain if p != engine_pref] if engine_pref in default_chain else default_chain
 
                 for provider in order:

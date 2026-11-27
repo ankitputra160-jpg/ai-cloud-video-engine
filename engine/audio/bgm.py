@@ -30,37 +30,39 @@ MOOD_FOLDER_MAP: Dict[str, str] = {
     "somber": "somber_emotional",
 }
 
-# Verified CC0 / Public Domain starter documentary music beds fetched once onto Google Drive on Colab
+# Verified CC0 / Public Domain / Wikimedia Commons documentary music beds fetched once onto disk/Drive
 CC0_STARTER_URLS: Dict[str, List[str]] = {
     "investigative_pulse": [
-        "https://freepd.com/music/Thinking%20Time.mp3",
-        "https://freepd.com/music/Mystery%20Sax.mp3",
+        "https://upload.wikimedia.org/wikipedia/commons/d/d8/Kevin_MacLeod_-_Rites.ogg",
     ],
     "somber_emotional": [
-        "https://freepd.com/music/Sad%20Trio.mp3",
+        "https://upload.wikimedia.org/wikipedia/commons/b/b9/Kevin_MacLeod_-_Trio_for_Piano_Violin_and_Viola.ogg",
     ],
     "historical_epic": [
-        "https://freepd.com/music/Chronos.mp3",
+        "https://upload.wikimedia.org/wikipedia/commons/7/76/Stratosphere%2C_%28MacLeod%2C_Kevin%29.oga",
     ],
     "neutral_explainer": [
-        "https://freepd.com/music/Study%20and%20Relax.mp3",
+        "https://upload.wikimedia.org/wikipedia/commons/5/52/Kevin_MacLeod_-_Anachronist.ogg",
     ],
 }
 
+_AUDIO_EXTS = (".mp3", ".wav", ".ogg", ".oga", ".m4a")
 
-def bootstrap_cc0_bgm_bank(bank_dir: str, timeout: int = 25) -> Dict[str, List[str]]:
-    """Download CC0 background music beds once into Google Drive mood folders (cached permanently)."""
+
+def bootstrap_cc0_bgm_bank(bank_dir: str, timeout: int = 30) -> Dict[str, List[str]]:
+    """Download CC0 / Wikimedia background music beds once into 4 mood folders (cached permanently)."""
     os.makedirs(bank_dir, exist_ok=True)
     indexed: Dict[str, List[str]] = {}
     for folder, urls in CC0_STARTER_URLS.items():
         sub = os.path.join(bank_dir, folder)
         os.makedirs(sub, exist_ok=True)
-        files_here = [os.path.join(sub, f) for f in os.listdir(sub) if f.lower().endswith((".mp3", ".wav", ".ogg"))]
+        files_here = [os.path.join(sub, f) for f in os.listdir(sub) if f.lower().endswith(_AUDIO_EXTS) and os.path.getsize(os.path.join(sub, f)) > 20000]
         if not files_here:
             for idx, url in enumerate(urls):
-                dest = os.path.join(sub, f"cc0_{folder}_{idx + 1}.mp3")
+                ext = ".ogg" if url.lower().endswith((".ogg", ".oga")) else ".mp3"
+                dest = os.path.join(sub, f"cc0_{folder}_{idx + 1}{ext}")
                 try:
-                    req = urllib.request.Request(url, headers={"User-Agent": "AIDocEngine/3.0"})
+                    req = urllib.request.Request(url, headers={"User-Agent": "AIDocEngine/3.0 (contact@aidocengine.org)"})
                     with urllib.request.urlopen(req, timeout=timeout) as resp, open(dest, "wb") as out:
                         if resp.status == 200:
                             out.write(resp.read())
@@ -101,7 +103,7 @@ class BackgroundMusicEngine:
         tracks = sorted(
             os.path.join(candidate_dir, f)
             for f in os.listdir(candidate_dir)
-            if f.lower().endswith((".mp3", ".wav", ".ogg", ".m4a"))
+            if f.lower().endswith(_AUDIO_EXTS)
         )
         if not tracks:
             return None

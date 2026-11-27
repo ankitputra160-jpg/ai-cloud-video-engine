@@ -1,13 +1,15 @@
 """
 engine/qc/inspector.py - Stage H: Automated Quality Inspection Engine
-Performs rigorous structural, stream, duration, and frame integrity verification on final video.
+Performs rigorous structural, stream, duration, ebur128 (-14 LUFS) loudness,
+audio-subtitle timing sync, and frame integrity verification on final video.
 """
 import os
+import re
 import json
 import logging
 import subprocess
 from dataclasses import dataclass, field, asdict
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple
 from engine.config import PipelineConfig
 from engine.renderer.ffmpeg_utils import get_media_info
 
@@ -28,6 +30,14 @@ class QCReport:
     audio_codec: str
     file_size_bytes: int
     black_frame_seconds: float = 0.0
+    pix_fmt: str = ""
+    integrated_lufs: Optional[float] = None
+    loudness_range_lra: Optional[float] = None
+    true_peak_dbtp: Optional[float] = None
+    subtitle_sync_ok: bool = True
+    subtitle_cue_count: int = 0
+    subtitle_max_end_sec: float = 0.0
+    subtitle_sync_drift_sec: float = 0.0
     issues: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
 
@@ -42,7 +52,13 @@ class QualityInspector:
     def __init__(self, config: PipelineConfig):
         self.config = config
 
-    def inspect_video(self, video_path: str, expected_duration: float) -> QCReport:
+    def inspect_video(
+        self,
+        video_path: str,
+        expected_duration: float,
+        subtitle_path: Optional[str] = None,
+        manifest: Optional[Any] = None,
+    ) -> QCReport:
         """Run deep quality inspection on the rendered MP4 file."""
         logger.info(f"Running automated Quality Control on: {video_path}")
         issues: List[str] = []
@@ -73,6 +89,7 @@ class QualityInspector:
         # 1. Video stream checks
         has_v = video_stream is not None
         v_codec = video_stream.get("codec_name", "") if video_stream else ""
+        pix_fmt = video_stream.get("pix_fmt", "") if video_stream else ""
         width = int(video_stream.get("width", 0)) if video_stream else 0
         height = int(video_stream.get("height", 0)) if video_stream else 0
 
@@ -82,6 +99,8 @@ class QualityInspector:
             prof = self.config.profile
             if width != prof.width or height != prof.height:
                 warnings.append(f"Resolution mismatch: expected {prof.width}x{prof.height}, got {width}x{height}")
+            if pix_fmt and pix_fmt != "yuv420p":
+                warnings.append(f"Pixel format mismatch: expected yuv420p, got {pix_fmt}")
 
         # 2. Audio stream checks
         has_a = audio_stream is not None
@@ -114,6 +133,32 @@ class QualityInspector:
         if black_seconds > max(1.5, expected_duration * 0.25):
             warnings.append(f"Excessive black frame duration detected ({black_seconds:.1f}s).")
 
+        # 6. EBU R128 loudness check (-14 LUFS broadcast target)
+        integrated_lufs, lra_lu, true_peak = (None, None, None)
+        if has_a:
+            integrated_lufs, lra_lu, true_peak = self._measure_loudness_ebur128(
+                video_path, timeout=max(45, int(expected_duration * 0.5))
+            )
+            if integrated_lufs is not None:
+                if integrated_lufs < -22.0 or integrated_lufs > -10.0:
+                    warnings.append(
+                        f"Audio loudness outside broadcast range around -14 LUFS: {integrated_lufs:.1f} LUFS"
+                    )
+                if true_peak is not None and true_peak > -0.2:
+                    warnings.append(f"Audio true peak near clipping: {true_peak:.1f} dBTP")
+
+        # 7. Audio-Subtitle timing sync check
+        sub_ok = True
+        cue_count = 0
+        sub_max_end = 0.0
+        sub_drift = 0.0
+        if subtitle_path and os.path.exists(subtitle_path):
+            sub_ok, cue_count, sub_max_end, sub_drift, sub_msg = self._check_subtitle_sync(
+                subtitle_path, actual_dur or expected_duration, manifest=manifest
+            )
+            if not sub_ok and sub_msg:
+                warnings.append(sub_msg)
+
         passed = len(issues) == 0
         status = "PASSED" if passed and len(warnings) == 0 else ("WARNING" if passed else "FAILED")
 
@@ -131,12 +176,102 @@ class QualityInspector:
             audio_codec=a_codec,
             file_size_bytes=file_size,
             black_frame_seconds=round(black_seconds, 2),
+            pix_fmt=pix_fmt,
+            integrated_lufs=integrated_lufs,
+            loudness_range_lra=lra_lu,
+            true_peak_dbtp=true_peak,
+            subtitle_sync_ok=sub_ok,
+            subtitle_cue_count=cue_count,
+            subtitle_max_end_sec=round(sub_max_end, 2),
+            subtitle_sync_drift_sec=round(sub_drift, 3),
             issues=issues,
             warnings=warnings
         )
 
-        logger.info(f"QC Result: {status} (Issues: {len(issues)}, Warnings: {len(warnings)})")
+        logger.info(
+            f"QC Result: {status} (LUFS: {integrated_lufs}, SubCues: {cue_count}, "
+            f"SyncOK: {sub_ok}, Issues: {len(issues)}, Warnings: {len(warnings)})"
+        )
         return report
+
+    def _measure_loudness_ebur128(
+        self, video_path: str, timeout: int = 60
+    ) -> Tuple[Optional[float], Optional[float], Optional[float]]:
+        """Measure integrated loudness (LUFS), LRA, and peak via FFmpeg ebur128."""
+        cmd = [
+            "ffmpeg", "-nostats", "-i", video_path,
+            "-vn", "-filter_complex", "ebur128=peak=true",
+            "-f", "null", "-",
+        ]
+        try:
+            res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+            text = res.stderr or ""
+            # Match Summary section at bottom of ebur128 output
+            i_matches = re.findall(r"\bI:\s*(-?\d+(?:\.\d+)?)\s*LUFS", text)
+            lra_matches = re.findall(r"\bLRA:\s*(-?\d+(?:\.\d+)?)\s*LU", text)
+            peak_matches = re.findall(r"\bPeak:\s*(-?\d+(?:\.\d+)?)\s*dBFS", text)
+            lufs = round(float(i_matches[-1]), 2) if i_matches else None
+            lra = round(float(lra_matches[-1]), 2) if lra_matches else None
+            peak = round(float(peak_matches[-1]), 2) if peak_matches else None
+            return lufs, lra, peak
+        except Exception:
+            return None, None, None
+
+    @staticmethod
+    def _parse_ts_seconds(ts: str) -> float:
+        ts = ts.strip().replace(",", ".")
+        parts = ts.split(":")
+        if len(parts) != 3:
+            return 0.0
+        return int(parts[0]) * 3600.0 + int(parts[1]) * 60.0 + float(parts[2])
+
+    def _check_subtitle_sync(
+        self, subtitle_path: str, actual_duration: float, manifest: Optional[Any] = None
+    ) -> Tuple[bool, int, float, float, str]:
+        """Verify subtitle timestamps are monotonic, stay within video duration, and match scene timings."""
+        try:
+            with open(subtitle_path, "r", encoding="utf-8-sig") as f:
+                raw = f.read()
+        except Exception as e:
+            return False, 0, 0.0, 0.0, f"Could not read subtitle file for sync check: {e}"
+
+        cues: List[Tuple[float, float]] = []
+        if subtitle_path.lower().endswith(".ass"):
+            for line in raw.splitlines():
+                if line.startswith("Dialogue:"):
+                    fields = line.split(",", 9)
+                    if len(fields) >= 3:
+                        st = self._parse_ts_seconds(fields[1])
+                        en = self._parse_ts_seconds(fields[2])
+                        cues.append((st, en))
+        else:
+            for m in re.finditer(r"(\d{2}:\d{2}:\d{2}[,.]\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}[,.]\d{3})", raw):
+                cues.append((self._parse_ts_seconds(m.group(1)), self._parse_ts_seconds(m.group(2))))
+
+        if not cues:
+            return False, 0, 0.0, 0.0, "Subtitle file contains zero timed cues."
+
+        max_end = max(en for _, en in cues)
+        overflow = max(0.0, max_end - (actual_duration + 0.6))
+        inverted = sum(1 for st, en in cues if en < st)
+
+        manifest_drift = 0.0
+        if manifest and getattr(manifest, "scenes", None):
+            manifest_total = sum(float(getattr(s, "duration", 0.0)) for s in manifest.scenes)
+            manifest_drift = abs(manifest_total - actual_duration)
+
+        drift = max(overflow, manifest_drift)
+        if inverted > 0:
+            return False, len(cues), max_end, drift, f"Subtitle sync error: {inverted} inverted cues."
+        if overflow > 1.0:
+            return False, len(cues), max_end, drift, (
+                f"Subtitle overflow past video end: max cue {max_end:.2f}s > video {actual_duration:.2f}s"
+            )
+        if manifest_drift > 2.0:
+            return False, len(cues), max_end, drift, (
+                f"Audio-subtitle manifest duration drift {manifest_drift:.2f}s exceeds tolerance."
+            )
+        return True, len(cues), max_end, drift, ""
 
     def _check_black_frames(self, video_path: str, timeout: int = 60) -> float:
         """Scan video for uninterrupted black frame sequences."""

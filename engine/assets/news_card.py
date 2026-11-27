@@ -133,13 +133,18 @@ class InvestigativeCardGenerator:
             }}
             .meta {{ display: flex; justify-content: space-between; font-size: 26px; font-weight: 700;
                 color: #b91c1c; border-bottom: 2px solid #d6d3c9; padding-bottom: 18px; margin-bottom: 34px; text-transform: uppercase; }}
-            .headline {{ font-size: 56px; line-height: 1.42; font-weight: 700; color: #0f172a; }}
+            .headline {{ font-size: 56px; line-height: 1.48; font-weight: 700; color: #0f172a; }}
             .highlight {{
-                background: linear-gradient(104deg, rgba(250,204,21,0) 0.9%, rgba(250,204,21,0.88) 2.4%, rgba(250,204,21,0.82) 96%, rgba(250,204,21,0) 99%);
+                background-image: linear-gradient(104deg, rgba(250,204,21,0) 0.8%, rgba(250,204,21,0.90) 2.5%, rgba(250,204,21,0.85) 96%, rgba(250,204,21,0) 99%);
+                background-repeat: no-repeat;
+                background-position: 0 72%;
+                background-size: var(--sweep-pct, 100%) 76%;
+                -webkit-box-decoration-break: clone;
+                box-decoration-break: clone;
                 padding: 4px 10px; border-radius: 6px;
-                animation: sweep 1.1s ease-out forwards;
+                animation: sweep 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }}
-            @keyframes sweep {{ from {{ clip-path: inset(0 100% 0 0); }} to {{ clip-path: inset(0 0 0 0); }} }}
+            @keyframes sweep {{ from {{ background-size: 0% 76%; }} to {{ background-size: 100% 76%; }} }}
             </style></head><body>
             <div class="paper">
               <div class="meta"><span>{esc_s}</span><span>{esc_d or 'VERIFIED RECORD'}</span></div>
@@ -223,9 +228,71 @@ class InvestigativeCardGenerator:
                 browser = p.chromium.launch(headless=True)
                 page = browser.new_page(viewport={"width": self.width, "height": self.height})
                 page.set_content(html_doc, wait_until="load")
-                page.wait_for_timeout(1200)  # Let yellow highlighter sweep complete cleanly
-                page.screenshot(path=png_tmp)
-                browser.close()
+
+                # Live animated yellow marker highlighter sweep for news_card
+                if card_type == "news_card":
+                    sweep_sec = min(1.2, max(0.6, duration * 0.4))
+                    n_sweep_frames = max(12, int(round(sweep_sec * self.fps)))
+                    with tempfile.TemporaryDirectory() as frame_dir:
+                        page.add_style_tag(content=".highlight { animation: none !important; }")
+                        for f_idx in range(n_sweep_frames):
+                            t_norm = f_idx / max(1, n_sweep_frames - 1)
+                            eased = 1.0 - (1.0 - t_norm) ** 2.2
+                            pct = round(eased * 100.0, 2)
+                            page.evaluate(
+                                f"document.documentElement.style.setProperty('--sweep-pct', '{pct}%');"
+                            )
+                            page.screenshot(path=os.path.join(frame_dir, f"frame_{f_idx:04d}.png"))
+
+                        last_frame = os.path.join(frame_dir, f"frame_{n_sweep_frames - 1:04d}.png")
+                        head_mp4 = output_path + ".sweep_head.mp4"
+                        tail_mp4 = output_path + ".sweep_tail.mp4"
+                        rem_dur = max(0.0, duration - (n_sweep_frames / float(self.fps)))
+
+                        head_cmd = [
+                            "ffmpeg", "-y", "-loglevel", "error",
+                            "-framerate", str(self.fps),
+                            "-i", os.path.join(frame_dir, "frame_%04d.png"),
+                            "-vf", "vignette=PI/5:mode=backward,noise=alls=4:allf=t,format=yuv420p",
+                            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
+                            "-pix_fmt", "yuv420p",
+                            head_mp4,
+                        ]
+                        res_h = subprocess.run(head_cmd, capture_output=True)
+                        ok_anim = False
+                        if res_h.returncode == 0 and os.path.exists(head_mp4):
+                            if rem_dur >= 0.4 and animate_image_to_video(
+                                last_frame, tail_mp4, duration=rem_dur, width=self.width, height=self.height,
+                                fps=self.fps, camera=camera, add_film_grain=True,
+                            ):
+                                res_c = subprocess.run(
+                                    [
+                                        "ffmpeg", "-y", "-loglevel", "error",
+                                        "-i", head_mp4, "-i", tail_mp4,
+                                        "-filter_complex", f"[0:v][1:v]concat=n=2:v=1:a=0,fps={self.fps},format=yuv420p[v]",
+                                        "-map", "[v]", "-t", f"{duration:.3f}",
+                                        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22", "-pix_fmt", "yuv420p",
+                                        output_path,
+                                    ],
+                                    capture_output=True,
+                                )
+                                for tmpf in (head_mp4, tail_mp4):
+                                    if os.path.exists(tmpf):
+                                        os.remove(tmpf)
+                                ok_anim = (res_c.returncode == 0 and os.path.exists(output_path) and os.path.getsize(output_path) > 5000)
+                            else:
+                                os.replace(head_mp4, output_path)
+                                ok_anim = os.path.exists(output_path) and os.path.getsize(output_path) > 5000
+                        if ok_anim:
+                            browser.close()
+                            return output_path
+                        # Fallback to static screenshot before closing browser
+                        page.screenshot(path=png_tmp)
+                        browser.close()
+                else:
+                    page.wait_for_timeout(1200)
+                    page.screenshot(path=png_tmp)
+                    browser.close()
             if os.path.exists(png_tmp) and os.path.getsize(png_tmp) > 5000:
                 ok = animate_image_to_video(
                     png_tmp, output_path, duration=duration, width=self.width, height=self.height,

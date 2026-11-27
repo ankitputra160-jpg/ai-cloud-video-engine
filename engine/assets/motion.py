@@ -114,9 +114,9 @@ def animate_image_to_video(
             "-loop", "1", "-t", f"{dur:.3f}", "-i", image_path,
             "-filter_complex", filter_complex,
             "-map", "[vout]",
-            "-t", f"{dur:.3f}",
-            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
-            "-pix_fmt", "yuv420p",
+            f"-t", f"{dur:.3f}",
+            f"-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
+            "-pix_fmt", "yuv420p", "-color_range", "tv",
             output_path,
         ]
     else:
@@ -150,9 +150,9 @@ def animate_image_to_video(
             "ffmpeg", "-y", "-loglevel", "error",
             "-i", image_path,
             "-vf", vf,
-            "-t", f"{dur:.3f}",
-            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
-            "-pix_fmt", "yuv420p",
+            f"-t", f"{dur:.3f}",
+            f"-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
+            "-pix_fmt", "yuv420p", "-color_range", "tv",
             output_path,
         ]
 

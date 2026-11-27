@@ -4,6 +4,8 @@ Generates custom 2D/editorial illustrations via Pollinations.ai and animates the
 """
 import logging
 import os
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from typing import List, Optional
@@ -15,11 +17,12 @@ logger = logging.getLogger("assets.pollinations")
 
 
 class PollinationsAIProvider(VisualAssetProvider):
-    def __init__(self, timeout: int = 25, width: int = 1920, height: int = 1080, fps: int = 25):
+    def __init__(self, timeout: int = 35, width: int = 1920, height: int = 1080, fps: int = 25):
         self.timeout = timeout
         self.width = width
         self.height = height
         self.fps = fps
+        self._last_req_ts = 0.0
 
     @property
     def name(self) -> str:
@@ -47,16 +50,32 @@ class PollinationsAIProvider(VisualAssetProvider):
         url = f"https://image.pollinations.ai/prompt/{encoded}?width={gen_w}&height={gen_h}&nologo=true&seed={seed}"
 
         tmp_img = target_path + ".ai.jpg"
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": "AIDocEngine/2.5"})
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                ctype = resp.headers.get("Content-Type", "")
-                if resp.status == 200 and "image" in ctype:
-                    with open(tmp_img, "wb") as f:
-                        while chunk := resp.read(65536):
-                            f.write(chunk)
-        except Exception as e:
-            logger.debug(f"Pollinations generation skipped: {e}")
+        for attempt in range(2):
+            elapsed = time.time() - self._last_req_ts
+            if elapsed < 1.6:
+                time.sleep(1.6 - elapsed)
+            self._last_req_ts = time.time()
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 AIDocEngine/3.0"})
+                with urllib.request.urlopen(req, timeout=max(30, self.timeout)) as resp:
+                    ctype = resp.headers.get("Content-Type", "")
+                    if resp.status == 200 and "image" in ctype:
+                        with open(tmp_img, "wb") as f:
+                            while chunk := resp.read(65536):
+                                f.write(chunk)
+                        break
+            except urllib.error.HTTPError as e:
+                if e.code in (429, 502, 503, 504) and attempt == 0:
+                    time.sleep(3.0)
+                    continue
+                logger.debug(f"Pollinations HTTP {e.code} skipped: {e}")
+                break
+            except Exception as e:
+                if attempt == 0:
+                    time.sleep(2.0)
+                    continue
+                logger.debug(f"Pollinations generation skipped: {e}")
+                break
 
         if os.path.exists(tmp_img) and os.path.getsize(tmp_img) > 15000:
             # Trim bottom 9% watermark strip (pollinations.ai badge) cleanly before Ken Burns animation

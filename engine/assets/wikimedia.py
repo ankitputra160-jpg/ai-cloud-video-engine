@@ -156,6 +156,15 @@ class WikimediaCommonsProvider(VisualAssetProvider):
                     return out_img_path
         return None
 
+    @staticmethod
+    def _is_relevant_title(query: str, title: str) -> bool:
+        stop = {"the", "and", "for", "with", "from", "into", "over", "near", "file", "india", "indian", "photo", "image", "documentary", "shot", "closeup", "screen", "night", "dark"}
+        q_toks = [t.lower() for t in __import__("re").findall(r"[A-Za-z]{3,}", query) if t.lower() not in stop]
+        if not q_toks:
+            return True
+        t_low = (title or "").lower()
+        return any(tok in t_low for tok in q_toks)
+
     def _search_wiki_pageimages(
         self,
         queries: List[str],
@@ -177,6 +186,9 @@ class WikimediaCommonsProvider(VisualAssetProvider):
                 continue
             pages = data.get("query", {}).get("pages", {})
             for page in pages.values():
+                page_title = str(page.get("title", ""))
+                if not self._is_relevant_title(query, page_title):
+                    continue
                 img_url = page.get("original", {}).get("source") or page.get("thumbnail", {}).get("source")
                 if not img_url or img_url in used or img_url.lower().endswith(".svg"):
                     continue
@@ -217,6 +229,7 @@ class WikimediaCommonsProvider(VisualAssetProvider):
                             continue
                         info = imageinfo[0]
                         candidates.append({
+                            "title": str(page.get("title", "")),
                             "url": str(info.get("url", "")),
                             "mime": str(info.get("mime", "")),
                             "width": str(info.get("width", 0) or 0),
@@ -231,6 +244,8 @@ class WikimediaCommonsProvider(VisualAssetProvider):
                 h = int(cand["height"])
 
                 if not file_url or file_url in used:
+                    continue
+                if not self._is_relevant_title(query, cand.get("title", "") + " " + file_url):
                     continue
 
                 if filetype == "video" and ("video" in mime or file_url.endswith((".webm", ".mp4", ".ogv"))):

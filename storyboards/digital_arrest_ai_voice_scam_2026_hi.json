@@ -267,6 +267,7 @@
           "source": "Cyber Crime Alert",
           "quote_speaker": "",
           "date_badge": "COLD OPEN",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -281,6 +282,7 @@
           "source": "Cyber Crime Alert",
           "quote_speaker": "",
           "date_badge": "COLD OPEN",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -295,6 +297,7 @@
           "source": "Cyber Crime Alert",
           "quote_speaker": "",
           "date_badge": "COLD OPEN",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -309,6 +312,7 @@
           "source": "Cyber Crime Alert",
           "quote_speaker": "",
           "date_badge": "COLD OPEN",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -600,6 +604,7 @@
           "source": "PIB / MHA Advisory",
           "quote_speaker": "",
           "date_badge": "DIGITAL ARREST",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -610,10 +615,11 @@
           "query": "PIB Advisory: Digital Arrest has zero legal basis under Indian law",
           "ai_prompt": "PIB Advisory: Digital Arrest has zero legal basis under Indian law, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "PIB & MHA चेतावनी",
-          "source": "PIB / MHA Advisory",
+          "headline": "PIB Advisory: Digital Arrest has zero legal basis under Indian law",
+          "source": "PIB & MHA चेतावनी",
           "quote_speaker": "",
           "date_badge": "DIGITAL ARREST",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -628,6 +634,7 @@
           "source": "PIB / MHA Advisory",
           "quote_speaker": "",
           "date_badge": "DIGITAL ARREST",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -642,6 +649,7 @@
           "source": "PIB / MHA Advisory",
           "quote_speaker": "",
           "date_badge": "DIGITAL ARREST",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -893,6 +901,7 @@
           "source": "MHA / I4C Official Data",
           "quote_speaker": "",
           "date_badge": "PATTERN INTERRUPT",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -907,6 +916,7 @@
           "source": "MHA / I4C Official Data",
           "quote_speaker": "",
           "date_badge": "PATTERN INTERRUPT",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg/1920px-North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg",
           "asset_path": null
         },
         {
@@ -921,6 +931,7 @@
           "source": "MHA / I4C Official Data",
           "quote_speaker": "",
           "date_badge": "PATTERN INTERRUPT",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -931,10 +942,11 @@
           "query": "Over 1.23 lakh digital arrest complaints, ₹1,935 Crore lost: MHA & I4C alert citizens to dial 1930",
           "ai_prompt": "Over 1.23 lakh digital arrest complaints, ₹1,935 Crore lost: MHA & I4C alert citizens to dial 1930, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Hindu / PIB",
-          "source": "MHA / I4C Official Data",
+          "headline": "Over 1.23 lakh digital arrest complaints, ₹1,935 Crore lost: MHA & I4C alert citizens to dial 1930",
+          "source": "The Hindu / PIB",
           "quote_speaker": "",
           "date_badge": "PATTERN INTERRUPT",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -1182,6 +1194,7 @@
           "source": "MHA / I4C Report",
           "quote_speaker": "",
           "date_badge": "2024 डेटा",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -1196,6 +1209,7 @@
           "source": "MHA / I4C Report",
           "quote_speaker": "",
           "date_badge": "2024 डेटा",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg/1920px-North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg",
           "asset_path": null
         },
         {
@@ -1210,6 +1224,7 @@
           "source": "MHA / I4C Report",
           "quote_speaker": "",
           "date_badge": "2024 डेटा",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -1224,6 +1239,7 @@
           "source": "MHA / I4C Report",
           "quote_speaker": "",
           "date_badge": "2024 डेटा",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -1465,6 +1481,7 @@
           "source": "I4C Analysis",
           "quote_speaker": "",
           "date_badge": "कौन फँसता है?",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -1479,6 +1496,7 @@
           "source": "I4C Analysis",
           "quote_speaker": "",
           "date_badge": "कौन फँसता है?",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -1493,6 +1511,7 @@
           "source": "I4C Analysis",
           "quote_speaker": "",
           "date_badge": "कौन फँसता है?",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -1507,6 +1526,7 @@
           "source": "I4C Analysis",
           "quote_speaker": "",
           "date_badge": "कौन फँसता है?",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -1774,10 +1794,11 @@
           "query": "PIB & MHA: 'Digital Arrest' does not exist under Indian law (BNSS)",
           "ai_prompt": "PIB & MHA: 'Digital Arrest' does not exist under Indian law (BNSS), raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "PIB Fact Check",
-          "source": "PIB & MHA (I4C)",
+          "headline": "PIB & MHA: 'Digital Arrest' does not exist under Indian law (BNSS)",
+          "source": "PIB Fact Check",
           "quote_speaker": "",
           "date_badge": "कानूनी सच",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -1792,6 +1813,7 @@
           "source": "PIB & MHA (I4C)",
           "quote_speaker": "",
           "date_badge": "कानूनी सच",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Supreme_Court_of_India%2C_inside_buildings_01.jpg",
           "asset_path": null
         },
         {
@@ -1802,10 +1824,11 @@
           "query": "There is no provision of 'Digital Arrest' under Indian law. Police, CBI or ED never interrogate via Skype or WhatsApp.",
           "ai_prompt": "There is no provision of 'Digital Arrest' under Indian law. Police, CBI or ED never interrogate via Skype or WhatsApp., raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "camera_click",
-          "headline": "PIB & MHA (I4C)",
+          "headline": "There is no provision of 'Digital Arrest' under Indian law. Police, CBI or ED never interrogate via Skype or WhatsApp.",
           "source": "PIB & MHA (I4C)",
           "quote_speaker": "PIB & MHA (I4C)",
           "date_badge": "कानूनी सच",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -1820,6 +1843,7 @@
           "source": "PIB & MHA (I4C)",
           "quote_speaker": "",
           "date_badge": "कानूनी सच",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -2107,6 +2131,7 @@
           "source": "BNSS / Indian Law",
           "quote_speaker": "",
           "date_badge": "BNSS नियम",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -2121,6 +2146,7 @@
           "source": "BNSS / Indian Law",
           "quote_speaker": "",
           "date_badge": "BNSS नियम",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -2135,6 +2161,7 @@
           "source": "BNSS / Indian Law",
           "quote_speaker": "",
           "date_badge": "BNSS नियम",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -2149,6 +2176,7 @@
           "source": "BNSS / Indian Law",
           "quote_speaker": "",
           "date_badge": "BNSS नियम",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Supreme_Court_of_India%2C_inside_buildings_01.jpg",
           "asset_path": null
         }
       ]
@@ -2442,10 +2470,11 @@
           "query": "Ludhiana industrialist S.P. Oswal duped of ₹7 Crore in 2-day Skype 'digital arrest' scam",
           "ai_prompt": "Ludhiana industrialist S.P. Oswal duped of ₹7 Crore in 2-day Skype 'digital arrest' scam, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Indian Express",
+          "headline": "Ludhiana industrialist S.P. Oswal duped of ₹7 Crore in 2-day Skype 'digital arrest' scam",
           "source": "The Indian Express",
           "quote_speaker": "",
           "date_badge": "अगस्त 2024",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -2460,6 +2489,7 @@
           "source": "The Indian Express",
           "quote_speaker": "",
           "date_badge": "अगस्त 2024",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -2474,6 +2504,7 @@
           "source": "The Indian Express",
           "quote_speaker": "",
           "date_badge": "अगस्त 2024",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -2488,6 +2519,7 @@
           "source": "The Indian Express",
           "quote_speaker": "",
           "date_badge": "अगस्त 2024",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -2763,6 +2795,7 @@
           "source": "The Indian Express / The Hindu",
           "quote_speaker": "",
           "date_badge": "केस स्टडी 1",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -2777,6 +2810,7 @@
           "source": "The Indian Express / The Hindu",
           "quote_speaker": "",
           "date_badge": "केस स्टडी 1",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -2791,6 +2825,7 @@
           "source": "The Indian Express / The Hindu",
           "quote_speaker": "",
           "date_badge": "केस स्टडी 1",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Supreme_Court_of_India%2C_inside_buildings_01.jpg",
           "asset_path": null
         },
         {
@@ -2801,10 +2836,11 @@
           "query": "Scammers staged mock virtual court hearing on Skype using forged Supreme Court order",
           "ai_prompt": "Scammers staged mock virtual court hearing on Skype using forged Supreme Court order, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Hindu",
-          "source": "The Indian Express / The Hindu",
+          "headline": "Scammers staged mock virtual court hearing on Skype using forged Supreme Court order",
+          "source": "The Hindu",
           "quote_speaker": "",
           "date_badge": "केस स्टडी 1",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -3090,6 +3126,7 @@
           "source": "Indian Express",
           "quote_speaker": "",
           "date_badge": "₹7 Crore की ठगी",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3104,6 +3141,7 @@
           "source": "Indian Express",
           "quote_speaker": "",
           "date_badge": "₹7 Crore की ठगी",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3118,6 +3156,7 @@
           "source": "Indian Express",
           "quote_speaker": "",
           "date_badge": "₹7 Crore की ठगी",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3128,10 +3167,11 @@
           "query": "Victim coerced into transferring ₹7 Crore across multiple mule bank accounts",
           "ai_prompt": "Victim coerced into transferring ₹7 Crore across multiple mule bank accounts, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "Indian Express Report",
-          "source": "Indian Express",
+          "headline": "Victim coerced into transferring ₹7 Crore across multiple mule bank accounts",
+          "source": "Indian Express Report",
           "quote_speaker": "",
           "date_badge": "₹7 Crore की ठगी",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -3407,10 +3447,11 @@
           "query": "Ludhiana Police bust inter-state digital arrest gang, freeze and recover ₹5.25 Crore",
           "ai_prompt": "Ludhiana Police bust inter-state digital arrest gang, freeze and recover ₹5.25 Crore, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Indian Express",
-          "source": "Ludhiana Police / Indian Express",
+          "headline": "Ludhiana Police bust inter-state digital arrest gang, freeze and recover ₹5.25 Crore",
+          "source": "The Indian Express",
           "quote_speaker": "",
           "date_badge": "रिकवरी",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3425,6 +3466,7 @@
           "source": "Ludhiana Police / Indian Express",
           "quote_speaker": "",
           "date_badge": "रिकवरी",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3439,6 +3481,7 @@
           "source": "Ludhiana Police / Indian Express",
           "quote_speaker": "",
           "date_badge": "रिकवरी",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3453,6 +3496,7 @@
           "source": "Ludhiana Police / Indian Express",
           "quote_speaker": "",
           "date_badge": "रिकवरी",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Reserve_Bank_Of_India_-_RBI_Mumbai.jpg/1920px-Reserve_Bank_Of_India_-_RBI_Mumbai.jpg",
           "asset_path": null
         }
       ]
@@ -3704,6 +3748,7 @@
           "source": "The Hindu / LiveLaw",
           "quote_speaker": "",
           "date_badge": "केस स्टडी 2",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3718,6 +3763,7 @@
           "source": "The Hindu / LiveLaw",
           "quote_speaker": "",
           "date_badge": "केस स्टडी 2",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3732,6 +3778,7 @@
           "source": "The Hindu / LiveLaw",
           "quote_speaker": "",
           "date_badge": "केस स्टडी 2",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -3742,10 +3789,11 @@
           "query": "Elderly doctors and retired officials kept on non-stop WhatsApp/Skype calls for 72 hours",
           "ai_prompt": "Elderly doctors and retired officials kept on non-stop WhatsApp/Skype calls for 72 hours, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Hindu",
-          "source": "The Hindu / LiveLaw",
+          "headline": "Elderly doctors and retired officials kept on non-stop WhatsApp/Skype calls for 72 hours",
+          "source": "The Hindu",
           "quote_speaker": "",
           "date_badge": "केस स्टडी 2",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -4019,6 +4067,7 @@
           "source": "LiveLaw / Bar and Bench",
           "quote_speaker": "",
           "date_badge": "Supreme Court",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Supreme_Court_of_India%2C_inside_buildings_01.jpg",
           "asset_path": null
         },
         {
@@ -4029,10 +4078,11 @@
           "query": "Supreme Court calls digital arrest syndicates 'Digital Dacoity', orders strict crackdown",
           "ai_prompt": "Supreme Court calls digital arrest syndicates 'Digital Dacoity', orders strict crackdown, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "LiveLaw / Bar and Bench",
+          "headline": "Supreme Court calls digital arrest syndicates 'Digital Dacoity', orders strict crackdown",
           "source": "LiveLaw / Bar and Bench",
           "quote_speaker": "",
           "date_badge": "Supreme Court",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -4043,10 +4093,11 @@
           "query": "Digital arrest rackets amount to 'Digital Dacoity' targeting innocent and elderly citizens; perpetrators must be dealt with firmly.",
           "ai_prompt": "Digital arrest rackets amount to 'Digital Dacoity' targeting innocent and elderly citizens; perpetrators must be dealt with firmly., raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "camera_click",
-          "headline": "Supreme Court of India",
-          "source": "LiveLaw / Bar and Bench",
-          "quote_speaker": "LiveLaw / Bar and Bench",
+          "headline": "Digital arrest rackets amount to 'Digital Dacoity' targeting innocent and elderly citizens; perpetrators must be dealt with firmly.",
+          "source": "Supreme Court of India",
+          "quote_speaker": "Supreme Court of India",
           "date_badge": "Supreme Court",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -4061,6 +4112,7 @@
           "source": "LiveLaw / Bar and Bench",
           "quote_speaker": "",
           "date_badge": "Supreme Court",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -4350,6 +4402,7 @@
           "source": "LiveLaw / The Hindu",
           "quote_speaker": "",
           "date_badge": "SC निर्देश",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg/1920px-Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg",
           "asset_path": null
         },
         {
@@ -4360,10 +4413,11 @@
           "query": "SC directs RBI to curb mule accounts and protect victims when banks miss red flags",
           "ai_prompt": "SC directs RBI to curb mule accounts and protect victims when banks miss red flags, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "LiveLaw",
-          "source": "LiveLaw / The Hindu",
+          "headline": "SC directs RBI to curb mule accounts and protect victims when banks miss red flags",
+          "source": "LiveLaw",
           "quote_speaker": "",
           "date_badge": "SC निर्देश",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -4378,6 +4432,7 @@
           "source": "LiveLaw / The Hindu",
           "quote_speaker": "",
           "date_badge": "SC निर्देश",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -4392,6 +4447,7 @@
           "source": "LiveLaw / The Hindu",
           "quote_speaker": "",
           "date_badge": "SC निर्देश",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -4673,6 +4729,7 @@
           "source": "I4C / RBI Reports",
           "quote_speaker": "",
           "date_badge": "Mule Accounts",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -4687,6 +4744,7 @@
           "source": "I4C / RBI Reports",
           "quote_speaker": "",
           "date_badge": "Mule Accounts",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -4701,6 +4759,7 @@
           "source": "I4C / RBI Reports",
           "quote_speaker": "",
           "date_badge": "Mule Accounts",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Reserve_Bank_Of_India_-_RBI_Mumbai.jpg/1920px-Reserve_Bank_Of_India_-_RBI_Mumbai.jpg",
           "asset_path": null
         },
         {
@@ -4715,6 +4774,7 @@
           "source": "I4C / RBI Reports",
           "quote_speaker": "",
           "date_badge": "Mule Accounts",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -4996,6 +5056,7 @@
           "source": "TRAI / DoT / PIB",
           "quote_speaker": "",
           "date_badge": "TRAI Advisory",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Sanchar_Bhawan.jpg/1920px-Sanchar_Bhawan.jpg",
           "asset_path": null
         },
         {
@@ -5006,10 +5067,11 @@
           "query": "TRAI & DoT Advisory: We never call citizens to threaten SIM disconnection or transfer calls to CBI",
           "ai_prompt": "TRAI & DoT Advisory: We never call citizens to threaten SIM disconnection or transfer calls to CBI, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "PIB / DoT",
-          "source": "TRAI / DoT / PIB",
+          "headline": "TRAI & DoT Advisory: We never call citizens to threaten SIM disconnection or transfer calls to CBI",
+          "source": "PIB / DoT",
           "quote_speaker": "",
           "date_badge": "TRAI Advisory",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5020,10 +5082,11 @@
           "query": "TRAI never calls citizens to threaten mobile disconnection or demand money. Report fraud calls on 1930 or Chakshu.",
           "ai_prompt": "TRAI never calls citizens to threaten mobile disconnection or demand money. Report fraud calls on 1930 or Chakshu., raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "camera_click",
-          "headline": "TRAI & DoT",
-          "source": "TRAI / DoT / PIB",
-          "quote_speaker": "TRAI / DoT / PIB",
+          "headline": "TRAI never calls citizens to threaten mobile disconnection or demand money. Report fraud calls on 1930 or Chakshu.",
+          "source": "TRAI & DoT",
+          "quote_speaker": "TRAI & DoT",
           "date_badge": "TRAI Advisory",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5038,6 +5101,7 @@
           "source": "TRAI / DoT / PIB",
           "quote_speaker": "",
           "date_badge": "TRAI Advisory",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -5319,6 +5383,7 @@
           "source": "McAfee / Indian Express",
           "quote_speaker": "",
           "date_badge": "AI VOICE CLONING",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5333,6 +5398,7 @@
           "source": "McAfee / Indian Express",
           "quote_speaker": "",
           "date_badge": "AI VOICE CLONING",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5343,10 +5409,11 @@
           "query": "Just 3 seconds of audio enough for AI voice cloning scam: McAfee India Report",
           "ai_prompt": "Just 3 seconds of audio enough for AI voice cloning scam: McAfee India Report, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Indian Express",
-          "source": "McAfee / Indian Express",
+          "headline": "Just 3 seconds of audio enough for AI voice cloning scam: McAfee India Report",
+          "source": "The Indian Express",
           "quote_speaker": "",
           "date_badge": "AI VOICE CLONING",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5361,6 +5428,7 @@
           "source": "McAfee / Indian Express",
           "quote_speaker": "",
           "date_badge": "AI VOICE CLONING",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -5664,6 +5732,7 @@
           "source": "McAfee Artificial Imposter",
           "quote_speaker": "",
           "date_badge": "3–5 सेकंड",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5678,6 +5747,7 @@
           "source": "McAfee Artificial Imposter",
           "quote_speaker": "",
           "date_badge": "3–5 सेकंड",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5692,6 +5762,7 @@
           "source": "McAfee Artificial Imposter",
           "quote_speaker": "",
           "date_badge": "3–5 सेकंड",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5706,6 +5777,7 @@
           "source": "McAfee Artificial Imposter",
           "quote_speaker": "",
           "date_badge": "3–5 सेकंड",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -5983,6 +6055,7 @@
           "source": "McAfee India Report",
           "quote_speaker": "",
           "date_badge": "McAfee डेटा",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -5997,6 +6070,7 @@
           "source": "McAfee India Report",
           "quote_speaker": "",
           "date_badge": "McAfee डेटा",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6011,6 +6085,7 @@
           "source": "McAfee India Report",
           "quote_speaker": "",
           "date_badge": "McAfee डेटा",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6021,10 +6096,11 @@
           "query": "47% Indian adults encountered or knew AI voice scam victims; 83% lost money: McAfee Study",
           "ai_prompt": "47% Indian adults encountered or knew AI voice scam victims; 83% lost money: McAfee Study, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Indian Express",
-          "source": "McAfee India Report",
+          "headline": "47% Indian adults encountered or knew AI voice scam victims; 83% lost money: McAfee Study",
+          "source": "The Indian Express",
           "quote_speaker": "",
           "date_badge": "McAfee डेटा",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -6318,6 +6394,7 @@
           "source": "Indian Express / Cyber Advisories",
           "quote_speaker": "",
           "date_badge": "डबल अटैक",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6332,6 +6409,7 @@
           "source": "Indian Express / Cyber Advisories",
           "quote_speaker": "",
           "date_badge": "डबल अटैक",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6346,6 +6424,7 @@
           "source": "Indian Express / Cyber Advisories",
           "quote_speaker": "",
           "date_badge": "डबल अटैक",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6360,6 +6439,7 @@
           "source": "Indian Express / Cyber Advisories",
           "quote_speaker": "",
           "date_badge": "डबल अटैक",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -6611,6 +6691,7 @@
           "source": "Cyber Psychology Research",
           "quote_speaker": "",
           "date_badge": "PSYCHOLOGY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6625,6 +6706,7 @@
           "source": "Cyber Psychology Research",
           "quote_speaker": "",
           "date_badge": "PSYCHOLOGY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6639,6 +6721,7 @@
           "source": "Cyber Psychology Research",
           "quote_speaker": "",
           "date_badge": "PSYCHOLOGY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6653,6 +6736,7 @@
           "source": "Cyber Psychology Research",
           "quote_speaker": "",
           "date_badge": "PSYCHOLOGY",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -6904,6 +6988,7 @@
           "source": "Police Investigation Records",
           "quote_speaker": "",
           "date_badge": "AUTHORITY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6918,6 +7003,7 @@
           "source": "Police Investigation Records",
           "quote_speaker": "",
           "date_badge": "AUTHORITY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6932,6 +7018,7 @@
           "source": "Police Investigation Records",
           "quote_speaker": "",
           "date_badge": "AUTHORITY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -6946,6 +7033,7 @@
           "source": "Police Investigation Records",
           "quote_speaker": "",
           "date_badge": "AUTHORITY",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -7217,6 +7305,7 @@
           "source": "MHA Cyber Advisory",
           "quote_speaker": "",
           "date_badge": "URGENCY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -7231,6 +7320,7 @@
           "source": "MHA Cyber Advisory",
           "quote_speaker": "",
           "date_badge": "URGENCY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -7245,6 +7335,7 @@
           "source": "MHA Cyber Advisory",
           "quote_speaker": "",
           "date_badge": "URGENCY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -7259,6 +7350,7 @@
           "source": "MHA Cyber Advisory",
           "quote_speaker": "",
           "date_badge": "URGENCY",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -7550,6 +7642,7 @@
           "source": "I4C Modus Operandi",
           "quote_speaker": "",
           "date_badge": "ISOLATION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -7564,6 +7657,7 @@
           "source": "I4C Modus Operandi",
           "quote_speaker": "",
           "date_badge": "ISOLATION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -7578,6 +7672,7 @@
           "source": "I4C Modus Operandi",
           "quote_speaker": "",
           "date_badge": "ISOLATION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -7592,6 +7687,7 @@
           "source": "I4C Modus Operandi",
           "quote_speaker": "",
           "date_badge": "ISOLATION",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -7907,6 +8003,7 @@
           "source": "PIB / RBI Advisory",
           "quote_speaker": "",
           "date_badge": "THE EXTORTION",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Reserve_Bank_Of_India_-_RBI_Mumbai.jpg/1920px-Reserve_Bank_Of_India_-_RBI_Mumbai.jpg",
           "asset_path": null
         },
         {
@@ -7921,6 +8018,7 @@
           "source": "PIB / RBI Advisory",
           "quote_speaker": "",
           "date_badge": "THE EXTORTION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -7935,6 +8033,7 @@
           "source": "PIB / RBI Advisory",
           "quote_speaker": "",
           "date_badge": "THE EXTORTION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -7945,10 +8044,11 @@
           "query": "No investigative agency asks citizens to transfer money for verification: RBI & PIB",
           "ai_prompt": "No investigative agency asks citizens to transfer money for verification: RBI & PIB, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "PIB Advisory",
-          "source": "PIB / RBI Advisory",
+          "headline": "No investigative agency asks citizens to transfer money for verification: RBI & PIB",
+          "source": "PIB Advisory",
           "quote_speaker": "",
           "date_badge": "THE EXTORTION",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -8270,6 +8370,7 @@
           "source": "The Hindu / I4C",
           "quote_speaker": "",
           "date_badge": "PARCEL SCAM",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -8284,6 +8385,7 @@
           "source": "The Hindu / I4C",
           "quote_speaker": "",
           "date_badge": "PARCEL SCAM",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -8298,6 +8400,7 @@
           "source": "The Hindu / I4C",
           "quote_speaker": "",
           "date_badge": "PARCEL SCAM",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -8308,10 +8411,11 @@
           "query": "Courier parcel fraud leading to fake narcotics digital arrest scams across Indian cities",
           "ai_prompt": "Courier parcel fraud leading to fake narcotics digital arrest scams across Indian cities, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Hindu",
-          "source": "The Hindu / I4C",
+          "headline": "Courier parcel fraud leading to fake narcotics digital arrest scams across Indian cities",
+          "source": "The Hindu",
           "quote_speaker": "",
           "date_badge": "PARCEL SCAM",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -8553,6 +8657,7 @@
           "source": "PIB / MHA / DoT",
           "quote_speaker": "",
           "date_badge": "सरकारी कार्रवाई",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg/1920px-North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg",
           "asset_path": null
         },
         {
@@ -8567,6 +8672,7 @@
           "source": "PIB / MHA / DoT",
           "quote_speaker": "",
           "date_badge": "सरकारी कार्रवाई",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Sanchar_Bhawan.jpg/1920px-Sanchar_Bhawan.jpg",
           "asset_path": null
         },
         {
@@ -8577,10 +8683,11 @@
           "query": "Govt blocks thousands of Skype IDs, WhatsApp accounts, and fraudulent SIMs linked to digital arrest",
           "ai_prompt": "Govt blocks thousands of Skype IDs, WhatsApp accounts, and fraudulent SIMs linked to digital arrest, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "PIB Press Release",
-          "source": "PIB / MHA / DoT",
+          "headline": "Govt blocks thousands of Skype IDs, WhatsApp accounts, and fraudulent SIMs linked to digital arrest",
+          "source": "PIB Press Release",
           "quote_speaker": "",
           "date_badge": "सरकारी कार्रवाई",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -8595,6 +8702,7 @@
           "source": "PIB / MHA / DoT",
           "quote_speaker": "",
           "date_badge": "सरकारी कार्रवाई",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -8896,6 +9004,7 @@
           "source": "MHA / I4C Advisory",
           "quote_speaker": "",
           "date_badge": "नियम 1",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -8910,6 +9019,7 @@
           "source": "MHA / I4C Advisory",
           "quote_speaker": "",
           "date_badge": "नियम 1",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -8924,6 +9034,7 @@
           "source": "MHA / I4C Advisory",
           "quote_speaker": "",
           "date_badge": "नियम 1",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -8934,10 +9045,11 @@
           "query": "If someone threatens 'Digital Arrest' on video call, disconnect immediately. It is 100% fraud.",
           "ai_prompt": "If someone threatens 'Digital Arrest' on video call, disconnect immediately. It is 100% fraud., raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "camera_click",
-          "headline": "MHA / I4C",
-          "source": "MHA / I4C Advisory",
-          "quote_speaker": "MHA / I4C Advisory",
+          "headline": "If someone threatens 'Digital Arrest' on video call, disconnect immediately. It is 100% fraud.",
+          "source": "MHA / I4C",
+          "quote_speaker": "MHA / I4C",
           "date_badge": "नियम 1",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -9223,6 +9335,7 @@
           "source": "RBI / PIB",
           "quote_speaker": "",
           "date_badge": "नियम 2",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -9237,6 +9350,7 @@
           "source": "RBI / PIB",
           "quote_speaker": "",
           "date_badge": "नियम 2",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg/1920px-Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg",
           "asset_path": null
         },
         {
@@ -9251,6 +9365,7 @@
           "source": "RBI / PIB",
           "quote_speaker": "",
           "date_badge": "नियम 2",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -9265,6 +9380,7 @@
           "source": "RBI / PIB",
           "quote_speaker": "",
           "date_badge": "नियम 2",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -9548,6 +9664,7 @@
           "source": "McAfee / Cyber Safety Guide",
           "quote_speaker": "",
           "date_badge": "नियम 3",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -9562,6 +9679,7 @@
           "source": "McAfee / Cyber Safety Guide",
           "quote_speaker": "",
           "date_badge": "नियम 3",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -9576,6 +9694,7 @@
           "source": "McAfee / Cyber Safety Guide",
           "quote_speaker": "",
           "date_badge": "नियम 3",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -9590,6 +9709,7 @@
           "source": "McAfee / Cyber Safety Guide",
           "quote_speaker": "",
           "date_badge": "नियम 3",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -9893,6 +10013,7 @@
           "source": "MHA / I4C",
           "quote_speaker": "",
           "date_badge": "हेल्पलाइन 1930",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -9907,6 +10028,7 @@
           "source": "MHA / I4C",
           "quote_speaker": "",
           "date_badge": "हेल्पलाइन 1930",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -9917,10 +10039,11 @@
           "query": "Report cyber financial fraud immediately on 1930 or cybercrime.gov.in to freeze mule accounts",
           "ai_prompt": "Report cyber financial fraud immediately on 1930 or cybercrime.gov.in to freeze mule accounts, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "I4C / PIB",
-          "source": "MHA / I4C",
+          "headline": "Report cyber financial fraud immediately on 1930 or cybercrime.gov.in to freeze mule accounts",
+          "source": "I4C / PIB",
           "quote_speaker": "",
           "date_badge": "हेल्पलाइन 1930",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -9935,6 +10058,7 @@
           "source": "MHA / I4C",
           "quote_speaker": "",
           "date_badge": "हेल्पलाइन 1930",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -10246,6 +10370,7 @@
           "source": "DoT / Sanchar Saathi",
           "quote_speaker": "",
           "date_badge": "CHAKSHU PORTAL",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Sanchar_Bhawan.jpg/1920px-Sanchar_Bhawan.jpg",
           "asset_path": null
         },
         {
@@ -10260,6 +10385,7 @@
           "source": "DoT / Sanchar Saathi",
           "quote_speaker": "",
           "date_badge": "CHAKSHU PORTAL",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -10274,6 +10400,7 @@
           "source": "DoT / Sanchar Saathi",
           "quote_speaker": "",
           "date_badge": "CHAKSHU PORTAL",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -10284,10 +10411,11 @@
           "query": "Citizens urged to report suspected fraud communications on DoT Sanchar Saathi Chakshu portal",
           "ai_prompt": "Citizens urged to report suspected fraud communications on DoT Sanchar Saathi Chakshu portal, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "PIB / DoT",
-          "source": "DoT / Sanchar Saathi",
+          "headline": "Citizens urged to report suspected fraud communications on DoT Sanchar Saathi Chakshu portal",
+          "source": "PIB / DoT",
           "quote_speaker": "",
           "date_badge": "CHAKSHU PORTAL",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -10579,6 +10707,7 @@
           "source": "I4C / The Hindu",
           "quote_speaker": "",
           "date_badge": "GLOBAL NETWORK",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -10593,6 +10722,7 @@
           "source": "I4C / The Hindu",
           "quote_speaker": "",
           "date_badge": "GLOBAL NETWORK",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -10603,10 +10733,11 @@
           "query": "MHA and I4C track cross-border cyber syndicates operating digital arrest calls from abroad",
           "ai_prompt": "MHA and I4C track cross-border cyber syndicates operating digital arrest calls from abroad, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Hindu / Indian Express",
-          "source": "I4C / The Hindu",
+          "headline": "MHA and I4C track cross-border cyber syndicates operating digital arrest calls from abroad",
+          "source": "The Hindu / Indian Express",
           "quote_speaker": "",
           "date_badge": "GLOBAL NETWORK",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -10621,6 +10752,7 @@
           "source": "I4C / The Hindu",
           "quote_speaker": "",
           "date_badge": "GLOBAL NETWORK",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg/1920px-North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg",
           "asset_path": null
         }
       ]
@@ -10892,6 +11024,7 @@
           "source": "Cyber Security Advisories",
           "quote_speaker": "",
           "date_badge": "DEEPFAKE TECH",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -10906,6 +11039,7 @@
           "source": "Cyber Security Advisories",
           "quote_speaker": "",
           "date_badge": "DEEPFAKE TECH",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -10920,6 +11054,7 @@
           "source": "Cyber Security Advisories",
           "quote_speaker": "",
           "date_badge": "DEEPFAKE TECH",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -10934,6 +11069,7 @@
           "source": "Cyber Security Advisories",
           "quote_speaker": "",
           "date_badge": "DEEPFAKE TECH",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -11265,6 +11401,7 @@
           "source": "LiveLaw / RBI",
           "quote_speaker": "",
           "date_badge": "BANKING SOP",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Reserve_Bank_Of_India_-_RBI_Mumbai.jpg/1920px-Reserve_Bank_Of_India_-_RBI_Mumbai.jpg",
           "asset_path": null
         },
         {
@@ -11275,10 +11412,11 @@
           "query": "Supreme Court orders RBI to frame strict SOPs for banks to flag mule accounts and unusual transfers",
           "ai_prompt": "Supreme Court orders RBI to frame strict SOPs for banks to flag mule accounts and unusual transfers, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "LiveLaw / Bar and Bench",
-          "source": "LiveLaw / RBI",
+          "headline": "Supreme Court orders RBI to frame strict SOPs for banks to flag mule accounts and unusual transfers",
+          "source": "LiveLaw / Bar and Bench",
           "quote_speaker": "",
           "date_badge": "BANKING SOP",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -11293,6 +11431,7 @@
           "source": "LiveLaw / RBI",
           "quote_speaker": "",
           "date_badge": "BANKING SOP",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -11307,6 +11446,7 @@
           "source": "LiveLaw / RBI",
           "quote_speaker": "",
           "date_badge": "BANKING SOP",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -11628,6 +11768,7 @@
           "source": "Public Awareness",
           "quote_speaker": "",
           "date_badge": "FAMILY SHIELD",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -11642,6 +11783,7 @@
           "source": "Public Awareness",
           "quote_speaker": "",
           "date_badge": "FAMILY SHIELD",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -11656,6 +11798,7 @@
           "source": "Public Awareness",
           "quote_speaker": "",
           "date_badge": "FAMILY SHIELD",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -11670,6 +11813,7 @@
           "source": "Public Awareness",
           "quote_speaker": "",
           "date_badge": "FAMILY SHIELD",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -11961,6 +12105,7 @@
           "source": "PIB / I4C",
           "quote_speaker": "",
           "date_badge": "3 GOLDEN CHECKS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -11975,6 +12120,7 @@
           "source": "PIB / I4C",
           "quote_speaker": "",
           "date_badge": "3 GOLDEN CHECKS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -11989,6 +12135,7 @@
           "source": "PIB / I4C",
           "quote_speaker": "",
           "date_badge": "3 GOLDEN CHECKS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -11999,10 +12146,11 @@
           "query": "Awareness and quick reporting on 1930 are our strongest weapons against cyber criminals.",
           "ai_prompt": "Awareness and quick reporting on 1930 are our strongest weapons against cyber criminals., raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "camera_click",
-          "headline": "I4C / PIB India",
-          "source": "PIB / I4C",
-          "quote_speaker": "PIB / I4C",
+          "headline": "Awareness and quick reporting on 1930 are our strongest weapons against cyber criminals.",
+          "source": "I4C / PIB India",
+          "quote_speaker": "I4C / PIB India",
           "date_badge": "3 GOLDEN CHECKS",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -12294,6 +12442,7 @@
           "source": "Cyber Suraksha",
           "quote_speaker": "",
           "date_badge": "FEAR VS FACTS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -12308,6 +12457,7 @@
           "source": "Cyber Suraksha",
           "quote_speaker": "",
           "date_badge": "FEAR VS FACTS",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/India_Gate%2C_New_Delhi_from_West.jpg",
           "asset_path": null
         },
         {
@@ -12322,6 +12472,7 @@
           "source": "Cyber Suraksha",
           "quote_speaker": "",
           "date_badge": "FEAR VS FACTS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -12336,6 +12487,7 @@
           "source": "Cyber Suraksha",
           "quote_speaker": "",
           "date_badge": "FEAR VS FACTS",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -12617,6 +12769,7 @@
           "source": "Govt of India",
           "quote_speaker": "",
           "date_badge": "KEY TAKEAWAY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -12627,10 +12780,11 @@
           "query": "Dial 1930 | Report at cybercrime.gov.in | Flag calls on sancharsaathi.gov.in",
           "ai_prompt": "Dial 1930 | Report at cybercrime.gov.in | Flag calls on sancharsaathi.gov.in, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "Official Govt Helplines",
-          "source": "Govt of India",
+          "headline": "Dial 1930 | Report at cybercrime.gov.in | Flag calls on sancharsaathi.gov.in",
+          "source": "Official Govt Helplines",
           "quote_speaker": "",
           "date_badge": "KEY TAKEAWAY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -12645,6 +12799,7 @@
           "source": "Govt of India",
           "quote_speaker": "",
           "date_badge": "KEY TAKEAWAY",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Supreme_Court_of_India%2C_inside_buildings_01.jpg",
           "asset_path": null
         },
         {
@@ -12659,6 +12814,7 @@
           "source": "Govt of India",
           "quote_speaker": "",
           "date_badge": "KEY TAKEAWAY",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -12970,6 +13126,7 @@
           "source": "Documentary Outro",
           "quote_speaker": "",
           "date_badge": "STAY SAFE",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -12984,6 +13141,7 @@
           "source": "Documentary Outro",
           "quote_speaker": "",
           "date_badge": "STAY SAFE",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -12998,6 +13156,7 @@
           "source": "Documentary Outro",
           "quote_speaker": "",
           "date_badge": "STAY SAFE",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -13012,6 +13171,7 @@
           "source": "Documentary Outro",
           "quote_speaker": "",
           "date_badge": "STAY SAFE",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/India_Gate%2C_New_Delhi_from_West.jpg",
           "asset_path": null
         }
       ]
@@ -13323,6 +13483,7 @@
           "source": "Cyber Victim Counseling",
           "quote_speaker": "",
           "date_badge": "SILENCE TRAP",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -13337,6 +13498,7 @@
           "source": "Cyber Victim Counseling",
           "quote_speaker": "",
           "date_badge": "SILENCE TRAP",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -13351,6 +13513,7 @@
           "source": "Cyber Victim Counseling",
           "quote_speaker": "",
           "date_badge": "SILENCE TRAP",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -13612,6 +13775,7 @@
           "source": "The Hindu / Cyber Cell",
           "quote_speaker": "",
           "date_badge": "FAKE DOCUMENTS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -13622,10 +13786,11 @@
           "query": "Cyber fraudsters use leaked PAN and Aadhaar data to craft convincing fake CBI warrants",
           "ai_prompt": "Cyber fraudsters use leaked PAN and Aadhaar data to craft convincing fake CBI warrants, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Hindu",
-          "source": "The Hindu / Cyber Cell",
+          "headline": "Cyber fraudsters use leaked PAN and Aadhaar data to craft convincing fake CBI warrants",
+          "source": "The Hindu",
           "quote_speaker": "",
           "date_badge": "FAKE DOCUMENTS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -13640,6 +13805,7 @@
           "source": "The Hindu / Cyber Cell",
           "quote_speaker": "",
           "date_badge": "FAKE DOCUMENTS",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -13911,6 +14077,7 @@
           "source": "I4C Cyber Intelligence",
           "quote_speaker": "",
           "date_badge": "DATA LEAK",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -13925,6 +14092,7 @@
           "source": "I4C Cyber Intelligence",
           "quote_speaker": "",
           "date_badge": "DATA LEAK",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -13939,6 +14107,7 @@
           "source": "I4C Cyber Intelligence",
           "quote_speaker": "",
           "date_badge": "DATA LEAK",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -14212,6 +14381,7 @@
           "source": "AI Security Research",
           "quote_speaker": "",
           "date_badge": "AI TECH",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -14226,6 +14396,7 @@
           "source": "AI Security Research",
           "quote_speaker": "",
           "date_badge": "AI TECH",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -14240,6 +14411,7 @@
           "source": "AI Security Research",
           "quote_speaker": "",
           "date_badge": "AI TECH",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -14495,6 +14667,7 @@
           "source": "Indian Express",
           "quote_speaker": "",
           "date_badge": "IMPERSONATION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -14505,10 +14678,11 @@
           "query": "Scammers spoof official DP images and VoIP numbers to pose as CBI and Enforcement Directorate",
           "ai_prompt": "Scammers spoof official DP images and VoIP numbers to pose as CBI and Enforcement Directorate, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "Indian Express",
+          "headline": "Scammers spoof official DP images and VoIP numbers to pose as CBI and Enforcement Directorate",
           "source": "Indian Express",
           "quote_speaker": "",
           "date_badge": "IMPERSONATION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -14523,6 +14697,7 @@
           "source": "Indian Express",
           "quote_speaker": "",
           "date_badge": "IMPERSONATION",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -14814,6 +14989,7 @@
           "source": "DoT Guidelines",
           "quote_speaker": "",
           "date_badge": "CALLER ID",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -14828,6 +15004,7 @@
           "source": "DoT Guidelines",
           "quote_speaker": "",
           "date_badge": "CALLER ID",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Sanchar_Bhawan.jpg/1920px-Sanchar_Bhawan.jpg",
           "asset_path": null
         },
         {
@@ -14842,6 +15019,7 @@
           "source": "DoT Guidelines",
           "quote_speaker": "",
           "date_badge": "CALLER ID",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -15135,6 +15313,7 @@
           "source": "The Hindu",
           "quote_speaker": "",
           "date_badge": "ELDERLY TARGET",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -15145,10 +15324,11 @@
           "query": "Senior citizens targeted in multi-crore digital arrest frauds across Bengaluru, Delhi, and Mumbai",
           "ai_prompt": "Senior citizens targeted in multi-crore digital arrest frauds across Bengaluru, Delhi, and Mumbai, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "The Hindu",
+          "headline": "Senior citizens targeted in multi-crore digital arrest frauds across Bengaluru, Delhi, and Mumbai",
           "source": "The Hindu",
           "quote_speaker": "",
           "date_badge": "ELDERLY TARGET",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -15163,6 +15343,7 @@
           "source": "The Hindu",
           "quote_speaker": "",
           "date_badge": "ELDERLY TARGET",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -15460,6 +15641,7 @@
           "source": "Police / Bank Advisories",
           "quote_speaker": "",
           "date_badge": "COERCION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -15474,6 +15656,7 @@
           "source": "Police / Bank Advisories",
           "quote_speaker": "",
           "date_badge": "COERCION",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -15488,6 +15671,7 @@
           "source": "Police / Bank Advisories",
           "quote_speaker": "",
           "date_badge": "COERCION",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -15755,10 +15939,11 @@
           "query": "No genuine police or court officer demands money over a video call to prove your innocence.",
           "ai_prompt": "No genuine police or court officer demands money over a video call to prove your innocence., raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "camera_click",
-          "headline": "PIB Fact Check",
+          "headline": "No genuine police or court officer demands money over a video call to prove your innocence.",
           "source": "PIB Fact Check",
           "quote_speaker": "PIB Fact Check",
           "date_badge": "GOLDEN RULE",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -15773,6 +15958,7 @@
           "source": "PIB Fact Check",
           "quote_speaker": "",
           "date_badge": "GOLDEN RULE",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Supreme_Court_of_India%2C_inside_buildings_01.jpg",
           "asset_path": null
         },
         {
@@ -15787,6 +15973,7 @@
           "source": "PIB Fact Check",
           "quote_speaker": "",
           "date_badge": "GOLDEN RULE",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -16090,6 +16277,7 @@
           "source": "MHA / I4C",
           "quote_speaker": "",
           "date_badge": "CFCFRMS SYSTEM",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg/1920px-North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg",
           "asset_path": null
         },
         {
@@ -16104,6 +16292,7 @@
           "source": "MHA / I4C",
           "quote_speaker": "",
           "date_badge": "CFCFRMS SYSTEM",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -16118,6 +16307,7 @@
           "source": "MHA / I4C",
           "quote_speaker": "",
           "date_badge": "CFCFRMS SYSTEM",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -16405,6 +16595,7 @@
           "source": "RBI / LiveLaw",
           "quote_speaker": "",
           "date_badge": "RBI MULEHUNTER",
+          "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg/1920px-Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg",
           "asset_path": null
         },
         {
@@ -16415,10 +16606,11 @@
           "query": "RBI deploys AI tools and directs banks to tighten mule account detection under SC oversight",
           "ai_prompt": "RBI deploys AI tools and directs banks to tighten mule account detection under SC oversight, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "LiveLaw / The Hindu",
-          "source": "RBI / LiveLaw",
+          "headline": "RBI deploys AI tools and directs banks to tighten mule account detection under SC oversight",
+          "source": "LiveLaw / The Hindu",
           "quote_speaker": "",
           "date_badge": "RBI MULEHUNTER",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -16433,6 +16625,7 @@
           "source": "RBI / LiveLaw",
           "quote_speaker": "",
           "date_badge": "RBI MULEHUNTER",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -16724,6 +16917,7 @@
           "source": "Public Safety Campaign",
           "quote_speaker": "",
           "date_badge": "AWARENESS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -16738,6 +16932,7 @@
           "source": "Public Safety Campaign",
           "quote_speaker": "",
           "date_badge": "AWARENESS",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -16752,6 +16947,7 @@
           "source": "Public Safety Campaign",
           "quote_speaker": "",
           "date_badge": "AWARENESS",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -17027,6 +17223,7 @@
           "source": "CERT-In / Cyber Advisory",
           "quote_speaker": "",
           "date_badge": "APK & SCREEN SHARE",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -17041,6 +17238,7 @@
           "source": "CERT-In / Cyber Advisory",
           "quote_speaker": "",
           "date_badge": "APK & SCREEN SHARE",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -17055,6 +17253,7 @@
           "source": "CERT-In / Cyber Advisory",
           "quote_speaker": "",
           "date_badge": "APK & SCREEN SHARE",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -17332,6 +17531,7 @@
           "source": "MHA / DoT",
           "quote_speaker": "",
           "date_badge": "ACTION PLAN",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -17346,6 +17546,7 @@
           "source": "MHA / DoT",
           "quote_speaker": "",
           "date_badge": "ACTION PLAN",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -17356,10 +17557,11 @@
           "query": "Dial 1930 and report suspicious callers at sancharsaathi.gov.in/sfc/",
           "ai_prompt": "Dial 1930 and report suspicious callers at sancharsaathi.gov.in/sfc/, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
           "sfx_tag": "paper_rustle",
-          "headline": "DoT / MHA",
-          "source": "MHA / DoT",
+          "headline": "Dial 1930 and report suspicious callers at sancharsaathi.gov.in/sfc/",
+          "source": "DoT / MHA",
           "quote_speaker": "",
           "date_badge": "ACTION PLAN",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -17631,6 +17833,7 @@
           "source": "Cyber Suraksha",
           "quote_speaker": "",
           "date_badge": "PROTECT FAMILY",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -17645,6 +17848,7 @@
           "source": "Cyber Suraksha",
           "quote_speaker": "",
           "date_badge": "PROTECT FAMILY",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/India_Gate%2C_New_Delhi_from_West.jpg",
           "asset_path": null
         },
         {
@@ -17659,6 +17863,7 @@
           "source": "Cyber Suraksha",
           "quote_speaker": "",
           "date_badge": "PROTECT FAMILY",
+          "preferred_media_url": null,
           "asset_path": null
         }
       ]
@@ -17902,6 +18107,7 @@
           "source": "Final Sign-Off",
           "quote_speaker": "",
           "date_badge": "JAY HIND",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -17916,6 +18122,7 @@
           "source": "Final Sign-Off",
           "quote_speaker": "",
           "date_badge": "JAY HIND",
+          "preferred_media_url": null,
           "asset_path": null
         },
         {
@@ -17930,6 +18137,7 @@
           "source": "Final Sign-Off",
           "quote_speaker": "",
           "date_badge": "JAY HIND",
+          "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Supreme_Court_of_India%2C_inside_buildings_01.jpg",
           "asset_path": null
         }
       ]

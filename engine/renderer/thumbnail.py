@@ -37,8 +37,8 @@ class AutoThumbnailGenerator:
 
         with tempfile.TemporaryDirectory() as tmpdir:
             raw_frame = os.path.join(tmpdir, "best_frame.jpg")
-            # Sample candidate frame ~18% into documentary (clear bright key visual, past intro fade)
-            sample_t = min(max(0.8, duration * 0.18), max(1.0, duration - 0.5))
+            # Sample candidate frame in the dramatic opening hook (~2.5% or 2.5s) past fade-in
+            sample_t = min(max(1.5, duration * 0.02), max(1.0, min(14.0, duration * 0.35)))
             subprocess.run(
                 [
                     "ffmpeg", "-y", "-loglevel", "error",
@@ -65,9 +65,14 @@ class AutoThumbnailGenerator:
 
     @staticmethod
     def _shorten_hook_words(hook_text: str) -> str:
+        import re as _re
         clean = normalize_devanagari(hook_text)
-        words = [w for w in clean.split() if w]
-        return " ".join(words[:5]) if words else "असली सच"
+        first_clause = _re.split(r"[।?!\n]", clean)[0].strip()
+        words = [w for w in first_clause.split() if w]
+        if 2 <= len(words) <= 8:
+            return " ".join(words)
+        all_words = [w for w in clean.split() if w]
+        return " ".join(all_words[:7]) if all_words else "असली सच"
 
     @staticmethod
     def _overlay_pillow_hook(bg_frame: str, hook: str, out_jpg: str) -> bool:
@@ -81,22 +86,22 @@ class AutoThumbnailGenerator:
             w, h = img.size
             grad = Image.new("RGBA", (w, h), (0, 0, 0, 0))
             gdraw = ImageDraw.Draw(grad)
-            # Bottom editorial vignette plate for crystal-clear headline contrast
-            gdraw.rectangle([0, int(h * 0.56), w, h], fill=(10, 14, 24, 195))
+            # Bottom editorial vignette plate (opaque enough to mask any bottom subtitles cleanly)
+            gdraw.rectangle([0, int(h * 0.50), w, h], fill=(8, 12, 22, 236))
             img = Image.alpha_composite(img, grad).convert("RGB")
 
             draw = ImageDraw.Draw(img)
             font_path = resolve_devanagari_font("Khand-Bold.ttf") or resolve_devanagari_font("NotoSansDevanagari-Bold.ttf")
             kw = {"layout_engine": ImageFont.Layout.RAQM} if check_raqm_support() else {}
-            font = ImageFont.truetype(font_path, 74, **kw) if font_path else ImageFont.load_default()
+            font = ImageFont.truetype(font_path, 66, **kw) if font_path else ImageFont.load_default()
 
-            lines = wrap_indic_text(hook, max_graphemes=22, max_lines=2)[:2]
-            y = int(h * 0.62)
+            lines = wrap_indic_text(hook, max_graphemes=24, max_lines=2)[:2]
+            y = int(h * 0.58)
             for idx, ln in enumerate(lines):
                 color = "#FACC15" if idx == 0 else "#FFFFFF"
                 draw.text((58, y + 4), ln, font=font, fill="#000000")
                 draw.text((54, y), ln, font=font, fill=color)
-                y += 88
+                y += 82
 
             img.save(out_jpg, "JPEG", quality=92)
             return os.path.exists(out_jpg) and os.path.getsize(out_jpg) > 5000

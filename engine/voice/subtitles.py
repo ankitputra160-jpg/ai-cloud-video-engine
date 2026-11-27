@@ -80,6 +80,20 @@ class SubtitleGenerator:
         if current_group:
             chunks.append(cls._finalize_chunk(current_group, scene.duration))
 
+        # Avoid 1-word trailing orphan subtitles by balancing with the previous chunk
+        if len(chunks) >= 2 and len(chunks[-1]["words"]) == 1 and len(chunks[-2]["words"]) >= 3:
+            prev_words = chunks[-2]["words"]
+            last_words = chunks[-1]["words"]
+            moved = prev_words[-1:]
+            chunks[-2] = cls._finalize_chunk(prev_words[:-1], scene.duration)
+            chunks[-1] = cls._finalize_chunk(moved + last_words, scene.duration)
+
+        # Prevent adjacent subtitle box overlap in libass
+        for i in range(len(chunks) - 1):
+            nxt_start = float(chunks[i + 1]["start"])
+            if chunks[i]["end"] >= nxt_start:
+                chunks[i]["end"] = round(max(chunks[i]["start"] + 0.15, nxt_start - 0.01), 3)
+
         return chunks
 
     @staticmethod

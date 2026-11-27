@@ -128,8 +128,8 @@ class VideoEditor:
 
     def _video_codec_args(self, crf: int) -> List[str]:
         if self.encoder == "h264_nvenc":
-            return ["-c:v", "h264_nvenc", "-preset", "p4", "-cq", str(crf), "-pix_fmt", "yuv420p"]
-        return ["-c:v", "libx264", "-preset", "fast", "-crf", str(crf), "-pix_fmt", "yuv420p"]
+            return ["-c:v", "h264_nvenc", "-preset", "p4", "-cq", str(crf), "-pix_fmt", "yuv420p", "-color_range", "tv"]
+        return ["-c:v", "libx264", "-preset", "fast", "-crf", str(crf), "-pix_fmt", "yuv420p", "-color_range", "tv"]
 
     def _render_scene_pass(
         self,
@@ -155,9 +155,9 @@ class VideoEditor:
             fonts_dir = get_fonts_dir()
             if os.path.isdir(fonts_dir):
                 esc_fonts = _escape_ffmpeg_filter_path(fonts_dir)
-                vf_str = f"ass='{esc_ass}':fontsdir='{esc_fonts}'"
+                vf_str = f"ass='{esc_ass}':fontsdir='{esc_fonts}',format=yuv420p"
             else:
-                vf_str = f"ass='{esc_ass}'"
+                vf_str = f"ass='{esc_ass}',format=yuv420p"
             cmd.extend(["-vf", vf_str])
             cmd.extend(self._video_codec_args(prof.crf))
         else:

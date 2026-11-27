@@ -56,8 +56,8 @@ class VisualAssetManager:
 
         self.real_providers: List[VisualAssetProvider] = [
             self.pib,
-            self.wikimedia,
             self.openverse,
+            self.wikimedia,
             self.archive_org,
             self.nasa,
             self.pexels,
@@ -117,10 +117,11 @@ class VisualAssetManager:
                     beat["asset_path"] = beat_norm
                     continue
 
-                # 1. Explicit curated URL always prioritized on beat 0
-                if b_idx == 0 and getattr(scene, "preferred_media_url", None):
+                # 1. Explicit curated URL prioritized on beat (beat-level or scene-level beat 0)
+                pref_url = beat.get("preferred_media_url") or (getattr(scene, "preferred_media_url", None) if b_idx == 0 else None)
+                if pref_url:
                     direct = self.wikimedia.fetch_direct_url_as_video(
-                        scene.preferred_media_url,
+                        pref_url,
                         beat_raw,
                         duration=b_dur,
                         camera=beat.get("camera", scene.camera),
@@ -210,6 +211,18 @@ class VisualAssetManager:
                     scene.footage_queries, raw_path, min_duration=b_dur, ai_prompt=prompt_en,
                     camera=beat.get("camera", scene.camera), date_badge=beat.get("date_badge", ""), seed=item["seed"],
                 )
+            if not res and not self.config.is_2d_style:
+                short_q = self._distill_stock_queries(str(beat.get("query") or scene.title))
+                if short_q:
+                    res = self._fetch_verified_real_beat(
+                        queries=short_q,
+                        prompt_en=prompt_en,
+                        raw_path=raw_path,
+                        duration=b_dur,
+                        camera=str(beat.get("camera", scene.camera)),
+                        date_badge=str(beat.get("date_badge", scene.on_screen_date)),
+                        used_urls=used_urls,
+                    )
             if not res:
                 res = self.motion_gen.generate_motion_clip(
                     raw_path, title=str(beat.get("headline") or scene.title), duration=b_dur,
@@ -394,6 +407,7 @@ class VisualAssetManager:
             "-vf", vf,
             "-t", f"{target_duration:.3f}",
             "-c:v", "libx264", "-preset", "ultrafast", "-crf", str(prof.crf),
+            "-pix_fmt", "yuv420p", "-color_range", "tv",
             "-an", output_path,
         ])
         res = subprocess.run(cmd, capture_output=True, text=True)
@@ -408,6 +422,24 @@ class VisualAssetManager:
                 output_path,
             ]
             subprocess.run(emergency_cmd, capture_output=True)
+
+    @staticmethod
+    def _distill_stock_queries(raw_query: str) -> List[str]:
+        """Extract crisp 2-3 keyword queries for Openverse/stock photography fallback."""
+        import re as _re
+        stop = {
+            "the", "and", "for", "with", "from", "into", "over", "near", "showing", "looking",
+            "sitting", "holding", "standing", "wearing", "inside", "outside", "concept",
+            "style", "photo", "image", "closeup", "close", "documentary", "indian", "india",
+            "at", "in", "on", "of", "to", "a", "an", "while", "during", "around", "next",
+        }
+        toks = [t for t in _re.findall(r"[A-Za-z]{3,}", raw_query or "") if t.lower() not in stop]
+        if not toks:
+            return []
+        queries = [" ".join(toks[:3])]
+        if len(toks) >= 2:
+            queries.append(" ".join(toks[:2]))
+        return queries
 
     @staticmethod
     def _safe_remove(path: Optional[str]) -> None:

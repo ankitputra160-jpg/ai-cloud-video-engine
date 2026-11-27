@@ -35,6 +35,7 @@ from engine.scriptwriter import DocumentaryScript, ScriptWriter
 from engine.storyboard import StoryboardEngine, StoryboardManifest
 from engine.voice.subtitles import SubtitleGenerator
 from engine.voice.tts import VoiceEngine
+from engine.yt_skills import export_youtube_package_and_chapters
 
 logging.basicConfig(
     level=logging.INFO,
@@ -271,9 +272,17 @@ class DocumentaryPipeline:
         qc_path = os.path.join(self.work_dir, "qc_report.json")
         qc_report.save_json(qc_path)
 
+        try:
+            yt_pkg = export_youtube_package_and_chapters(manifest, srt_path, self.work_dir)
+            logger.info(f"📺 YouTube Agent Skills package & chapters exported: {yt_pkg.get('chapters_txt')}")
+        except Exception as e:
+            logger.debug(f"YouTube package export skipped cleanly: {e}")
+
         thumb_out = None
         if self.config.generate_thumbnail and self.config.thumbnail_path:
-            hook_line = manifest.scenes[0].narration if manifest.scenes else self.config.topic
+            hook_line = getattr(manifest, "thumbnail_hook", "") or (
+                manifest.scenes[0].narration if manifest.scenes else self.config.topic
+            )
             thumb_out = AutoThumbnailGenerator.generate_thumbnail(
                 final_video,
                 hook_text=hook_line,

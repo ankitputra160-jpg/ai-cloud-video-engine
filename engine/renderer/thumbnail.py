@@ -37,8 +37,8 @@ class AutoThumbnailGenerator:
 
         with tempfile.TemporaryDirectory() as tmpdir:
             raw_frame = os.path.join(tmpdir, "best_frame.jpg")
-            # Sample candidate frame in the dramatic opening hook (~2.5% or 2.5s) past fade-in
-            sample_t = min(max(1.5, duration * 0.02), max(1.0, min(14.0, duration * 0.35)))
+            # Sample dramatic frame in the Cold Open (~2.4s) past fade-in
+            sample_t = 2.4 if duration > 8.0 else min(max(0.5, duration * 0.3), max(0.5, duration - 0.4))
             subprocess.run(
                 [
                     "ffmpeg", "-y", "-loglevel", "error",
@@ -69,10 +69,10 @@ class AutoThumbnailGenerator:
         clean = normalize_devanagari(hook_text)
         first_clause = _re.split(r"[।?!\n]", clean)[0].strip()
         words = [w for w in first_clause.split() if w]
-        if 2 <= len(words) <= 8:
+        if 2 <= len(words) <= 5:
             return " ".join(words)
         all_words = [w for w in clean.split() if w]
-        return " ".join(all_words[:7]) if all_words else "असली सच"
+        return " ".join(all_words[:5]) if all_words else "असली सच"
 
     @staticmethod
     def _overlay_pillow_hook(bg_frame: str, hook: str, out_jpg: str) -> bool:

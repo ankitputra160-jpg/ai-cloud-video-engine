@@ -2,6 +2,7 @@
   "topic": "डिजिटल अरेस्ट और AI वॉइस क्लोनिंग स्कैम का काला जाल: कैसे पढ़े-लिखे लोग भी एक कॉल पर अपनी जिंदगी भर की कमाई गँवा रहे हैं?",
   "language": "hi",
   "style": "Documentary",
+  "thumbnail_hook": "सावधान! ₹1,935 Crore ठगी",
   "target_duration": 540,
   "total_duration": 540.0,
   "scene_count": 56,
@@ -10,49 +11,59 @@
       "scene_id": "scene_01",
       "chapter_index": 1,
       "title": "रात की वो एक कॉल",
-      "narration": "रात के बारह बजे आपका फ़ोन बजता है। स्क्रीन पर चमकता है CBI या Narcotics Video Call। क्या आप घबरा जाएंगे?",
-      "visual_description": "Documentary beat: रात की वो एक कॉल (dark bedroom smartphone ringing glowing screen CBI video call tension)",
+      "narration": "रात के 12 बजे आपके फ़ोन पर CBI का वीडियो कॉल आता है—और ₹1,935 Crore ठगी का यही जाल आपकी जमा-पूँजी छीन सकता है। क्या आप बच पाएंगे?",
+      "visual_description": "Documentary beat: रात की वो एक कॉल (CBI Cyber Crime अधिकारी — +92 / VoIP Video Call)",
       "footage_queries": [
-        "dark bedroom smartphone ringing glowing screen CBI video call tension",
+        "CBI Cyber Crime अधिकारी — +92 / VoIP Video Call",
         "close up shocked Indian person looking at smartphone video call in dark room",
         "fake police officer on laptop video call screen in dim room"
       ],
-      "ai_prompt": "dark bedroom smartphone ringing glowing screen CBI video call tension, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
+      "ai_prompt": "CBI Cyber Crime अधिकारी — +92 / VoIP Video Call, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
       "duration": 9.64,
       "transition": "fade",
       "bgm_mood": "mysterious",
       "sfx_tag": "deep_sub_hit",
-      "subtitle_text": "रात के बारह बजे आपका फ़ोन बजता है। स्क्रीन पर चमकता है CBI या Narcotics Video Call। क्या आप घबरा जाएंगे?",
+      "subtitle_text": "रात के 12 बजे आपके फ़ोन पर CBI का वीडियो कॉल आता है—और ₹1,935 Crore ठगी का यही जाल आपकी जमा-पूँजी छीन सकता है। क्या आप बच पाएंगे?",
       "layout": "hero",
       "camera": "push_in",
       "on_screen_date": "COLD OPEN",
       "preferred_media_url": null,
-      "tagged_narration": "[fear]रात के बारह बजे आपका फ़ोन बजता है। स्क्रीन पर चमकता है CBI या Narcotics Video Call।[/fear] [pause:0.5s] क्या आप घबरा जाएंगे?",
-      "tts_text": "[fear] रात के बारह बजे आपका फ़ोन बजता है। स्क्रीन पर चमकता है सी बी आई या नारकोटिक्स वीडियो कॉल।[/fear] [pause:0.5s] क्या आप घबरा जाएंगे?",
+      "tagged_narration": "[fear]रात के 12 बजे आपके फ़ोन पर CBI का वीडियो कॉल आता है—और ₹1,935 Crore ठगी का यही जाल आपकी जमा-पूँजी छीन सकता है।[/fear] [pause:0.4s] क्या आप बच पाएंगे?",
+      "tts_text": "[fear] रात के बारह बजे आपके फ़ोन पर सी बी आई का वीडियो कॉल आता है—और एक हज़ार नौ सौ पैंतीस करोड़ रुपये ठगी का यही जाल आपकी जमा-पूँजी छीन सकता है।[/fear] [pause:0.4s] क्या आप बच पाएंगे?",
       "speak_words": [
         "रात",
         "के",
         "बारह",
         "बजे",
-        "आपका",
+        "आपके",
         "फ़ोन",
-        "बजता",
-        "है",
-        "स्क्रीन",
         "पर",
-        "चमकता",
-        "है",
         "सी",
         "बी",
         "आई",
-        "या",
-        "नारकोटिक्स",
+        "का",
         "वीडियो",
         "कॉल",
+        "आता",
+        "है—और",
+        "उन्नीस",
+        "सौ",
+        "पैंतीस",
+        "करोड़",
+        "रुपये",
+        "ठगी",
+        "का",
+        "यही",
+        "जाल",
+        "आपकी",
+        "जमा-पूँजी",
+        "छीन",
+        "सकता",
+        "है",
         "क्या",
         "आप",
-        "घबरा",
-        "जाएंगे"
+        "बच",
+        "पाएंगे"
       ],
       "display_spans": [
         {
@@ -75,7 +86,7 @@
         },
         {
           "span_id": "span_3",
-          "show": "बारह",
+          "show": "12",
           "speak_words": [
             "बारह"
           ],
@@ -93,9 +104,9 @@
         },
         {
           "span_id": "span_5",
-          "show": "आपका",
+          "show": "आपके",
           "speak_words": [
-            "आपका"
+            "आपके"
           ],
           "speak_start_idx": 4,
           "speak_end_idx": 4
@@ -111,143 +122,201 @@
         },
         {
           "span_id": "span_7",
-          "show": "बजता",
+          "show": "पर",
           "speak_words": [
-            "बजता"
+            "पर"
           ],
           "speak_start_idx": 6,
           "speak_end_idx": 6
         },
         {
           "span_id": "span_8",
-          "show": "है।",
-          "speak_words": [
-            "है"
-          ],
-          "speak_start_idx": 7,
-          "speak_end_idx": 7
-        },
-        {
-          "span_id": "span_9",
-          "show": "स्क्रीन",
-          "speak_words": [
-            "स्क्रीन"
-          ],
-          "speak_start_idx": 8,
-          "speak_end_idx": 8
-        },
-        {
-          "span_id": "span_10",
-          "show": "पर",
-          "speak_words": [
-            "पर"
-          ],
-          "speak_start_idx": 9,
-          "speak_end_idx": 9
-        },
-        {
-          "span_id": "span_11",
-          "show": "चमकता",
-          "speak_words": [
-            "चमकता"
-          ],
-          "speak_start_idx": 10,
-          "speak_end_idx": 10
-        },
-        {
-          "span_id": "span_12",
-          "show": "है",
-          "speak_words": [
-            "है"
-          ],
-          "speak_start_idx": 11,
-          "speak_end_idx": 11
-        },
-        {
-          "span_id": "span_13",
           "show": "CBI",
           "speak_words": [
             "सी",
             "बी",
             "आई"
           ],
+          "speak_start_idx": 7,
+          "speak_end_idx": 9
+        },
+        {
+          "span_id": "span_9",
+          "show": "का",
+          "speak_words": [
+            "का"
+          ],
+          "speak_start_idx": 10,
+          "speak_end_idx": 10
+        },
+        {
+          "span_id": "span_10",
+          "show": "वीडियो",
+          "speak_words": [
+            "वीडियो"
+          ],
+          "speak_start_idx": 11,
+          "speak_end_idx": 11
+        },
+        {
+          "span_id": "span_11",
+          "show": "कॉल",
+          "speak_words": [
+            "कॉल"
+          ],
           "speak_start_idx": 12,
+          "speak_end_idx": 12
+        },
+        {
+          "span_id": "span_12",
+          "show": "आता",
+          "speak_words": [
+            "आता"
+          ],
+          "speak_start_idx": 13,
+          "speak_end_idx": 13
+        },
+        {
+          "span_id": "span_13",
+          "show": "है—और",
+          "speak_words": [
+            "है—और"
+          ],
+          "speak_start_idx": 14,
           "speak_end_idx": 14
         },
         {
           "span_id": "span_14",
-          "show": "या",
+          "show": "₹1,935 Crore",
           "speak_words": [
-            "या"
+            "उन्नीस",
+            "सौ",
+            "पैंतीस",
+            "करोड़",
+            "रुपये"
           ],
           "speak_start_idx": 15,
-          "speak_end_idx": 15
-        },
-        {
-          "span_id": "span_15",
-          "show": "Narcotics",
-          "speak_words": [
-            "नारकोटिक्स"
-          ],
-          "speak_start_idx": 16,
-          "speak_end_idx": 16
-        },
-        {
-          "span_id": "span_16",
-          "show": "Video",
-          "speak_words": [
-            "वीडियो"
-          ],
-          "speak_start_idx": 17,
-          "speak_end_idx": 17
-        },
-        {
-          "span_id": "span_17",
-          "show": "Call।",
-          "speak_words": [
-            "कॉल"
-          ],
-          "speak_start_idx": 18,
-          "speak_end_idx": 18
-        },
-        {
-          "span_id": "span_18",
-          "show": "क्या",
-          "speak_words": [
-            "क्या"
-          ],
-          "speak_start_idx": 19,
           "speak_end_idx": 19
         },
         {
-          "span_id": "span_19",
-          "show": "आप",
+          "span_id": "span_15",
+          "show": "ठगी",
           "speak_words": [
-            "आप"
+            "ठगी"
           ],
           "speak_start_idx": 20,
           "speak_end_idx": 20
         },
         {
-          "span_id": "span_20",
-          "show": "घबरा",
+          "span_id": "span_16",
+          "show": "का",
           "speak_words": [
-            "घबरा"
+            "का"
           ],
           "speak_start_idx": 21,
           "speak_end_idx": 21
         },
         {
-          "span_id": "span_21",
-          "show": "जाएंगे?",
+          "span_id": "span_17",
+          "show": "यही",
           "speak_words": [
-            "जाएंगे"
+            "यही"
           ],
           "speak_start_idx": 22,
           "speak_end_idx": 22
+        },
+        {
+          "span_id": "span_18",
+          "show": "जाल",
+          "speak_words": [
+            "जाल"
+          ],
+          "speak_start_idx": 23,
+          "speak_end_idx": 23
+        },
+        {
+          "span_id": "span_19",
+          "show": "आपकी",
+          "speak_words": [
+            "आपकी"
+          ],
+          "speak_start_idx": 24,
+          "speak_end_idx": 24
+        },
+        {
+          "span_id": "span_20",
+          "show": "जमा-पूँजी",
+          "speak_words": [
+            "जमा-पूँजी"
+          ],
+          "speak_start_idx": 25,
+          "speak_end_idx": 25
+        },
+        {
+          "span_id": "span_21",
+          "show": "छीन",
+          "speak_words": [
+            "छीन"
+          ],
+          "speak_start_idx": 26,
+          "speak_end_idx": 26
+        },
+        {
+          "span_id": "span_22",
+          "show": "सकता",
+          "speak_words": [
+            "सकता"
+          ],
+          "speak_start_idx": 27,
+          "speak_end_idx": 27
+        },
+        {
+          "span_id": "span_23",
+          "show": "है।",
+          "speak_words": [
+            "है"
+          ],
+          "speak_start_idx": 28,
+          "speak_end_idx": 28
+        },
+        {
+          "span_id": "span_24",
+          "show": "क्या",
+          "speak_words": [
+            "क्या"
+          ],
+          "speak_start_idx": 29,
+          "speak_end_idx": 29
+        },
+        {
+          "span_id": "span_25",
+          "show": "आप",
+          "speak_words": [
+            "आप"
+          ],
+          "speak_start_idx": 30,
+          "speak_end_idx": 30
+        },
+        {
+          "span_id": "span_26",
+          "show": "बच",
+          "speak_words": [
+            "बच"
+          ],
+          "speak_start_idx": 31,
+          "speak_end_idx": 31
+        },
+        {
+          "span_id": "span_27",
+          "show": "पाएंगे?",
+          "speak_words": [
+            "पाएंगे"
+          ],
+          "speak_start_idx": 32,
+          "speak_end_idx": 32
         }
       ],
-      "visual_type": "hero_ltx_i2v",
+      "visual_type": "phone_call_card",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -257,12 +326,12 @@
       "visual_beats": [
         {
           "beat_id": "scene_01_b1",
-          "visual_type": "hero_ltx_i2v",
+          "visual_type": "phone_call_card",
           "duration": 2.41,
           "camera": "push_in",
-          "query": "dark bedroom smartphone ringing glowing screen CBI video call tension",
-          "ai_prompt": "dark bedroom smartphone ringing glowing screen CBI video call tension, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "deep_sub_hit",
+          "query": "CBI Cyber Crime अधिकारी — +92 / VoIP Video Call",
+          "ai_prompt": "CBI Cyber Crime अधिकारी — +92 / VoIP Video Call, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
+          "sfx_tag": "subtle_pop",
           "headline": "रात के 12 बजे अनजान वीडियो कॉल",
           "source": "Cyber Crime Alert",
           "quote_speaker": "",
@@ -272,7 +341,7 @@
         },
         {
           "beat_id": "scene_01_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "close up shocked Indian person looking at smartphone video call in dark room",
@@ -584,7 +653,7 @@
           "speak_end_idx": 23
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -594,7 +663,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_02_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "elderly Indian citizen sitting nervously in front of laptop Skype call at night",
@@ -624,7 +693,7 @@
         },
         {
           "beat_id": "scene_02_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "hand holding passport and Aadhaar card near laptop webcam dimly lit",
@@ -639,7 +708,7 @@
         },
         {
           "beat_id": "scene_02_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "cyber scammer call center operators with headsets in dark office",
@@ -921,7 +990,7 @@
         },
         {
           "beat_id": "scene_03_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "digital data visualization glowing map of India cyber crime network",
@@ -973,13 +1042,15 @@
       "on_screen_date": "2024 डेटा",
       "preferred_media_url": null,
       "tagged_narration": "MHA और I4C की रिपोर्ट बताती है कि 2024 में लोगों ने Digital Arrest में ₹1,935 Crore गँवा दिए।",
-      "tts_text": "एम एच ए और I4C की रिपोर्ट बताती है कि दो हज़ार चौबीस में लोगों ने डिजिटल अरेस्ट में एक हज़ार नौ सौ पैंतीस करोड़ रुपये गँवा दिए।",
+      "tts_text": "एम एच ए और आई फोर सी की रिपोर्ट बताती है कि दो हज़ार चौबीस में लोगों ने डिजिटल अरेस्ट में एक हज़ार नौ सौ पैंतीस करोड़ रुपये गँवा दिए।",
       "speak_words": [
         "एम",
         "एच",
         "ए",
         "और",
-        "I4C",
+        "आई",
+        "फोर",
+        "सी",
         "की",
         "रिपोर्ट",
         "बताती",
@@ -1027,10 +1098,12 @@
           "span_id": "span_3",
           "show": "I4C",
           "speak_words": [
-            "I4C"
+            "आई",
+            "फोर",
+            "सी"
           ],
           "speak_start_idx": 4,
-          "speak_end_idx": 4
+          "speak_end_idx": 6
         },
         {
           "span_id": "span_4",
@@ -1038,8 +1111,8 @@
           "speak_words": [
             "की"
           ],
-          "speak_start_idx": 5,
-          "speak_end_idx": 5
+          "speak_start_idx": 7,
+          "speak_end_idx": 7
         },
         {
           "span_id": "span_5",
@@ -1047,8 +1120,8 @@
           "speak_words": [
             "रिपोर्ट"
           ],
-          "speak_start_idx": 6,
-          "speak_end_idx": 6
+          "speak_start_idx": 8,
+          "speak_end_idx": 8
         },
         {
           "span_id": "span_6",
@@ -1056,8 +1129,8 @@
           "speak_words": [
             "बताती"
           ],
-          "speak_start_idx": 7,
-          "speak_end_idx": 7
+          "speak_start_idx": 9,
+          "speak_end_idx": 9
         },
         {
           "span_id": "span_7",
@@ -1065,8 +1138,8 @@
           "speak_words": [
             "है"
           ],
-          "speak_start_idx": 8,
-          "speak_end_idx": 8
+          "speak_start_idx": 10,
+          "speak_end_idx": 10
         },
         {
           "span_id": "span_8",
@@ -1074,8 +1147,8 @@
           "speak_words": [
             "कि"
           ],
-          "speak_start_idx": 9,
-          "speak_end_idx": 9
+          "speak_start_idx": 11,
+          "speak_end_idx": 11
         },
         {
           "span_id": "span_9",
@@ -1085,8 +1158,8 @@
             "हज़ार",
             "चौबीस"
           ],
-          "speak_start_idx": 10,
-          "speak_end_idx": 12
+          "speak_start_idx": 12,
+          "speak_end_idx": 14
         },
         {
           "span_id": "span_10",
@@ -1094,8 +1167,8 @@
           "speak_words": [
             "में"
           ],
-          "speak_start_idx": 13,
-          "speak_end_idx": 13
+          "speak_start_idx": 15,
+          "speak_end_idx": 15
         },
         {
           "span_id": "span_11",
@@ -1103,8 +1176,8 @@
           "speak_words": [
             "लोगों"
           ],
-          "speak_start_idx": 14,
-          "speak_end_idx": 14
+          "speak_start_idx": 16,
+          "speak_end_idx": 16
         },
         {
           "span_id": "span_12",
@@ -1112,38 +1185,30 @@
           "speak_words": [
             "ने"
           ],
-          "speak_start_idx": 15,
-          "speak_end_idx": 15
-        },
-        {
-          "span_id": "span_13",
-          "show": "Digital",
-          "speak_words": [
-            "डिजिटल"
-          ],
-          "speak_start_idx": 16,
-          "speak_end_idx": 16
-        },
-        {
-          "span_id": "span_14",
-          "show": "Arrest",
-          "speak_words": [
-            "अरेस्ट"
-          ],
           "speak_start_idx": 17,
           "speak_end_idx": 17
         },
         {
-          "span_id": "span_15",
+          "span_id": "span_13",
+          "show": "Digital Arrest",
+          "speak_words": [
+            "डिजिटल",
+            "अरेस्ट"
+          ],
+          "speak_start_idx": 18,
+          "speak_end_idx": 19
+        },
+        {
+          "span_id": "span_14",
           "show": "में",
           "speak_words": [
             "में"
           ],
-          "speak_start_idx": 18,
-          "speak_end_idx": 18
+          "speak_start_idx": 20,
+          "speak_end_idx": 20
         },
         {
-          "span_id": "span_16",
+          "span_id": "span_15",
           "show": "₹1,935 Crore",
           "speak_words": [
             "उन्नीस",
@@ -1152,26 +1217,26 @@
             "करोड़",
             "रुपये"
           ],
-          "speak_start_idx": 19,
-          "speak_end_idx": 23
+          "speak_start_idx": 21,
+          "speak_end_idx": 25
         },
         {
-          "span_id": "span_17",
+          "span_id": "span_16",
           "show": "गँवा",
           "speak_words": [
             "गँवा"
           ],
-          "speak_start_idx": 24,
-          "speak_end_idx": 24
+          "speak_start_idx": 26,
+          "speak_end_idx": 26
         },
         {
-          "span_id": "span_18",
+          "span_id": "span_17",
           "show": "दिए।",
           "speak_words": [
             "दिए"
           ],
-          "speak_start_idx": 25,
-          "speak_end_idx": 25
+          "speak_start_idx": 27,
+          "speak_end_idx": 27
         }
       ],
       "visual_type": "stat_card",
@@ -1214,7 +1279,7 @@
         },
         {
           "beat_id": "scene_04_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "Indian bank currency notes and digital banking screen closeup",
@@ -1461,7 +1526,7 @@
           "speak_end_idx": 18
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -1471,7 +1536,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_05_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "Indian doctor in white coat looking stressed at smartphone",
@@ -1486,7 +1551,7 @@
         },
         {
           "beat_id": "scene_05_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "Indian corporate executive in office looking worried during video call",
@@ -1501,7 +1566,7 @@
         },
         {
           "beat_id": "scene_05_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "Indian retired senior citizen couple looking anxious at computer screen",
@@ -1698,24 +1763,16 @@
         },
         {
           "span_id": "span_14",
-          "show": "Digital",
+          "show": "Digital Arrest",
           "speak_words": [
-            "डिजिटल"
-          ],
-          "speak_start_idx": 13,
-          "speak_end_idx": 13
-        },
-        {
-          "span_id": "span_15",
-          "show": "Arrest",
-          "speak_words": [
+            "डिजिटल",
             "अरेस्ट"
           ],
-          "speak_start_idx": 14,
+          "speak_start_idx": 13,
           "speak_end_idx": 14
         },
         {
-          "span_id": "span_16",
+          "span_id": "span_15",
           "show": "जैसी",
           "speak_words": [
             "जैसी"
@@ -1724,7 +1781,7 @@
           "speak_end_idx": 15
         },
         {
-          "span_id": "span_17",
+          "span_id": "span_16",
           "show": "कोई",
           "speak_words": [
             "कोई"
@@ -1733,7 +1790,7 @@
           "speak_end_idx": 16
         },
         {
-          "span_id": "span_18",
+          "span_id": "span_17",
           "show": "चीज़",
           "speak_words": [
             "चीज़"
@@ -1742,7 +1799,7 @@
           "speak_end_idx": 17
         },
         {
-          "span_id": "span_19",
+          "span_id": "span_18",
           "show": "होती",
           "speak_words": [
             "होती"
@@ -1751,7 +1808,7 @@
           "speak_end_idx": 18
         },
         {
-          "span_id": "span_20",
+          "span_id": "span_19",
           "show": "ही",
           "speak_words": [
             "ही"
@@ -1760,7 +1817,7 @@
           "speak_end_idx": 19
         },
         {
-          "span_id": "span_21",
+          "span_id": "span_20",
           "show": "नहीं",
           "speak_words": [
             "नहीं"
@@ -1769,7 +1826,7 @@
           "speak_end_idx": 20
         },
         {
-          "span_id": "span_22",
+          "span_id": "span_21",
           "show": "है।",
           "speak_words": [
             "है"
@@ -1833,7 +1890,7 @@
         },
         {
           "beat_id": "scene_06_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "printed Indian law book and gavel on wooden desk documentary photo",
@@ -1870,7 +1927,7 @@
       "on_screen_date": "BNSS नियम",
       "preferred_media_url": null,
       "tagged_narration": "BNSS के तहत असली गिरफ्तारी में पुलिस का सामने होना, Arrest Memo देना और 24 घंटे में मजिस्ट्रेट के आगे पेशी ज़रूरी है।",
-      "tts_text": "बी एन एस एस के तहत असली गिरफ्तारी में पुलिस का सामने होना, अरेस्ट मएमओ देना और चौबीस घंटे में मजिस्ट्रेट के आगे पेशी ज़रूरी है।",
+      "tts_text": "बी एन एस एस के तहत असली गिरफ्तारी में पुलिस का सामने होना, अरेस्ट मेमो देना और चौबीस घंटे में मजिस्ट्रेट के आगे पेशी ज़रूरी है।",
       "speak_words": [
         "बी",
         "एन",
@@ -1886,7 +1943,7 @@
         "सामने",
         "होना",
         "अरेस्ट",
-        "मएमओ",
+        "मेमो",
         "देना",
         "और",
         "चौबीस",
@@ -2006,7 +2063,7 @@
           "span_id": "span_12",
           "show": "Memo",
           "speak_words": [
-            "मएमओ"
+            "मेमो"
           ],
           "speak_start_idx": 14,
           "speak_end_idx": 14
@@ -2136,7 +2193,7 @@
         },
         {
           "beat_id": "scene_07_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "Indian police station entrance daytime realistic documentary photo",
@@ -2203,7 +2260,7 @@
       "on_screen_date": "अगस्त 2024",
       "preferred_media_url": null,
       "tagged_narration": "अब एक असली केस देखिए जिसने पूरे देश को हिला दिया। [pause:0.4s] अगस्त 2024 में लुधियाना के जाने-माने उद्योगपति S.P. Oswal के साथ क्या हुआ?",
-      "tts_text": "अब एक असली केस देखिए जिसने पूरे देश को हिला दिया। [pause:0.4s] अगस्त दो हज़ार चौबीस में लुधियाना के जाने-माने उद्योगपति एस पी. ओसवअल के साथ क्या हुआ?",
+      "tts_text": "अब एक असली केस देखिए जिसने पूरे देश को हिला दिया। [pause:0.4s] अगस्त दो हज़ार चौबीस में लुधियाना के जाने-माने उद्योगपति एस पी ओसवाल के साथ क्या हुआ?",
       "speak_words": [
         "अब",
         "एक",
@@ -2227,7 +2284,7 @@
         "उद्योगपति",
         "एस",
         "पी",
-        "ओसवअल",
+        "ओसवाल",
         "के",
         "साथ",
         "क्या",
@@ -2412,7 +2469,7 @@
           "span_id": "span_20",
           "show": "Oswal",
           "speak_words": [
-            "ओसवअल"
+            "ओसवाल"
           ],
           "speak_start_idx": 22,
           "speak_end_idx": 22
@@ -2494,7 +2551,7 @@
         },
         {
           "beat_id": "scene_08_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "large textile factory exterior in Ludhiana India documentary photo",
@@ -2546,7 +2603,7 @@
       "on_screen_date": "केस स्टडी 1",
       "preferred_media_url": null,
       "tagged_narration": "[fear]स्कैमर्स खुद को CBI अफसर बताकर Skype कॉल पर आए। उन्होंने कहा कि आपका Aadhaar Card मनी लॉन्ड्रिंग में फँस गया है।[/fear]",
-      "tts_text": "[fear] स्कैमर्स खुद को सी बी आई अफसर बताकर स्काइप कॉल पर आए। उन्होंने कहा कि आपका अअडहअअर कअरड मनी लॉन्ड्रिंग में फँस गया है।[/fear]",
+      "tts_text": "[fear] स्कैमर्स खुद को सी बी आई अफसर बताकर स्काइप कॉल पर आए। उन्होंने कहा कि आपका आधार कार्ड मनी लॉन्ड्रिंग में फँस गया है।[/fear]",
       "speak_words": [
         "स्कैमर्स",
         "खुद",
@@ -2564,8 +2621,8 @@
         "कहा",
         "कि",
         "आपका",
-        "अअडहअअर",
-        "कअरड",
+        "आधार",
+        "कार्ड",
         "मनी",
         "लॉन्ड्रिंग",
         "में",
@@ -2706,7 +2763,7 @@
           "span_id": "span_15",
           "show": "Aadhaar",
           "speak_words": [
-            "अअडहअअर"
+            "आधार"
           ],
           "speak_start_idx": 16,
           "speak_end_idx": 16
@@ -2715,7 +2772,7 @@
           "span_id": "span_16",
           "show": "Card",
           "speak_words": [
-            "कअरड"
+            "कार्ड"
           ],
           "speak_start_idx": 17,
           "speak_end_idx": 17
@@ -2775,7 +2832,7 @@
           "speak_end_idx": 23
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -2785,7 +2842,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_09_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "forged arrest warrant document with fake government stamps on desk",
@@ -2800,7 +2857,7 @@
         },
         {
           "beat_id": "scene_09_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "man sitting on video call pretending to be judge in fake courtroom",
@@ -3131,7 +3188,7 @@
         },
         {
           "beat_id": "scene_10_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "laptop webcam glowing blue light in quiet study room at night",
@@ -3146,7 +3203,7 @@
         },
         {
           "beat_id": "scene_10_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "bank wire transfer receipt screen with high value figures",
@@ -3728,7 +3785,7 @@
           "speak_end_idx": 19
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -3738,7 +3795,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_12_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "elderly Indian woman sitting alone on sofa staring scared at tablet screen",
@@ -3768,7 +3825,7 @@
         },
         {
           "beat_id": "scene_12_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "wall clock showing late night hours in lonely Indian apartment",
@@ -3802,7 +3859,7 @@
       "scene_id": "scene_13",
       "chapter_index": 13,
       "title": "सुप्रीम कोर्ट का सख्त रुख",
-      "narration": "जब ये मामले बढ़ते गए, तो Supreme Court ने खुद संज्ञान लिया और इन गिरोहों को सीधे 'Digital Dacoity' यानी डिजिटल डकैती कहा।",
+      "narration": "जब ये मामले बढ़ते गए, तो Supreme Court ने खुद संज्ञान लिया और इन गिरोहों को सीधे 'Digital Dacoity' करार दिया।",
       "visual_description": "Documentary beat: सुप्रीम कोर्ट का सख्त रुख (Supreme Court of India New Delhi architecture)",
       "footage_queries": [
         "Supreme Court of India New Delhi architecture",
@@ -3814,13 +3871,13 @@
       "transition": "fade",
       "bgm_mood": "angry",
       "sfx_tag": "paper_rustle",
-      "subtitle_text": "जब ये मामले बढ़ते गए, तो Supreme Court ने खुद संज्ञान लिया और इन गिरोहों को सीधे 'Digital Dacoity' यानी डिजिटल डकैती कहा।",
+      "subtitle_text": "जब ये मामले बढ़ते गए, तो Supreme Court ने खुद संज्ञान लिया और इन गिरोहों को सीधे 'Digital Dacoity' करार दिया।",
       "layout": "hero",
       "camera": "push_in",
       "on_screen_date": "Supreme Court",
       "preferred_media_url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Supreme_Court_of_India%2C_inside_buildings_01.jpg",
-      "tagged_narration": "[angry]जब ये मामले बढ़ते गए, तो Supreme Court ने खुद संज्ञान लिया और इन गिरोहों को सीधे 'Digital Dacoity' यानी डिजिटल डकैती कहा।[/angry]",
-      "tts_text": "[angry] जब ये मामले बढ़ते गए, तो सुप्रीम कोर्ट ने खुद संज्ञान लिया और इन गिरोहों को सीधे 'डिजिटल डअकओइटय' यानी डिजिटल डकैती कहा।[/angry]",
+      "tagged_narration": "[angry]जब ये मामले बढ़ते गए, तो Supreme Court ने खुद संज्ञान लिया और इन गिरोहों को सीधे 'Digital Dacoity' करार दिया।[/angry]",
+      "tts_text": "[angry] जब ये मामले बढ़ते गए, तो सुप्रीम कोर्ट ने खुद संज्ञान लिया और इन गिरोहों को सीधे 'डिजिटल डकैती' करार दिया।[/angry]",
       "speak_words": [
         "जब",
         "ये",
@@ -3840,11 +3897,9 @@
         "को",
         "सीधे",
         "डिजिटल",
-        "डअकओइटय",
-        "यानी",
-        "डिजिटल",
         "डकैती",
-        "कहा"
+        "करार",
+        "दिया"
       ],
       "display_spans": [
         {
@@ -4005,46 +4060,28 @@
           "span_id": "span_18",
           "show": "Dacoity'",
           "speak_words": [
-            "डअकओइटय"
+            "डकैती"
           ],
           "speak_start_idx": 18,
           "speak_end_idx": 18
         },
         {
           "span_id": "span_19",
-          "show": "यानी",
+          "show": "करार",
           "speak_words": [
-            "यानी"
+            "करार"
           ],
           "speak_start_idx": 19,
           "speak_end_idx": 19
         },
         {
           "span_id": "span_20",
-          "show": "डिजिटल",
+          "show": "दिया।",
           "speak_words": [
-            "डिजिटल"
+            "दिया"
           ],
           "speak_start_idx": 20,
           "speak_end_idx": 20
-        },
-        {
-          "span_id": "span_21",
-          "show": "डकैती",
-          "speak_words": [
-            "डकैती"
-          ],
-          "speak_start_idx": 21,
-          "speak_end_idx": 21
-        },
-        {
-          "span_id": "span_22",
-          "show": "कहा।",
-          "speak_words": [
-            "कहा"
-          ],
-          "speak_start_idx": 22,
-          "speak_end_idx": 22
         }
       ],
       "visual_type": "real_photo",
@@ -4102,7 +4139,7 @@
         },
         {
           "beat_id": "scene_13_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "close up of Supreme Court legal files and wooden bench",
@@ -4139,7 +4176,7 @@
       "on_screen_date": "SC निर्देश",
       "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg/1920px-Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg",
       "tagged_narration": "सुप्रीम कोर्ट ने CBI और Interpol को विदेशी गैंग्स पकड़ने को कहा, और RBI को संदिग्ध बैंक ट्रांज़ैक्शन रोकने के सख्त निर्देश दिए।",
-      "tts_text": "सुप्रीम कोर्ट ने सी बी आई और इनटएरपओल को विदेशी गैंग्स पकड़ने को कहा, और आर बी आई को संदिग्ध बैंक ट्रांज़ैक्शन रोकने के सख्त निर्देश दिए।",
+      "tts_text": "सुप्रीम कोर्ट ने सी बी आई और इंटरपोल को विदेशी गैंग्स पकड़ने को कहा, और आर बी आई को संदिग्ध बैंक ट्रांज़ैक्शन रोकने के सख्त निर्देश दिए।",
       "speak_words": [
         "सुप्रीम",
         "कोर्ट",
@@ -4148,7 +4185,7 @@
         "बी",
         "आई",
         "और",
-        "इनटएरपओल",
+        "इंटरपोल",
         "को",
         "विदेशी",
         "गैंग्स",
@@ -4221,7 +4258,7 @@
           "span_id": "span_6",
           "show": "Interpol",
           "speak_words": [
-            "इनटएरपओल"
+            "इंटरपोल"
           ],
           "speak_start_idx": 7,
           "speak_end_idx": 7
@@ -4474,7 +4511,7 @@
       "on_screen_date": "Mule Accounts",
       "preferred_media_url": null,
       "tagged_narration": "[slow]ज़रा रुकिए — आपका पैसा ठगों के खाते में जाते ही गायब कैसे हो जाता है?[/slow] [pause:0.4s] इसके पीछे होता है Mule Account नेटवर्क।",
-      "tts_text": "[slow] ज़रा रुकिए — आपका पैसा ठगों के खाते में जाते ही गायब कैसे हो जाता है?[/slow] [pause:0.4s] इसके पीछे होता है मउलए अककआउनट नेटवर्क।",
+      "tts_text": "[slow] ज़रा रुकिए — आपका पैसा ठगों के खाते में जाते ही गायब कैसे हो जाता है?[/slow] [pause:0.4s] इसके पीछे होता है म्यूल अकाउंट नेटवर्क।",
       "speak_words": [
         "ज़रा",
         "रुकिए",
@@ -4496,8 +4533,8 @@
         "पीछे",
         "होता",
         "है",
-        "मउलए",
-        "अककआउनट",
+        "म्यूल",
+        "अकाउंट",
         "नेटवर्क"
       ],
       "display_spans": [
@@ -4685,7 +4722,7 @@
           "span_id": "span_21",
           "show": "Mule",
           "speak_words": [
-            "मउलए"
+            "म्यूल"
           ],
           "speak_start_idx": 20,
           "speak_end_idx": 20
@@ -4694,7 +4731,7 @@
           "span_id": "span_22",
           "show": "Account",
           "speak_words": [
-            "अककआउनट"
+            "अकाउंट"
           ],
           "speak_start_idx": 21,
           "speak_end_idx": 21
@@ -4709,7 +4746,7 @@
           "speak_end_idx": 22
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -4719,7 +4756,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_15_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "multiple smartphones and SIM cards laid out on table in cyber investigation",
@@ -4734,7 +4771,7 @@
         },
         {
           "beat_id": "scene_15_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "ATM cash withdrawal at night blurred face security camera style",
@@ -5091,12 +5128,12 @@
         },
         {
           "beat_id": "scene_16_b4",
-          "visual_type": "ai_image",
+          "visual_type": "phone_call_card",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "smartphone screen showing incoming unknown IVR scam call",
           "ai_prompt": "smartphone screen showing incoming unknown IVR scam call, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "soft_whoosh",
+          "sfx_tag": "subtle_pop",
           "headline": "फर्जी IVR रिकॉर्डेड कॉल से जाल",
           "source": "TRAI / DoT / PIB",
           "quote_speaker": "",
@@ -5111,13 +5148,13 @@
       "chapter_index": 17,
       "title": "अब आइए नए खतरे पर: AI वॉइस क्लोनिंग",
       "narration": "लेकिन अब इस स्कैम में एक और ख़तरनाक हथियार जुड़ गया है। मान लीजिए आपके बेटे या दोस्त की आवाज़ में कॉल आए!",
-      "visual_description": "Documentary beat: अब आइए नए खतरे पर: AI वॉइस क्लोनिंग (glowing audio waveform morphing on dark computer screen AI voice cloning)",
+      "visual_description": "Documentary beat: अब आइए नए खतरे पर: AI वॉइस क्लोनिंग (AI Voice Clone: 3 सेकंड ऑडियो → 99% हूबहू आवाज़)",
       "footage_queries": [
-        "glowing audio waveform morphing on dark computer screen AI voice cloning",
+        "AI Voice Clone: 3 सेकंड ऑडियो → 99% हूबहू आवाज़",
         "father shocked holding phone hearing panicked voice in living room",
         "Just 3 seconds of audio enough for AI voice cloning scam: McAfee India Report"
       ],
-      "ai_prompt": "glowing audio waveform morphing on dark computer screen AI voice cloning, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
+      "ai_prompt": "AI Voice Clone: 3 सेकंड ऑडियो → 99% हूबहू आवाज़, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
       "duration": 9.64,
       "transition": "fade",
       "bgm_mood": "mysterious",
@@ -5363,7 +5400,7 @@
           "speak_end_idx": 22
         }
       ],
-      "visual_type": "hero_ltx_i2v",
+      "visual_type": "waveform_card",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -5373,12 +5410,12 @@
       "visual_beats": [
         {
           "beat_id": "scene_17_b1",
-          "visual_type": "hero_ltx_i2v",
+          "visual_type": "waveform_card",
           "duration": 2.41,
           "camera": "push_in",
-          "query": "glowing audio waveform morphing on dark computer screen AI voice cloning",
-          "ai_prompt": "glowing audio waveform morphing on dark computer screen AI voice cloning, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "deep_sub_hit",
+          "query": "AI Voice Clone: 3 सेकंड ऑडियो → 99% हूबहू आवाज़",
+          "ai_prompt": "AI Voice Clone: 3 सेकंड ऑडियो → 99% हूबहू आवाज़, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
+          "sfx_tag": "subtle_pop",
           "headline": "AI से हूबहू आवाज़ की नकल",
           "source": "McAfee / Indian Express",
           "quote_speaker": "",
@@ -5388,7 +5425,7 @@
         },
         {
           "beat_id": "scene_17_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "father shocked holding phone hearing panicked voice in living room",
@@ -5455,7 +5492,7 @@
       "on_screen_date": "3–5 सेकंड",
       "preferred_media_url": null,
       "tagged_narration": "जी हाँ! आज के AI टूल्स को आपकी आवाज़ की नकल करने के लिए Instagram Reel या WhatsApp से सिर्फ़ 3 से 5 सेकंड चाहिए।",
-      "tts_text": "जी हाँ! आज के ए आई टूल्स को आपकी आवाज़ की नकल करने के लिए इनसटअगरअम रईल या व्हाट्सएप से सिर्फ़ तीन से पाँच सेकंड चाहिए।",
+      "tts_text": "जी हाँ! आज के ए आई टूल्स को आपकी आवाज़ की नकल करने के लिए इंस्टाग्राम रील या व्हाट्सएप से सिर्फ़ तीन से पाँच सेकंड चाहिए।",
       "speak_words": [
         "जी",
         "हाँ",
@@ -5472,8 +5509,8 @@
         "करने",
         "के",
         "लिए",
-        "इनसटअगरअम",
-        "रईल",
+        "इंस्टाग्राम",
+        "रील",
         "या",
         "व्हाट्सएप",
         "से",
@@ -5616,7 +5653,7 @@
           "span_id": "span_15",
           "show": "Instagram",
           "speak_words": [
-            "इनसटअगरअम"
+            "इंस्टाग्राम"
           ],
           "speak_start_idx": 15,
           "speak_end_idx": 15
@@ -5625,7 +5662,7 @@
           "span_id": "span_16",
           "show": "Reel",
           "speak_words": [
-            "रईल"
+            "रील"
           ],
           "speak_start_idx": 16,
           "speak_end_idx": 16
@@ -5712,7 +5749,7 @@
           "speak_end_idx": 25
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -5722,7 +5759,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_18_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "smartphone playing social media video reel with microphone audio waves",
@@ -5737,12 +5774,12 @@
         },
         {
           "beat_id": "scene_18_b2",
-          "visual_type": "ai_image",
+          "visual_type": "waveform_card",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "sound spectrum spectrogram software analyzing human voice pitch",
           "ai_prompt": "sound spectrum spectrogram software analyzing human voice pitch, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "soft_whoosh",
+          "sfx_tag": "subtle_pop",
           "headline": "3 सेकंड का सैंपल, 100% कॉपी",
           "source": "McAfee Artificial Imposter",
           "quote_speaker": "",
@@ -5767,7 +5804,7 @@
         },
         {
           "beat_id": "scene_18_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "person speaking into studio mic with AI neural network graphics",
@@ -5804,9 +5841,9 @@
       "on_screen_date": "McAfee डेटा",
       "preferred_media_url": null,
       "tagged_narration": "McAfee के सर्वे में 69% भारतीय असली और AI आवाज़ में फर्क नहीं कर सके, और 83% पीड़ितों ने पैसे गँवा दिए।",
-      "tts_text": "मकअफई के सर्वे में उनहत्तर परसेंट भारतीय असली और ए आई आवाज़ में फर्क नहीं कर सके, और तिरासी परसेंट पीड़ितों ने पैसे गँवा दिए।",
+      "tts_text": "मैकएफ़ी के सर्वे में उनहत्तर परसेंट भारतीय असली और ए आई आवाज़ में फर्क नहीं कर सके, और तिरासी परसेंट पीड़ितों ने पैसे गँवा दिए।",
       "speak_words": [
-        "मकअफई",
+        "मैकएफ़ी",
         "के",
         "सर्वे",
         "में",
@@ -5837,7 +5874,7 @@
           "span_id": "span_1",
           "show": "McAfee",
           "speak_words": [
-            "मकअफई"
+            "मैकएफ़ी"
           ],
           "speak_start_idx": 0,
           "speak_end_idx": 0
@@ -6374,7 +6411,7 @@
           "speak_end_idx": 24
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -6384,7 +6421,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_20_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "scammer mixing voice cloning audio on laptop near multiple phones",
@@ -6399,7 +6436,7 @@
         },
         {
           "beat_id": "scene_20_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "worried Indian mother clutching phone in kitchen emotional tension",
@@ -6414,7 +6451,7 @@
         },
         {
           "beat_id": "scene_20_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "UPI payment confirmation screen on smartphone in shaky hands",
@@ -6671,7 +6708,7 @@
           "speak_end_idx": 19
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -6681,7 +6718,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_21_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "human brain neural diagram with three glowing nodes fear trust urgency",
@@ -6711,7 +6748,7 @@
         },
         {
           "beat_id": "scene_21_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "fake police studio backdrop with national emblem and flags",
@@ -6726,7 +6763,7 @@
         },
         {
           "beat_id": "scene_21_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "red countdown timer urgent warning on laptop screen",
@@ -6968,7 +7005,7 @@
           "speak_end_idx": 19
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -6978,7 +7015,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_22_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "fake police station film set inside small dark room with camera ring light",
@@ -6993,7 +7030,7 @@
         },
         {
           "beat_id": "scene_22_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "counterfeit ID badge and forged official stamp closeup",
@@ -7008,7 +7045,7 @@
         },
         {
           "beat_id": "scene_22_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "person in khaki uniform glaring sternly into webcam",
@@ -7285,7 +7322,7 @@
           "speak_end_idx": 21
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -7295,7 +7332,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_23_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "ticking clock closeup with tense dramatic lighting",
@@ -7310,7 +7347,7 @@
         },
         {
           "beat_id": "scene_23_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "digital forged arrest warrant PDF with red stamp",
@@ -7325,7 +7362,7 @@
         },
         {
           "beat_id": "scene_23_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "nervous hands trembling while typing bank OTP on phone",
@@ -7377,13 +7414,13 @@
       "on_screen_date": "ISOLATION",
       "preferred_media_url": null,
       "tagged_narration": "[fear]सबसे ख़तरनाक चाल है Isolation—वे कहते हैं ये नेशनल सिक्योरिटी का मामला है, घरवालों या वकील को बताया तो वे भी फँस जाएंगे।[/fear]",
-      "tts_text": "[fear] सबसे ख़तरनाक चाल है इसओलअशन—वे कहते हैं ये नेशनल सिक्योरिटी का मामला है, घरवालों या वकील को बताया तो वे भी फँस जाएंगे।[/fear]",
+      "tts_text": "[fear] सबसे ख़तरनाक चाल है आइसोलेशन—वे कहते हैं ये नेशनल सिक्योरिटी का मामला है, घरवालों या वकील को बताया तो वे भी फँस जाएंगे।[/fear]",
       "speak_words": [
         "सबसे",
         "ख़तरनाक",
         "चाल",
         "है",
-        "इसओलअशन",
+        "आइसोलेशन",
         "—वे",
         "कहते",
         "हैं",
@@ -7445,7 +7482,7 @@
           "span_id": "span_5",
           "show": "Isolation",
           "speak_words": [
-            "इसओलअशन"
+            "आइसोलेशन"
           ],
           "speak_start_idx": 4,
           "speak_end_idx": 4
@@ -7622,7 +7659,7 @@
           "speak_end_idx": 23
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -7632,7 +7669,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_24_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "person locking bedroom door from inside while on video call",
@@ -7647,7 +7684,7 @@
         },
         {
           "beat_id": "scene_24_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "person ignoring ringing incoming calls from family member",
@@ -7677,7 +7714,7 @@
         },
         {
           "beat_id": "scene_24_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "shushing gesture finger on lips dark atmospheric documentary photo",
@@ -7714,7 +7751,7 @@
       "on_screen_date": "THE EXTORTION",
       "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Reserve_Bank_Of_India_-_RBI_Mumbai.jpg/1920px-Reserve_Bank_Of_India_-_RBI_Mumbai.jpg",
       "tagged_narration": "आखिर में वे कहते हैं कि अपनी ईमानदारी साबित करने के लिए सारा पैसा 'RBI Escrow Account' में भेज दो, जाँच के बाद वापस मिल जाएगा।",
-      "tts_text": "आखिर में वे कहते हैं कि अपनी ईमानदारी साबित करने के लिए सारा पैसा 'आर बी आई एसकरओ अककआउनट' में भेज दो, जाँच के बाद वापस मिल जाएगा।",
+      "tts_text": "आखिर में वे कहते हैं कि अपनी ईमानदारी साबित करने के लिए सारा पैसा 'आर बी आई एस्क्रो अकाउंट' में भेज दो, जाँच के बाद वापस मिल जाएगा।",
       "speak_words": [
         "आखिर",
         "में",
@@ -7733,8 +7770,8 @@
         "आर",
         "बी",
         "आई",
-        "एसकरओ",
-        "अककआउनट",
+        "एस्क्रो",
+        "अकाउंट",
         "में",
         "भेज",
         "दो",
@@ -7887,7 +7924,7 @@
           "span_id": "span_16",
           "show": "Escrow",
           "speak_words": [
-            "एसकरओ"
+            "एस्क्रो"
           ],
           "speak_start_idx": 17,
           "speak_end_idx": 17
@@ -7896,7 +7933,7 @@
           "span_id": "span_17",
           "show": "Account'",
           "speak_words": [
-            "अककआउनट"
+            "अकाउंट"
           ],
           "speak_start_idx": 18,
           "speak_end_idx": 18
@@ -8350,7 +8387,7 @@
           "speak_end_idx": 26
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -8360,7 +8397,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_26_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "cardboard courier parcel box with shipping label on warehouse table",
@@ -8375,7 +8412,7 @@
         },
         {
           "beat_id": "scene_26_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "forged passport and suspicious parcel photo sent on WhatsApp",
@@ -8984,7 +9021,7 @@
           "speak_end_idx": 24
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": true,
@@ -8994,7 +9031,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_28_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "finger pressing red end call button on smartphone screen",
@@ -9024,7 +9061,7 @@
         },
         {
           "beat_id": "scene_28_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "smartphone screen showing blocked caller confirmation",
@@ -9355,7 +9392,7 @@
         },
         {
           "beat_id": "scene_29_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "person closing banking app safely on smartphone",
@@ -9370,7 +9407,7 @@
         },
         {
           "beat_id": "scene_29_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "Indian bank branch exterior daytime reassuring documentary shot",
@@ -9407,7 +9444,7 @@
       "on_screen_date": "नियम 3",
       "preferred_media_url": null,
       "tagged_narration": "[slow]नियम 3 सबसे स्मार्ट है — AI वॉइस क्लोनिंग को हराने के लिए अपने परिवार के साथ एक सीक्रेट Codeword तय कर लें।[/slow]",
-      "tts_text": "[slow] नियम तीन सबसे स्मार्ट है — ए आई वॉइस क्लोनिंग को हराने के लिए अपने परिवार के साथ एक सीक्रेट कओडएवओरड तय कर लें।[/slow]",
+      "tts_text": "[slow] नियम तीन सबसे स्मार्ट है — ए आई वॉइस क्लोनिंग को हराने के लिए अपने परिवार के साथ एक सीक्रेट कोडवर्ड तय कर लें।[/slow]",
       "speak_words": [
         "नियम",
         "तीन",
@@ -9429,7 +9466,7 @@
         "साथ",
         "एक",
         "सीक्रेट",
-        "कओडएवओरड",
+        "कोडवर्ड",
         "तय",
         "कर",
         "लें"
@@ -9611,7 +9648,7 @@
           "span_id": "span_20",
           "show": "Codeword",
           "speak_words": [
-            "कओडएवओरड"
+            "कोडवर्ड"
           ],
           "speak_start_idx": 20,
           "speak_end_idx": 20
@@ -9644,7 +9681,7 @@
           "speak_end_idx": 23
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -9654,7 +9691,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_30_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "Indian family sitting together at dining table talking warmly",
@@ -9684,7 +9721,7 @@
         },
         {
           "beat_id": "scene_30_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "person dialing known personal mobile number of relative to verify",
@@ -9699,7 +9736,7 @@
         },
         {
           "beat_id": "scene_30_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "smartphone social media privacy lock settings screen",
@@ -9736,7 +9773,7 @@
       "on_screen_date": "हेल्पलाइन 1930",
       "preferred_media_url": null,
       "tagged_narration": "[fast]नियम 4: अगर गलती से पैसा चला जाए, तो पहले ही घंटे यानी Golden Hour में 1930 डायल करें और cybercrime.gov.in पर शिकायत दर्ज करें।[/fast]",
-      "tts_text": "[fast] नियम चार: अगर गलती से पैसा चला जाए, तो पहले ही घंटे यानी गओलडएन हआउर में उन्नीस तीस डायल करें और कयबएरकरइमएगओवइन पर शिकायत दर्ज करें।[/fast]",
+      "tts_text": "[fast] नियम चार: अगर गलती से पैसा चला जाए, तो पहले ही घंटे यानी गोल्डन आवर में उन्नीस तीस डायल करें और साइबरक्राइम डॉट गव डॉट इन पर शिकायत दर्ज करें।[/fast]",
       "speak_words": [
         "नियम",
         "चार",
@@ -9751,8 +9788,8 @@
         "ही",
         "घंटे",
         "यानी",
-        "गओलडएन",
-        "हआउर",
+        "गोल्डन",
+        "आवर",
         "में",
         "उन्नीस",
         "तीस",
@@ -9885,24 +9922,16 @@
         },
         {
           "span_id": "span_14",
-          "show": "Golden",
+          "show": "Golden Hour",
           "speak_words": [
-            "गओलडएन"
+            "गोल्डन",
+            "आवर"
           ],
           "speak_start_idx": 13,
-          "speak_end_idx": 13
-        },
-        {
-          "span_id": "span_15",
-          "show": "Hour",
-          "speak_words": [
-            "हआउर"
-          ],
-          "speak_start_idx": 14,
           "speak_end_idx": 14
         },
         {
-          "span_id": "span_16",
+          "span_id": "span_15",
           "show": "में",
           "speak_words": [
             "में"
@@ -9911,7 +9940,7 @@
           "speak_end_idx": 15
         },
         {
-          "span_id": "span_17",
+          "span_id": "span_16",
           "show": "1930",
           "speak_words": [
             "उन्नीस",
@@ -9921,7 +9950,7 @@
           "speak_end_idx": 17
         },
         {
-          "span_id": "span_18",
+          "span_id": "span_17",
           "show": "डायल",
           "speak_words": [
             "डायल"
@@ -9930,7 +9959,7 @@
           "speak_end_idx": 18
         },
         {
-          "span_id": "span_19",
+          "span_id": "span_18",
           "show": "करें",
           "speak_words": [
             "करें"
@@ -9939,7 +9968,7 @@
           "speak_end_idx": 19
         },
         {
-          "span_id": "span_20",
+          "span_id": "span_19",
           "show": "और",
           "speak_words": [
             "और"
@@ -9948,7 +9977,7 @@
           "speak_end_idx": 20
         },
         {
-          "span_id": "span_21",
+          "span_id": "span_20",
           "show": "cybercrime.gov.in",
           "speak_words": [
             "कयबएरकरइमएगओवइन"
@@ -9957,7 +9986,7 @@
           "speak_end_idx": 21
         },
         {
-          "span_id": "span_22",
+          "span_id": "span_21",
           "show": "पर",
           "speak_words": [
             "पर"
@@ -9966,7 +9995,7 @@
           "speak_end_idx": 22
         },
         {
-          "span_id": "span_23",
+          "span_id": "span_22",
           "show": "शिकायत",
           "speak_words": [
             "शिकायत"
@@ -9975,7 +10004,7 @@
           "speak_end_idx": 23
         },
         {
-          "span_id": "span_24",
+          "span_id": "span_23",
           "show": "दर्ज",
           "speak_words": [
             "दर्ज"
@@ -9984,7 +10013,7 @@
           "speak_end_idx": 24
         },
         {
-          "span_id": "span_25",
+          "span_id": "span_24",
           "show": "करें।",
           "speak_words": [
             "करें"
@@ -10018,7 +10047,7 @@
         },
         {
           "beat_id": "scene_31_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "person dialing 1930 on smartphone keypad urgent closeup",
@@ -10085,7 +10114,7 @@
       "on_screen_date": "CHAKSHU PORTAL",
       "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Sanchar_Bhawan.jpg/1920px-Sanchar_Bhawan.jpg",
       "tagged_narration": "नियम 5: पैसे न भी गए हों, फिर भी हर फर्जी कॉल की रिपोर्ट Sanchar Saathi के Chakshu पोर्टल पर ज़रूर करें ताकि दूसरे बच सकें।",
-      "tts_text": "नियम पाँच: पैसे न भी गए हों, फिर भी हर फर्जी कॉल की रिपोर्ट सअनचअर सअअथइ के चअकशउ पोर्टल पर ज़रूर करें ताकि दूसरे बच सकें।",
+      "tts_text": "नियम पाँच: पैसे न भी गए हों, फिर भी हर फर्जी कॉल की रिपोर्ट संचार साथी के चक्षु पोर्टल पर ज़रूर करें ताकि दूसरे बच सकें।",
       "speak_words": [
         "नियम",
         "पाँच",
@@ -10101,10 +10130,10 @@
         "कॉल",
         "की",
         "रिपोर्ट",
-        "सअनचअर",
-        "सअअथइ",
+        "संचार",
+        "साथी",
         "के",
-        "चअकशउ",
+        "चक्षु",
         "पोर्टल",
         "पर",
         "ज़रूर",
@@ -10243,24 +10272,16 @@
         },
         {
           "span_id": "span_15",
-          "show": "Sanchar",
+          "show": "Sanchar Saathi",
           "speak_words": [
-            "सअनचअर"
+            "संचार",
+            "साथी"
           ],
           "speak_start_idx": 14,
-          "speak_end_idx": 14
-        },
-        {
-          "span_id": "span_16",
-          "show": "Saathi",
-          "speak_words": [
-            "सअअथइ"
-          ],
-          "speak_start_idx": 15,
           "speak_end_idx": 15
         },
         {
-          "span_id": "span_17",
+          "span_id": "span_16",
           "show": "के",
           "speak_words": [
             "के"
@@ -10269,16 +10290,16 @@
           "speak_end_idx": 16
         },
         {
-          "span_id": "span_18",
+          "span_id": "span_17",
           "show": "Chakshu",
           "speak_words": [
-            "चअकशउ"
+            "चक्षु"
           ],
           "speak_start_idx": 17,
           "speak_end_idx": 17
         },
         {
-          "span_id": "span_19",
+          "span_id": "span_18",
           "show": "पोर्टल",
           "speak_words": [
             "पोर्टल"
@@ -10287,7 +10308,7 @@
           "speak_end_idx": 18
         },
         {
-          "span_id": "span_20",
+          "span_id": "span_19",
           "show": "पर",
           "speak_words": [
             "पर"
@@ -10296,7 +10317,7 @@
           "speak_end_idx": 19
         },
         {
-          "span_id": "span_21",
+          "span_id": "span_20",
           "show": "ज़रूर",
           "speak_words": [
             "ज़रूर"
@@ -10305,7 +10326,7 @@
           "speak_end_idx": 20
         },
         {
-          "span_id": "span_22",
+          "span_id": "span_21",
           "show": "करें",
           "speak_words": [
             "करें"
@@ -10314,7 +10335,7 @@
           "speak_end_idx": 21
         },
         {
-          "span_id": "span_23",
+          "span_id": "span_22",
           "show": "ताकि",
           "speak_words": [
             "ताकि"
@@ -10323,7 +10344,7 @@
           "speak_end_idx": 22
         },
         {
-          "span_id": "span_24",
+          "span_id": "span_23",
           "show": "दूसरे",
           "speak_words": [
             "दूसरे"
@@ -10332,7 +10353,7 @@
           "speak_end_idx": 23
         },
         {
-          "span_id": "span_25",
+          "span_id": "span_24",
           "show": "बच",
           "speak_words": [
             "बच"
@@ -10341,7 +10362,7 @@
           "speak_end_idx": 24
         },
         {
-          "span_id": "span_26",
+          "span_id": "span_25",
           "show": "सकें।",
           "speak_words": [
             "सकें"
@@ -10390,7 +10411,7 @@
         },
         {
           "beat_id": "scene_32_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "person reporting spam scam number on mobile web browser",
@@ -10442,7 +10463,7 @@
       "on_screen_date": "GLOBAL NETWORK",
       "preferred_media_url": null,
       "tagged_narration": "[slow]लेकिन एक बड़ा सवाल अभी बाकी है — ये कॉल आते कहाँ से हैं?[/slow] [pause:0.4s] I4C जांच में कई तार विदेशों से जुड़े मिले हैं।",
-      "tts_text": "[slow] लेकिन एक बड़ा सवाल अभी बाकी है — ये कॉल आते कहाँ से हैं?[/slow] [pause:0.4s] I4C जांच में कई तार विदेशों से जुड़े मिले हैं।",
+      "tts_text": "[slow] लेकिन एक बड़ा सवाल अभी बाकी है — ये कॉल आते कहाँ से हैं?[/slow] [pause:0.4s] आई फोर सी जांच में कई तार विदेशों से जुड़े मिले हैं।",
       "speak_words": [
         "लेकिन",
         "एक",
@@ -10458,7 +10479,9 @@
         "कहाँ",
         "से",
         "हैं",
-        "I4C",
+        "आई",
+        "फोर",
+        "सी",
         "जांच",
         "में",
         "कई",
@@ -10600,10 +10623,12 @@
           "span_id": "span_15",
           "show": "I4C",
           "speak_words": [
-            "I4C"
+            "आई",
+            "फोर",
+            "सी"
           ],
           "speak_start_idx": 14,
-          "speak_end_idx": 14
+          "speak_end_idx": 16
         },
         {
           "span_id": "span_16",
@@ -10611,8 +10636,8 @@
           "speak_words": [
             "जांच"
           ],
-          "speak_start_idx": 15,
-          "speak_end_idx": 15
+          "speak_start_idx": 17,
+          "speak_end_idx": 17
         },
         {
           "span_id": "span_17",
@@ -10620,8 +10645,8 @@
           "speak_words": [
             "में"
           ],
-          "speak_start_idx": 16,
-          "speak_end_idx": 16
+          "speak_start_idx": 18,
+          "speak_end_idx": 18
         },
         {
           "span_id": "span_18",
@@ -10629,8 +10654,8 @@
           "speak_words": [
             "कई"
           ],
-          "speak_start_idx": 17,
-          "speak_end_idx": 17
+          "speak_start_idx": 19,
+          "speak_end_idx": 19
         },
         {
           "span_id": "span_19",
@@ -10638,8 +10663,8 @@
           "speak_words": [
             "तार"
           ],
-          "speak_start_idx": 18,
-          "speak_end_idx": 18
+          "speak_start_idx": 20,
+          "speak_end_idx": 20
         },
         {
           "span_id": "span_20",
@@ -10647,8 +10672,8 @@
           "speak_words": [
             "विदेशों"
           ],
-          "speak_start_idx": 19,
-          "speak_end_idx": 19
+          "speak_start_idx": 21,
+          "speak_end_idx": 21
         },
         {
           "span_id": "span_21",
@@ -10656,8 +10681,8 @@
           "speak_words": [
             "से"
           ],
-          "speak_start_idx": 20,
-          "speak_end_idx": 20
+          "speak_start_idx": 22,
+          "speak_end_idx": 22
         },
         {
           "span_id": "span_22",
@@ -10665,8 +10690,8 @@
           "speak_words": [
             "जुड़े"
           ],
-          "speak_start_idx": 21,
-          "speak_end_idx": 21
+          "speak_start_idx": 23,
+          "speak_end_idx": 23
         },
         {
           "span_id": "span_23",
@@ -10674,8 +10699,8 @@
           "speak_words": [
             "मिले"
           ],
-          "speak_start_idx": 22,
-          "speak_end_idx": 22
+          "speak_start_idx": 24,
+          "speak_end_idx": 24
         },
         {
           "span_id": "span_24",
@@ -10683,8 +10708,8 @@
           "speak_words": [
             "हैं"
           ],
-          "speak_start_idx": 23,
-          "speak_end_idx": 23
+          "speak_start_idx": 25,
+          "speak_end_idx": 25
         }
       ],
       "visual_type": "map_card",
@@ -10712,7 +10737,7 @@
         },
         {
           "beat_id": "scene_33_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "rows of computers inside secretive cyber scam compound office",
@@ -10779,7 +10804,7 @@
       "on_screen_date": "DEEPFAKE TECH",
       "preferred_media_url": null,
       "tagged_narration": "आवाज़ और चेहरे दोनों की नकल के लिए अब सस्ते Deepfake और Voice Cloning ऐप्स खुलेआम इंटरनेट पर इस्तेमाल हो रहे हैं।",
-      "tts_text": "आवाज़ और चेहरे दोनों की नकल के लिए अब सस्ते डईपफअकए और वॉइस क्लोनिंग ऐप्स खुलेआम इंटरनेट पर इस्तेमाल हो रहे हैं।",
+      "tts_text": "आवाज़ और चेहरे दोनों की नकल के लिए अब सस्ते डीपफेक और वॉइस क्लोनिंग ऐप्स खुलेआम इंटरनेट पर इस्तेमाल हो रहे हैं।",
       "speak_words": [
         "आवाज़",
         "और",
@@ -10791,7 +10816,7 @@
         "लिए",
         "अब",
         "सस्ते",
-        "डईपफअकए",
+        "डीपफेक",
         "और",
         "वॉइस",
         "क्लोनिंग",
@@ -10899,7 +10924,7 @@
           "span_id": "span_11",
           "show": "Deepfake",
           "speak_words": [
-            "डईपफअकए"
+            "डीपफेक"
           ],
           "speak_start_idx": 10,
           "speak_end_idx": 10
@@ -11004,7 +11029,7 @@
           "speak_end_idx": 21
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -11014,7 +11039,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_34_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "split screen showing real person face and AI deepfake wireframe mesh",
@@ -11029,12 +11054,12 @@
         },
         {
           "beat_id": "scene_34_b2",
-          "visual_type": "ai_image",
+          "visual_type": "waveform_card",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "glowing audio neural waveform converting voice tone on laptop",
           "ai_prompt": "glowing audio neural waveform converting voice tone on laptop, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "soft_whoosh",
+          "sfx_tag": "subtle_pop",
           "headline": "लाइव कॉल में भी आवाज बदलने की तकनीक",
           "source": "Cyber Security Advisories",
           "quote_speaker": "",
@@ -11059,7 +11084,7 @@
         },
         {
           "beat_id": "scene_34_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "cyber security analyst examining tampered video pixels on dual monitors",
@@ -11436,7 +11461,7 @@
         },
         {
           "beat_id": "scene_35_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "bank manager advising elderly customer politely across desk",
@@ -11748,7 +11773,7 @@
           "speak_end_idx": 26
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -11758,7 +11783,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_36_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "elderly Indian father sitting quietly near window holding phone",
@@ -11773,7 +11798,7 @@
         },
         {
           "beat_id": "scene_36_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_right",
           "query": "young adult explaining smartphone safety to elderly parents on sofa",
@@ -11803,7 +11828,7 @@
         },
         {
           "beat_id": "scene_36_b4",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pan_left",
           "query": "warm family conversation in living room evening light",
@@ -11840,7 +11865,7 @@
       "on_screen_date": "3 GOLDEN CHECKS",
       "preferred_media_url": null,
       "tagged_narration": "हमेशा तीन बातें याद रखिए: कोई वीडियो अरेस्ट नहीं होता, कोई Safe Account नहीं होता, और Secret रहने को कहे तो पक्का स्कैम है।",
-      "tts_text": "हमेशा तीन बातें याद रखिए: कोई वीडियो अरेस्ट नहीं होता, कोई सअफए अककआउनट नहीं होता, और सएकरएट रहने को कहे तो पक्का स्कैम है।",
+      "tts_text": "हमेशा तीन बातें याद रखिए: कोई वीडियो अरेस्ट नहीं होता, कोई सेफ अकाउंट नहीं होता, और सीक्रेट रहने को कहे तो पक्का स्कैम है।",
       "speak_words": [
         "हमेशा",
         "तीन",
@@ -11853,12 +11878,12 @@
         "नहीं",
         "होता",
         "कोई",
-        "सअफए",
-        "अककआउनट",
+        "सेफ",
+        "अकाउंट",
         "नहीं",
         "होता",
         "और",
-        "सएकरएट",
+        "सीक्रेट",
         "रहने",
         "को",
         "कहे",
@@ -11971,7 +11996,7 @@
           "span_id": "span_12",
           "show": "Safe",
           "speak_words": [
-            "सअफए"
+            "सेफ"
           ],
           "speak_start_idx": 11,
           "speak_end_idx": 11
@@ -11980,7 +12005,7 @@
           "span_id": "span_13",
           "show": "Account",
           "speak_words": [
-            "अककआउनट"
+            "अकाउंट"
           ],
           "speak_start_idx": 12,
           "speak_end_idx": 12
@@ -12016,7 +12041,7 @@
           "span_id": "span_17",
           "show": "Secret",
           "speak_words": [
-            "सएकरएट"
+            "सीक्रेट"
           ],
           "speak_start_idx": 16,
           "speak_end_idx": 16
@@ -12422,7 +12447,7 @@
           "speak_end_idx": 23
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -12432,7 +12457,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_38_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "confident person hanging up scam call and smiling calmly",
@@ -12462,7 +12487,7 @@
         },
         {
           "beat_id": "scene_38_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "pull_out",
           "query": "person dialing 1930 helpline on phone calmly",
@@ -12749,7 +12774,7 @@
           "speak_end_idx": 22
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -12759,7 +12784,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_39_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
           "query": "hands holding smartphone with glowing security shield icon concept",
@@ -12824,13 +12849,13 @@
       "chapter_index": 40,
       "title": "निष्कर्ष: वीडियो शेयर करें, सतर्क रहें",
       "narration": "तो आज ही अपने माता-पिता के साथ Family Codeword सेट करें और उन्हें बताएं कि Digital Arrest जैसा कोई कानून नहीं है। सतर्क रहिए, सुरक्षित रहिए।",
-      "visual_description": "Documentary beat: निष्कर्ष: वीडियो शेयर करें, सतर्क रहें (cinematic wide twilight shot Indian family safe at home warm light)",
+      "visual_description": "Documentary beat: निष्कर्ष: वीडियो शेयर करें, सतर्क रहें (family home parents living room warm evening conversation)",
       "footage_queries": [
-        "cinematic wide twilight shot Indian family safe at home warm light",
+        "family home parents living room warm evening conversation",
         "No Digital Arrest in India",
         "Save This Number: 1930"
       ],
-      "ai_prompt": "cinematic wide twilight shot Indian family safe at home warm light, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
+      "ai_prompt": "family home parents living room warm evening conversation, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
       "duration": 9.64,
       "transition": "wipeleft",
       "bgm_mood": "epic",
@@ -12841,7 +12866,7 @@
       "on_screen_date": "STAY SAFE",
       "preferred_media_url": null,
       "tagged_narration": "तो आज ही अपने माता-पिता के साथ Family Codeword सेट करें और उन्हें बताएं कि Digital Arrest जैसा कोई कानून नहीं है। सतर्क रहिए, सुरक्षित रहिए।",
-      "tts_text": "तो आज ही अपने माता-पिता के साथ फअमइलय कओडएवओरड सेट करें और उन्हें बताएं कि डिजिटल अरेस्ट जैसा कोई कानून नहीं है। सतर्क रहिए, सुरक्षित रहिए।",
+      "tts_text": "तो आज ही अपने माता-पिता के साथ फ़ैमिली कोडवर्ड सेट करें और उन्हें बताएं कि डिजिटल अरेस्ट जैसा कोई कानून नहीं है। सतर्क रहिए, सुरक्षित रहिए।",
       "speak_words": [
         "तो",
         "आज",
@@ -12850,8 +12875,8 @@
         "माता-पिता",
         "के",
         "साथ",
-        "फअमइलय",
-        "कओडएवओरड",
+        "फ़ैमिली",
+        "कोडवर्ड",
         "सेट",
         "करें",
         "और",
@@ -12938,7 +12963,7 @@
           "span_id": "span_8",
           "show": "Family",
           "speak_words": [
-            "फअमइलय"
+            "फ़ैमिली"
           ],
           "speak_start_idx": 7,
           "speak_end_idx": 7
@@ -12947,7 +12972,7 @@
           "span_id": "span_9",
           "show": "Codeword",
           "speak_words": [
-            "कओडएवओरड"
+            "कोडवर्ड"
           ],
           "speak_start_idx": 8,
           "speak_end_idx": 8
@@ -13008,24 +13033,16 @@
         },
         {
           "span_id": "span_16",
-          "show": "Digital",
+          "show": "Digital Arrest",
           "speak_words": [
-            "डिजिटल"
-          ],
-          "speak_start_idx": 15,
-          "speak_end_idx": 15
-        },
-        {
-          "span_id": "span_17",
-          "show": "Arrest",
-          "speak_words": [
+            "डिजिटल",
             "अरेस्ट"
           ],
-          "speak_start_idx": 16,
+          "speak_start_idx": 15,
           "speak_end_idx": 16
         },
         {
-          "span_id": "span_18",
+          "span_id": "span_17",
           "show": "जैसा",
           "speak_words": [
             "जैसा"
@@ -13034,7 +13051,7 @@
           "speak_end_idx": 17
         },
         {
-          "span_id": "span_19",
+          "span_id": "span_18",
           "show": "कोई",
           "speak_words": [
             "कोई"
@@ -13043,7 +13060,7 @@
           "speak_end_idx": 18
         },
         {
-          "span_id": "span_20",
+          "span_id": "span_19",
           "show": "कानून",
           "speak_words": [
             "कानून"
@@ -13052,7 +13069,7 @@
           "speak_end_idx": 19
         },
         {
-          "span_id": "span_21",
+          "span_id": "span_20",
           "show": "नहीं",
           "speak_words": [
             "नहीं"
@@ -13061,7 +13078,7 @@
           "speak_end_idx": 20
         },
         {
-          "span_id": "span_22",
+          "span_id": "span_21",
           "show": "है।",
           "speak_words": [
             "है"
@@ -13070,7 +13087,7 @@
           "speak_end_idx": 21
         },
         {
-          "span_id": "span_23",
+          "span_id": "span_22",
           "show": "सतर्क",
           "speak_words": [
             "सतर्क"
@@ -13079,7 +13096,7 @@
           "speak_end_idx": 22
         },
         {
-          "span_id": "span_24",
+          "span_id": "span_23",
           "show": "रहिए,",
           "speak_words": [
             "रहिए"
@@ -13088,7 +13105,7 @@
           "speak_end_idx": 23
         },
         {
-          "span_id": "span_25",
+          "span_id": "span_24",
           "show": "सुरक्षित",
           "speak_words": [
             "सुरक्षित"
@@ -13097,7 +13114,7 @@
           "speak_end_idx": 24
         },
         {
-          "span_id": "span_26",
+          "span_id": "span_25",
           "show": "रहिए।",
           "speak_words": [
             "रहिए"
@@ -13106,7 +13123,7 @@
           "speak_end_idx": 25
         }
       ],
-      "visual_type": "hero_ltx_i2v",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -13116,12 +13133,12 @@
       "visual_beats": [
         {
           "beat_id": "scene_40_b1",
-          "visual_type": "hero_ltx_i2v",
+          "visual_type": "real_video",
           "duration": 2.41,
           "camera": "push_in",
-          "query": "cinematic wide twilight shot Indian family safe at home warm light",
-          "ai_prompt": "cinematic wide twilight shot Indian family safe at home warm light, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "deep_sub_hit",
+          "query": "family home parents living room warm evening conversation",
+          "ai_prompt": "family home parents living room warm evening conversation, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
+          "sfx_tag": "soft_whoosh",
           "headline": "परिवार के साथ आज ही बात करें",
           "source": "Documentary Outro",
           "quote_speaker": "",
@@ -13463,7 +13480,7 @@
           "speak_end_idx": 25
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -13473,7 +13490,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_41_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "elderly retired man sitting alone at wooden table looking down worried",
@@ -13503,7 +13520,7 @@
         },
         {
           "beat_id": "scene_41_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.214,
           "camera": "pull_out",
           "query": "supportive family member holding elderly parent hand comforting",
@@ -13540,7 +13557,7 @@
       "on_screen_date": "FAKE DOCUMENTS",
       "preferred_media_url": null,
       "tagged_narration": "जो वारंट आपको WhatsApp पर भेजा जाता है, उसमें असली सरकारी लोगो और आपका पुराना leaked डेटा चिपका दिया जाता है।",
-      "tts_text": "जो वारंट आपको व्हाट्सएप पर भेजा जाता है, उसमें असली सरकारी लोगो और आपका पुराना लईकएड डेटा चिपका दिया जाता है।",
+      "tts_text": "जो वारंट आपको व्हाट्सएप पर भेजा जाता है, उसमें असली सरकारी लोगो और आपका पुराना लीक डेटा चिपका दिया जाता है।",
       "speak_words": [
         "जो",
         "वारंट",
@@ -13557,7 +13574,7 @@
         "और",
         "आपका",
         "पुराना",
-        "लईकएड",
+        "लीक",
         "डेटा",
         "चिपका",
         "दिया",
@@ -13704,7 +13721,7 @@
           "span_id": "span_16",
           "show": "leaked",
           "speak_words": [
-            "लईकएड"
+            "लीक"
           ],
           "speak_start_idx": 15,
           "speak_end_idx": 15
@@ -13755,7 +13772,7 @@
           "speak_end_idx": 20
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -13765,7 +13782,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_42_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "forged legal document PDF on mobile screen with fake red seal",
@@ -13795,7 +13812,7 @@
         },
         {
           "beat_id": "scene_42_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.214,
           "camera": "pull_out",
           "query": "close up computer monitor editing fake PDF letterhead template",
@@ -14057,7 +14074,7 @@
           "speak_end_idx": 21
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -14067,7 +14084,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_43_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "glowing database servers dark room cybersecurity concept",
@@ -14361,7 +14378,7 @@
           "speak_end_idx": 22
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "waveform_card",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -14371,12 +14388,12 @@
       "visual_beats": [
         {
           "beat_id": "scene_44_b1",
-          "visual_type": "ai_image",
+          "visual_type": "waveform_card",
           "duration": 3.213,
           "camera": "push_in",
           "query": "audio waveform equalizer pulsing across Indian map graphic",
           "ai_prompt": "audio waveform equalizer pulsing across Indian map graphic, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "soft_whoosh",
+          "sfx_tag": "subtle_pop",
           "headline": "हर भारतीय भाषा में वॉइस क्लोन",
           "source": "AI Security Research",
           "quote_speaker": "",
@@ -14401,7 +14418,7 @@
         },
         {
           "beat_id": "scene_44_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.214,
           "camera": "pull_out",
           "query": "headset microphone recording short voice clip on smartphone",
@@ -14647,7 +14664,7 @@
           "speak_end_idx": 21
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "phone_call_card",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -14657,12 +14674,12 @@
       "visual_beats": [
         {
           "beat_id": "scene_45_b1",
-          "visual_type": "ai_image",
+          "visual_type": "phone_call_card",
           "duration": 3.213,
           "camera": "push_in",
           "query": "smartphone screen showing fake official profile picture on messaging app",
           "ai_prompt": "smartphone screen showing fake official profile picture on messaging app, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "soft_whoosh",
+          "sfx_tag": "subtle_pop",
           "headline": "असली IPS अफसर की चुराई तस्वीर",
           "source": "Indian Express",
           "quote_speaker": "",
@@ -14724,20 +14741,23 @@
       "on_screen_date": "CALLER ID",
       "preferred_media_url": null,
       "tagged_narration": "ध्यान दीजिए: ज़्यादातर स्कैम कॉल +92, +88 या अजीब VoIP नंबरों से आते हैं जिन्हें भारतीय पुलिस नंबर जैसा दिखाया जाता है।",
-      "tts_text": "ध्यान दीजिए: ज़्यादातर स्कैम कॉल +बानवे, +अट्ठासी या अजीब वओइप नंबरों से आते हैं जिन्हें भारतीय पुलिस नंबर जैसा दिखाया जाता है।",
+      "tts_text": "ध्यान दीजिए: ज़्यादातर स्कैम कॉल प्लस बानवे, प्लस अट्ठासी या अजीब वी ओ आई पी नंबरों से आते हैं जिन्हें भारतीय पुलिस नंबर जैसा दिखाया जाता है।",
       "speak_words": [
         "ध्यान",
         "दीजिए",
         "ज़्यादातर",
         "स्कैम",
         "कॉल",
-        "+",
+        "प्लस",
         "बानवे",
-        "+",
+        "प्लस",
         "अट्ठासी",
         "या",
         "अजीब",
-        "वओइप",
+        "वी",
+        "ओ",
+        "आई",
+        "पी",
         "नंबरों",
         "से",
         "आते",
@@ -14799,42 +14819,26 @@
         },
         {
           "span_id": "span_6",
-          "show": "+",
+          "show": "+92,",
           "speak_words": [
-            "+"
-          ],
-          "speak_start_idx": 5,
-          "speak_end_idx": 5
-        },
-        {
-          "span_id": "span_7",
-          "show": "92,",
-          "speak_words": [
+            "प्लस",
             "बानवे"
           ],
-          "speak_start_idx": 6,
+          "speak_start_idx": 5,
           "speak_end_idx": 6
         },
         {
-          "span_id": "span_8",
-          "show": "+",
+          "span_id": "span_7",
+          "show": "+88",
           "speak_words": [
-            "+"
-          ],
-          "speak_start_idx": 7,
-          "speak_end_idx": 7
-        },
-        {
-          "span_id": "span_9",
-          "show": "88",
-          "speak_words": [
+            "प्लस",
             "अट्ठासी"
           ],
-          "speak_start_idx": 8,
+          "speak_start_idx": 7,
           "speak_end_idx": 8
         },
         {
-          "span_id": "span_10",
+          "span_id": "span_8",
           "show": "या",
           "speak_words": [
             "या"
@@ -14843,7 +14847,7 @@
           "speak_end_idx": 9
         },
         {
-          "span_id": "span_11",
+          "span_id": "span_9",
           "show": "अजीब",
           "speak_words": [
             "अजीब"
@@ -14852,124 +14856,127 @@
           "speak_end_idx": 10
         },
         {
-          "span_id": "span_12",
+          "span_id": "span_10",
           "show": "VoIP",
           "speak_words": [
-            "वओइप"
+            "वी",
+            "ओ",
+            "आई",
+            "पी"
           ],
           "speak_start_idx": 11,
-          "speak_end_idx": 11
-        },
-        {
-          "span_id": "span_13",
-          "show": "नंबरों",
-          "speak_words": [
-            "नंबरों"
-          ],
-          "speak_start_idx": 12,
-          "speak_end_idx": 12
-        },
-        {
-          "span_id": "span_14",
-          "show": "से",
-          "speak_words": [
-            "से"
-          ],
-          "speak_start_idx": 13,
-          "speak_end_idx": 13
-        },
-        {
-          "span_id": "span_15",
-          "show": "आते",
-          "speak_words": [
-            "आते"
-          ],
-          "speak_start_idx": 14,
           "speak_end_idx": 14
         },
         {
-          "span_id": "span_16",
-          "show": "हैं",
+          "span_id": "span_11",
+          "show": "नंबरों",
           "speak_words": [
-            "हैं"
+            "नंबरों"
           ],
           "speak_start_idx": 15,
           "speak_end_idx": 15
         },
         {
-          "span_id": "span_17",
-          "show": "जिन्हें",
+          "span_id": "span_12",
+          "show": "से",
           "speak_words": [
-            "जिन्हें"
+            "से"
           ],
           "speak_start_idx": 16,
           "speak_end_idx": 16
         },
         {
-          "span_id": "span_18",
-          "show": "भारतीय",
+          "span_id": "span_13",
+          "show": "आते",
           "speak_words": [
-            "भारतीय"
+            "आते"
           ],
           "speak_start_idx": 17,
           "speak_end_idx": 17
         },
         {
-          "span_id": "span_19",
-          "show": "पुलिस",
+          "span_id": "span_14",
+          "show": "हैं",
           "speak_words": [
-            "पुलिस"
+            "हैं"
           ],
           "speak_start_idx": 18,
           "speak_end_idx": 18
         },
         {
-          "span_id": "span_20",
-          "show": "नंबर",
+          "span_id": "span_15",
+          "show": "जिन्हें",
           "speak_words": [
-            "नंबर"
+            "जिन्हें"
           ],
           "speak_start_idx": 19,
           "speak_end_idx": 19
         },
         {
-          "span_id": "span_21",
-          "show": "जैसा",
+          "span_id": "span_16",
+          "show": "भारतीय",
           "speak_words": [
-            "जैसा"
+            "भारतीय"
           ],
           "speak_start_idx": 20,
           "speak_end_idx": 20
         },
         {
-          "span_id": "span_22",
-          "show": "दिखाया",
+          "span_id": "span_17",
+          "show": "पुलिस",
           "speak_words": [
-            "दिखाया"
+            "पुलिस"
           ],
           "speak_start_idx": 21,
           "speak_end_idx": 21
         },
         {
-          "span_id": "span_23",
-          "show": "जाता",
+          "span_id": "span_18",
+          "show": "नंबर",
           "speak_words": [
-            "जाता"
+            "नंबर"
           ],
           "speak_start_idx": 22,
           "speak_end_idx": 22
         },
         {
-          "span_id": "span_24",
+          "span_id": "span_19",
+          "show": "जैसा",
+          "speak_words": [
+            "जैसा"
+          ],
+          "speak_start_idx": 23,
+          "speak_end_idx": 23
+        },
+        {
+          "span_id": "span_20",
+          "show": "दिखाया",
+          "speak_words": [
+            "दिखाया"
+          ],
+          "speak_start_idx": 24,
+          "speak_end_idx": 24
+        },
+        {
+          "span_id": "span_21",
+          "show": "जाता",
+          "speak_words": [
+            "जाता"
+          ],
+          "speak_start_idx": 25,
+          "speak_end_idx": 25
+        },
+        {
+          "span_id": "span_22",
           "show": "है।",
           "speak_words": [
             "है"
           ],
-          "speak_start_idx": 23,
-          "speak_end_idx": 23
+          "speak_start_idx": 26,
+          "speak_end_idx": 26
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "phone_call_card",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -14979,12 +14986,12 @@
       "visual_beats": [
         {
           "beat_id": "scene_46_b1",
-          "visual_type": "ai_image",
+          "visual_type": "phone_call_card",
           "duration": 3.213,
           "camera": "push_in",
           "query": "mobile phone incoming call screen showing strange international prefix",
           "ai_prompt": "mobile phone incoming call screen showing strange international prefix, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "soft_whoosh",
+          "sfx_tag": "subtle_pop",
           "headline": "+92 या अजीब VoIP नंबर से कॉल",
           "source": "DoT Guidelines",
           "quote_speaker": "",
@@ -15293,7 +15300,7 @@
           "speak_end_idx": 24
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -15303,7 +15310,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_47_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "elderly Indian retired couple looking over bank passbook together",
@@ -15621,7 +15628,7 @@
           "speak_end_idx": 26
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -15631,7 +15638,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_48_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "person wearing earpiece inside bank lobby nervously filling cheque",
@@ -15646,7 +15653,7 @@
         },
         {
           "beat_id": "scene_48_b2",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "pan_right",
           "query": "bank teller asking customer about large fund transfer across counter",
@@ -16000,7 +16007,7 @@
       "on_screen_date": "CFCFRMS SYSTEM",
       "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg/1920px-North_Block%2C_Raisina_Hill%2C_New_Delhi_03.jpg",
       "tagged_narration": "जैसे ही आप 1930 पर कॉल करते हैं, CFCFRMS सिस्टम तुरंत बैंकों को अलर्ट भेजकर ठगों के म्यूल खातों में पैसा फ्रीज़ कर देता है।",
-      "tts_text": "जैसे ही आप उन्नीस तीस पर कॉल करते हैं, कफकफरमस सिस्टम तुरंत बैंकों को अलर्ट भेजकर ठगों के म्यूल खातों में पैसा फ्रीज़ कर देता है।",
+      "tts_text": "जैसे ही आप उन्नीस तीस पर कॉल करते हैं, सी एफ सी एफ आर एम एस सिस्टम तुरंत बैंकों को अलर्ट भेजकर ठगों के म्यूल खातों में पैसा फ्रीज़ कर देता है।",
       "speak_words": [
         "जैसे",
         "ही",
@@ -16011,7 +16018,13 @@
         "कॉल",
         "करते",
         "हैं",
-        "कफकफरमस",
+        "सी",
+        "एफ",
+        "सी",
+        "एफ",
+        "आर",
+        "एम",
+        "एस",
         "सिस्टम",
         "तुरंत",
         "बैंकों",
@@ -16107,10 +16120,16 @@
           "span_id": "span_9",
           "show": "CFCFRMS",
           "speak_words": [
-            "कफकफरमस"
+            "सी",
+            "एफ",
+            "सी",
+            "एफ",
+            "आर",
+            "एम",
+            "एस"
           ],
           "speak_start_idx": 9,
-          "speak_end_idx": 9
+          "speak_end_idx": 15
         },
         {
           "span_id": "span_10",
@@ -16118,8 +16137,8 @@
           "speak_words": [
             "सिस्टम"
           ],
-          "speak_start_idx": 10,
-          "speak_end_idx": 10
+          "speak_start_idx": 16,
+          "speak_end_idx": 16
         },
         {
           "span_id": "span_11",
@@ -16127,8 +16146,8 @@
           "speak_words": [
             "तुरंत"
           ],
-          "speak_start_idx": 11,
-          "speak_end_idx": 11
+          "speak_start_idx": 17,
+          "speak_end_idx": 17
         },
         {
           "span_id": "span_12",
@@ -16136,8 +16155,8 @@
           "speak_words": [
             "बैंकों"
           ],
-          "speak_start_idx": 12,
-          "speak_end_idx": 12
+          "speak_start_idx": 18,
+          "speak_end_idx": 18
         },
         {
           "span_id": "span_13",
@@ -16145,8 +16164,8 @@
           "speak_words": [
             "को"
           ],
-          "speak_start_idx": 13,
-          "speak_end_idx": 13
+          "speak_start_idx": 19,
+          "speak_end_idx": 19
         },
         {
           "span_id": "span_14",
@@ -16154,8 +16173,8 @@
           "speak_words": [
             "अलर्ट"
           ],
-          "speak_start_idx": 14,
-          "speak_end_idx": 14
+          "speak_start_idx": 20,
+          "speak_end_idx": 20
         },
         {
           "span_id": "span_15",
@@ -16163,8 +16182,8 @@
           "speak_words": [
             "भेजकर"
           ],
-          "speak_start_idx": 15,
-          "speak_end_idx": 15
+          "speak_start_idx": 21,
+          "speak_end_idx": 21
         },
         {
           "span_id": "span_16",
@@ -16172,8 +16191,8 @@
           "speak_words": [
             "ठगों"
           ],
-          "speak_start_idx": 16,
-          "speak_end_idx": 16
+          "speak_start_idx": 22,
+          "speak_end_idx": 22
         },
         {
           "span_id": "span_17",
@@ -16181,8 +16200,8 @@
           "speak_words": [
             "के"
           ],
-          "speak_start_idx": 17,
-          "speak_end_idx": 17
+          "speak_start_idx": 23,
+          "speak_end_idx": 23
         },
         {
           "span_id": "span_18",
@@ -16190,8 +16209,8 @@
           "speak_words": [
             "म्यूल"
           ],
-          "speak_start_idx": 18,
-          "speak_end_idx": 18
+          "speak_start_idx": 24,
+          "speak_end_idx": 24
         },
         {
           "span_id": "span_19",
@@ -16199,8 +16218,8 @@
           "speak_words": [
             "खातों"
           ],
-          "speak_start_idx": 19,
-          "speak_end_idx": 19
+          "speak_start_idx": 25,
+          "speak_end_idx": 25
         },
         {
           "span_id": "span_20",
@@ -16208,8 +16227,8 @@
           "speak_words": [
             "में"
           ],
-          "speak_start_idx": 20,
-          "speak_end_idx": 20
+          "speak_start_idx": 26,
+          "speak_end_idx": 26
         },
         {
           "span_id": "span_21",
@@ -16217,8 +16236,8 @@
           "speak_words": [
             "पैसा"
           ],
-          "speak_start_idx": 21,
-          "speak_end_idx": 21
+          "speak_start_idx": 27,
+          "speak_end_idx": 27
         },
         {
           "span_id": "span_22",
@@ -16226,8 +16245,8 @@
           "speak_words": [
             "फ्रीज़"
           ],
-          "speak_start_idx": 22,
-          "speak_end_idx": 22
+          "speak_start_idx": 28,
+          "speak_end_idx": 28
         },
         {
           "span_id": "span_23",
@@ -16235,8 +16254,8 @@
           "speak_words": [
             "कर"
           ],
-          "speak_start_idx": 23,
-          "speak_end_idx": 23
+          "speak_start_idx": 29,
+          "speak_end_idx": 29
         },
         {
           "span_id": "span_24",
@@ -16244,8 +16263,8 @@
           "speak_words": [
             "देता"
           ],
-          "speak_start_idx": 24,
-          "speak_end_idx": 24
+          "speak_start_idx": 30,
+          "speak_end_idx": 30
         },
         {
           "span_id": "span_25",
@@ -16253,8 +16272,8 @@
           "speak_words": [
             "है"
           ],
-          "speak_start_idx": 25,
-          "speak_end_idx": 25
+          "speak_start_idx": 31,
+          "speak_end_idx": 31
         }
       ],
       "visual_type": "real_photo",
@@ -16297,7 +16316,7 @@
         },
         {
           "beat_id": "scene_50_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.214,
           "camera": "pull_out",
           "query": "cyber crime officer monitoring bank freeze dashboard on computer",
@@ -16334,7 +16353,7 @@
       "on_screen_date": "RBI MULEHUNTER",
       "preferred_media_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg/1920px-Tower_and_building_of_Reserve_Bank_of_India%2C_Mumbai_04.jpg",
       "tagged_narration": "सुप्रीम कोर्ट के आदेश के बाद RBI और बैंक अब म्यूल अकाउंट्स पकड़ने के लिए MuleHunter जैसे AI सिस्टम लागू कर रहे हैं।",
-      "tts_text": "सुप्रीम कोर्ट के आदेश के बाद आर बी आई और बैंक अब म्यूल अकाउंट्स पकड़ने के लिए मउलएहउनटएर जैसे ए आई सिस्टम लागू कर रहे हैं।",
+      "tts_text": "सुप्रीम कोर्ट के आदेश के बाद आर बी आई और बैंक अब म्यूल अकाउंट्स पकड़ने के लिए म्यूल हंटर जैसे ए आई सिस्टम लागू कर रहे हैं।",
       "speak_words": [
         "सुप्रीम",
         "कोर्ट",
@@ -16353,7 +16372,8 @@
         "पकड़ने",
         "के",
         "लिए",
-        "मउलएहउनटएर",
+        "म्यूल",
+        "हंटर",
         "जैसे",
         "ए",
         "आई",
@@ -16505,10 +16525,11 @@
           "span_id": "span_16",
           "show": "MuleHunter",
           "speak_words": [
-            "मउलएहउनटएर"
+            "म्यूल",
+            "हंटर"
           ],
           "speak_start_idx": 17,
-          "speak_end_idx": 17
+          "speak_end_idx": 18
         },
         {
           "span_id": "span_17",
@@ -16516,8 +16537,8 @@
           "speak_words": [
             "जैसे"
           ],
-          "speak_start_idx": 18,
-          "speak_end_idx": 18
+          "speak_start_idx": 19,
+          "speak_end_idx": 19
         },
         {
           "span_id": "span_18",
@@ -16526,8 +16547,8 @@
             "ए",
             "आई"
           ],
-          "speak_start_idx": 19,
-          "speak_end_idx": 20
+          "speak_start_idx": 20,
+          "speak_end_idx": 21
         },
         {
           "span_id": "span_19",
@@ -16535,8 +16556,8 @@
           "speak_words": [
             "सिस्टम"
           ],
-          "speak_start_idx": 21,
-          "speak_end_idx": 21
+          "speak_start_idx": 22,
+          "speak_end_idx": 22
         },
         {
           "span_id": "span_20",
@@ -16544,8 +16565,8 @@
           "speak_words": [
             "लागू"
           ],
-          "speak_start_idx": 22,
-          "speak_end_idx": 22
+          "speak_start_idx": 23,
+          "speak_end_idx": 23
         },
         {
           "span_id": "span_21",
@@ -16553,8 +16574,8 @@
           "speak_words": [
             "कर"
           ],
-          "speak_start_idx": 23,
-          "speak_end_idx": 23
+          "speak_start_idx": 24,
+          "speak_end_idx": 24
         },
         {
           "span_id": "span_22",
@@ -16562,8 +16583,8 @@
           "speak_words": [
             "रहे"
           ],
-          "speak_start_idx": 24,
-          "speak_end_idx": 24
+          "speak_start_idx": 25,
+          "speak_end_idx": 25
         },
         {
           "span_id": "span_23",
@@ -16571,8 +16592,8 @@
           "speak_words": [
             "हैं"
           ],
-          "speak_start_idx": 25,
-          "speak_end_idx": 25
+          "speak_start_idx": 26,
+          "speak_end_idx": 26
         }
       ],
       "visual_type": "real_photo",
@@ -16897,7 +16918,7 @@
           "speak_end_idx": 23
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -16907,7 +16928,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_52_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "diverse group of Indian office colleagues discussing cybersecurity around table",
@@ -16937,7 +16958,7 @@
         },
         {
           "beat_id": "scene_52_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.214,
           "camera": "pull_out",
           "query": "Indian citizen sharing cyber alert message on family group",
@@ -17203,7 +17224,7 @@
           "speak_end_idx": 23
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -17213,7 +17234,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_53_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "smartphone screen warning untrusted APK download cyber danger",
@@ -17243,7 +17264,7 @@
         },
         {
           "beat_id": "scene_53_b3",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.214,
           "camera": "pull_out",
           "query": "padlock security symbol over mobile phone screen",
@@ -17511,7 +17532,7 @@
           "speak_end_idx": 24
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -17521,7 +17542,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_54_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "calm person pressing block and report button on smartphone",
@@ -17813,7 +17834,7 @@
           "speak_end_idx": 21
         }
       ],
-      "visual_type": "ai_image",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": true,
       "is_archive_quote": false,
@@ -17823,7 +17844,7 @@
       "visual_beats": [
         {
           "beat_id": "scene_55_b1",
-          "visual_type": "ai_image",
+          "visual_type": "real_video",
           "duration": 3.213,
           "camera": "push_in",
           "query": "smiling son showing informative video to elderly parents at home",
@@ -17873,13 +17894,13 @@
       "chapter_index": 56,
       "title": "अंतिम संदेश: ज्ञान ही असली सुरक्षा",
       "narration": "याद रखिए: असली ताकत डर में नहीं, सही जानकारी में है। 1930 याद रखें, सतर्क रहें और सुरक्षित रहें।",
-      "visual_description": "Documentary beat: अंतिम संदेश: ज्ञान ही असली सुरक्षा (cinematic wide sunset shot Indian parliament and India Gate hopeful mood)",
+      "visual_description": "Documentary beat: अंतिम संदेश: ज्ञान ही असली सुरक्षा (city building urban twilight hopeful documentary)",
       "footage_queries": [
-        "cinematic wide sunset shot Indian parliament and India Gate hopeful mood",
+        "city building urban twilight hopeful documentary",
         "1930 • cybercrime.gov.in",
         "Supreme Court of India New Delhi"
       ],
-      "ai_prompt": "cinematic wide sunset shot Indian parliament and India Gate hopeful mood, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
+      "ai_prompt": "city building urban twilight hopeful documentary, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
       "duration": 9.8,
       "transition": "wipeleft",
       "bgm_mood": "epic",
@@ -18087,7 +18108,7 @@
           "speak_end_idx": 19
         }
       ],
-      "visual_type": "hero_ltx_i2v",
+      "visual_type": "real_video",
       "negative_prompt": "3d render, cgi, unreal engine, smooth plastic skin, neon lighting, glowing, symmetrical, cartoon, digital art, distorted text, watermark",
       "is_pattern_interrupt": false,
       "is_archive_quote": false,
@@ -18097,12 +18118,12 @@
       "visual_beats": [
         {
           "beat_id": "scene_56_b1",
-          "visual_type": "hero_ltx_i2v",
+          "visual_type": "real_video",
           "duration": 3.267,
           "camera": "push_in",
-          "query": "cinematic wide sunset shot Indian parliament and India Gate hopeful mood",
-          "ai_prompt": "cinematic wide sunset shot Indian parliament and India Gate hopeful mood, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
-          "sfx_tag": "deep_sub_hit",
+          "query": "city building urban twilight hopeful documentary",
+          "ai_prompt": "city building urban twilight hopeful documentary, raw archival documentary photograph, shot on 35mm Leica lens, natural overcast daylight, subtle film grain, authentic texture, candid photojournalism, 16:9 widescreen",
+          "sfx_tag": "soft_whoosh",
           "headline": "डर नहीं, सही जानकारी ही सुरक्षा है",
           "source": "Final Sign-Off",
           "quote_speaker": "",

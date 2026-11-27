@@ -823,9 +823,9 @@ class VoiceEngine:
                     scene.duration = round(max(1.0, round(exact_dur * fps) / fps), 3)
                 continue
 
-            tagged = getattr(scene, "tts_text", "") or getattr(scene, "tagged_narration", "") or scene.narration
+            tagged = getattr(scene, "tagged_narration", "") or getattr(scene, "tts_text", "") or scene.narration
             if self.config.language == "hi":
-                tagged = to_tts_tagged_text(tagged)
+                tagged = to_tts_tagged_text(tagged, preserve_unknown=True)
 
             clean_display = normalize_devanagari(scene.subtitle_text or scene.narration)
             scene.narration = clean_display
@@ -1117,12 +1117,12 @@ class VoiceEngine:
         return False, []
 
     def _master_voice_track(self, input_path: str, output_path: str) -> None:
-        """Apply broadcast compressor + 180Hz vocal warmth + steady LRA=6 loudness normalization."""
+        """Apply warm documentary vocal mastering without harsh treble or robotic artifacts."""
         vocal_chain = (
-            "highpass=f=85,"
-            "equalizer=f=180:width_type=h:width=100:g=2,"
-            "equalizer=f=3000:t=q:w=1.4:g=2.0,"
-            "acompressor=threshold=-18dB:ratio=3:attack=5:release=50,"
+            "highpass=f=80,"
+            "equalizer=f=180:width_type=h:width=100:g=1.5,"
+            "equalizer=f=3000:t=q:w=1.4:g=0.8,"
+            "acompressor=threshold=-18dB:ratio=2.5:attack=8:release=60,"
             "loudnorm=I=-14:TP=-1.5:LRA=6,"
             "alimiter=limit=0.92"
         )

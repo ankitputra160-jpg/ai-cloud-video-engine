@@ -17,6 +17,7 @@ from engine.assets.ai_gpu_visuals import FluxStillGenerator, LtxVideoGenerator
 from engine.assets.ai_visuals import CinematicMotionVisualProvider
 from engine.assets.archive_org import InternetArchiveProvider
 from engine.assets.base import VisualAssetProvider
+from engine.assets.mixkit import MixkitVideoProvider
 from engine.assets.nasa import NasaMediaProvider
 from engine.assets.news_card import InvestigativeCardGenerator
 from engine.assets.openverse import OpenverseProvider
@@ -40,6 +41,7 @@ class VisualAssetManager:
         hf_tok = getattr(config, "hf_token", None)
 
         self.pib = PIBIndiaProvider(timeout=config.http_timeout, width=w, height=h, fps=fps)
+        self.mixkit = MixkitVideoProvider(timeout=max(20, config.http_timeout), width=w, height=h, fps=fps)
         self.archive_org = InternetArchiveProvider(timeout=config.http_timeout, width=w, height=h, fps=fps)
         self.openverse = OpenverseProvider(timeout=config.http_timeout, width=w, height=h, fps=fps)
         self.wikimedia = WikimediaCommonsProvider(timeout=config.http_timeout, width=w, height=h, fps=fps)
@@ -56,6 +58,7 @@ class VisualAssetManager:
 
         self.real_providers: List[VisualAssetProvider] = [
             self.pib,
+            self.mixkit,
             self.openverse,
             self.wikimedia,
             self.archive_org,
@@ -134,8 +137,8 @@ class VisualAssetManager:
                         scene.asset_source = "curated_archival_media"
                         continue
 
-                # 2. Playwright / libass 2D Investigative Cards (25%)
-                if vtype in ("news_card", "quote_card", "map_card", "stat_card"):
+                # 2. Playwright / libass 2D Investigative & Live Animated Cards
+                if vtype in ("news_card", "quote_card", "map_card", "stat_card", "phone_call_card", "waveform_card"):
                     portrait_file = None
                     if vtype == "quote_card":
                         speaker_q = str(beat.get("quote_speaker") or getattr(scene, "quote_speaker", "") or scene.title)
@@ -163,6 +166,15 @@ class VisualAssetManager:
                 if vtype == "hero_ltx_i2v" and getattr(self.config, "enable_ai_video", True) and self.ltx_gen.is_available():
                     pending_hero_i2v.append({"scene": scene, "beat": beat, "raw": beat_raw, "norm": beat_norm, "seed": 200 + s_idx * 10 + b_idx})
                     continue
+
+                if vtype == "real_video":
+                    vid_queries = ([str(beat.get("query"))] if beat.get("query") else []) + list(scene.footage_queries)
+                    found_vid = self.mixkit.fetch_video(vid_queries, beat_raw, min_duration=b_dur, used_urls=used_urls)
+                    if found_vid:
+                        self._normalize_clip(found_vid, beat_norm, b_dur)
+                        self._safe_remove(found_vid)
+                        beat["asset_path"] = beat_norm
+                        continue
 
                 if vtype in ("ai_image", "hero_ltx_i2v") or self.config.is_2d_style:
                     pending_ai_stills.append({"scene": scene, "beat": beat, "raw": beat_raw, "norm": beat_norm, "seed": 100 + s_idx * 10 + b_idx})
@@ -214,6 +226,8 @@ class VisualAssetManager:
             if not res and not self.config.is_2d_style:
                 short_q = self._distill_stock_queries(str(beat.get("query") or scene.title))
                 if short_q:
+                    res = self.mixkit.fetch_video(short_q, raw_path, min_duration=b_dur, used_urls=used_urls)
+                if not res and short_q:
                     res = self._fetch_verified_real_beat(
                         queries=short_q,
                         prompt_en=prompt_en,
@@ -332,6 +346,10 @@ class VisualAssetManager:
                     queries, raw_path, min_duration=duration, used_urls=used_urls,
                     camera=camera, date_badge=date_badge,
                     **({"prefer_images": self.config.is_2d_style} if isinstance(provider, WikimediaCommonsProvider) else {}),
+                )
+            elif isinstance(provider, MixkitVideoProvider):
+                res = provider.fetch_video(
+                    queries, raw_path, min_duration=duration, used_urls=used_urls,
                 )
             elif isinstance(provider, NasaMediaProvider):
                 res = provider.fetch_video(

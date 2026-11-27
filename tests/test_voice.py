@@ -339,6 +339,27 @@ class TestVoiceEngine(unittest.TestCase):
         mock_piper.assert_not_called()
         self.assertTrue(os.path.exists(out_m.scenes[0].voice_asset_path))
 
+    def test_pronunciation_no_broken_transliteration_and_natural_pitch(self):
+        """Verifies Aadhaar/Oswal/McAfee/I4C/1930/+92/cybercrime.gov.in pronuncation & pitch=1.0."""
+        from engine.text.pronunciation import to_tts_tagged_text
+        from engine.voice.emotion_router import EMOTION_PROFILES
+
+        sample = (
+            "I4C डेटा के अनुसार S.P. Oswal के Aadhaar और McAfee रिपोर्ट के बाद "
+            "+92 VoIP कॉल से बचें; 1930 और cybercrime.gov.in तथा Sanchar Saathi Chakshu पर बताएं।"
+        )
+        out = to_tts_tagged_text(sample, preserve_unknown=True)
+        for bad in ("अअडहअअर", "इ चार क", "ओसवअल", "मकअफई", "सअनचअर", "एस पी."):
+            self.assertNotIn(bad, out)
+        for expected in ("आई फोर सी", "एस पी ओसवाल", "आधार", "मैकएफ़ी", "प्लस बानवे", "वी ओ आई पी", "उन्नीस तीस", "साइबरक्राइम डॉट गव डॉट इन", "संचार साथी चक्षु"):
+            self.assertIn(expected, out)
+
+        preserved = to_tts_tagged_text("A completelyRareBrandName works.", preserve_unknown=True)
+        self.assertIn("completelyRareBrandName", preserved)
+
+        for profile in EMOTION_PROFILES.values():
+            self.assertEqual(profile["pitch_shift"], 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()

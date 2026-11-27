@@ -38,8 +38,8 @@ EMOTION_PROFILES: Dict[str, Dict[str, Any]] = {
             "Very clear audio, close mic studio recording."
         ),
         "ref_filename": "ref_suspense.wav",
-        "atempo": 0.91,
-        "pitch_shift": 0.96,
+        "atempo": 0.96,
+        "pitch_shift": 1.00,
     },
     "angry": {
         "parler_caption": (
@@ -47,8 +47,8 @@ EMOTION_PROFILES: Dict[str, Dict[str, Any]] = {
             "Very clear audio, close mic studio recording."
         ),
         "ref_filename": "ref_angry.wav",
-        "atempo": 1.05,
-        "pitch_shift": 1.02,
+        "atempo": 1.02,
+        "pitch_shift": 1.00,
     },
     "slow": {
         "parler_caption": (
@@ -56,8 +56,8 @@ EMOTION_PROFILES: Dict[str, Dict[str, Any]] = {
             "Very clear audio, close mic studio recording."
         ),
         "ref_filename": "ref_neutral.wav",
-        "atempo": 0.88,
-        "pitch_shift": 0.98,
+        "atempo": 0.95,
+        "pitch_shift": 1.00,
     },
     "fast": {
         "parler_caption": (
@@ -65,8 +65,8 @@ EMOTION_PROFILES: Dict[str, Dict[str, Any]] = {
             "Very clear audio, close mic studio recording."
         ),
         "ref_filename": "ref_fast.wav",
-        "atempo": 1.12,
-        "pitch_shift": 1.01,
+        "atempo": 1.04,
+        "pitch_shift": 1.00,
     },
 }
 

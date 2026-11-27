@@ -63,6 +63,14 @@ class OpenverseProvider(VisualAssetProvider):
                         continue
                     if h and (w / max(1, h)) < 1.15:
                         continue
+                    title_str = str(item.get("title") or "").lower()
+                    tag_str = " ".join(str(t.get("name") or "") for t in (item.get("tags") or []) if isinstance(t, dict)).lower()
+                    meta_text = f"{title_str} {tag_str}"
+                    if any(bad in meta_text for bad in ("sticker", "cartoon", "anime", "akb48", "meme", "logo", "icon", "clipart", "birthday", "party", "wedding", "emoji", "svg", "vector", "illustration")):
+                        continue
+                    q_tokens = [tok.lower() for tok in query.split() if len(tok) >= 4]
+                    if q_tokens and not any(tok in meta_text for tok in q_tokens):
+                        continue
                     tmp_img = target_path + ".ov.jpg"
                     try:
                         dreq = urllib.request.Request(img_url, headers={"User-Agent": "AIDocEngine/3.0"})

@@ -95,6 +95,81 @@ ENGLISH_TO_DEVANAGARI: Dict[str, str] = {
     "call": "कॉल",
     "ludhiana": "लुधियाना",
     "livelaw": "लाइवलॉ",
+    "bar": "बार",
+    "bench": "बेंच",
+    "aadhaar": "आधार",
+    "oswal": "ओसवाल",
+    "vardhman": "वर्धमान",
+    "mcafee": "मैकएफ़ी",
+    "sanchar": "संचार",
+    "saathi": "साथी",
+    "chakshu": "चक्षु",
+    "escrow": "एस्क्रो",
+    "deepfake": "डीपफेक",
+    "instagram": "इंस्टाग्राम",
+    "reel": "रील",
+    "reels": "रील्स",
+    "isolation": "आइसोलेशन",
+    "authority": "अथॉरिटी",
+    "urgency": "अर्जेंसी",
+    "codeword": "कोडवर्ड",
+    "golden": "गोल्डन",
+    "hour": "आवर",
+    "mule": "म्यूल",
+    "account": "अकाउंट",
+    "accounts": "अकाउंट्स",
+    "mulehunter": "म्यूल हंटर",
+    "interpol": "इंटरपोल",
+    "dacoity": "डकैती",
+    "memo": "मेमो",
+    "leaked": "लीक",
+    "voip": "वी ओ आई पी",
+    "cfcfrms": "सी एफ सी एफ आर एम एस",
+    "cybercrime.gov.in": "साइबरक्राइम डॉट गव डॉट इन",
+    "bnss": "बी एन एस एस",
+    "rtgs": "आर टी जी एस",
+    "upi": "यू पी आई",
+    "otp": "ओ टी पी",
+    "kyc": "के वाई सी",
+    "apk": "ए पी के",
+    "ips": "आई पी एस",
+    "fd": "एफ डी",
+    "sim": "सिम",
+    "safe": "सेफ",
+    "secret": "सीक्रेट",
+    "family": "फ़ैमिली",
+    "check": "चेक",
+    "rule": "रूल",
+    "portal": "पोर्टल",
+    "card": "कार्ड",
+    "gov": "गव",
+    "in": "इन",
+    "i4c": "आई फोर सी",
+    "fedex": "फ़ेडएक्स",
+    "dhl": "डी एच एल",
+    "sp": "एस पी",
+    "surveillance": "सर्वेलेंस",
+    "imposter": "इम्पोस्टर",
+    "impersonation": "इम्पर्सोनेशन",
+    "smart": "स्मार्ट",
+    "lock": "लॉक",
+    "phone": "फ़ोन",
+    "transfer": "ट्रांसफर",
+    "verification": "वेरिफ़िकेशन",
+    "shield": "शील्ड",
+    "checklist": "चेकलिस्ट",
+    "red": "रेड",
+    "flag": "फ़्लैग",
+    "panic": "पैनिक",
+    "trap": "ट्रैप",
+    "click": "क्लिक",
+    "link": "लिंक",
+    "app": "ऐप",
+    "apps": "ऐप्स",
+    "pdf": "पी डी एफ",
+    "pan": "पैन",
+    "id": "आई डी",
+    "shorts": "शॉर्ट्स",
     "media": "मीडिया",
     "viral": "वायरल",
     "breaking": "ब्रेकिंग",
@@ -179,8 +254,8 @@ def number_str_to_hindi(num_str: str, is_year: bool = False) -> str:
     return integer_to_hindi_words(val, as_year=likely_year)
 
 
-def english_word_to_devanagari(word: str) -> str:
-    """Convert any English word or acronym into speakable Devanagari."""
+def english_word_to_devanagari(word: str, fallback_transliterate: bool = True) -> str:
+    """Convert any English word or acronym into speakable Devanagari (optionally preserving unknown words)."""
     clean = re.sub(r"[^A-Za-z]", "", word)
     if not clean:
         return word
@@ -189,8 +264,10 @@ def english_word_to_devanagari(word: str) -> str:
         return ENGLISH_TO_DEVANAGARI[low]
     if clean.isupper() and 2 <= len(clean) <= 5:
         return " ".join(_LETTER_PHONETICS.get(ch, ch) for ch in clean)
+    if not fallback_transliterate:
+        return word
 
-    # Lightweight phonetic syllable transliteration fallback
+    # Lightweight phonetic syllable transliteration fallback (for CTC forced aligner only)
     out: List[str] = []
     i = 0
     while i < len(low):
@@ -212,14 +289,16 @@ _GROUP_TOKEN_RE = re.compile(
     r"(?:₹|Rs\.?\s*)?\d[\d,]*(?:\.\d+)?\s*(?:Cr|Crore|Lakh|Lac|करोड़|लाख)\b"
     r"|\d[\d,]*(?:\.\d+)?%"
     r"|(?:₹|Rs\.?\s*)\d[\d,]*(?:\.\d+)?"
-    r"|\b(?:Supreme\s+Court|High\s+Court|Election\s+Commission|Social\s+Media)\b"
+    r"|\b(?:Supreme\s+Court|High\s+Court|Election\s+Commission|Social\s+Media|Sanchar\s+Saathi|Digital\s+Arrest|Golden\s+Hour|Bar\s+and\s+Bench)\b"
+    r"|\bI4C\b|\bS\.P\."
+    r"|\+\d{1,4}\b"
     r"|\b\d[\d,]*(?:\.\d+)?\b"
     r"|\b[A-Za-z][A-Za-z.]*\b",
     flags=re.IGNORECASE,
 )
 
 
-def _convert_grouped_token_to_speak(token: str) -> str:
+def _convert_grouped_token_to_speak(token: str, fallback_transliterate: bool = True) -> str:
     """Turn one grouped display token (e.g. '₹500 Cr', '45%', '2026', 'Supreme Court') into spoken Devanagari."""
     t = token.strip()
     low = t.lower()
@@ -252,7 +331,11 @@ def _convert_grouped_token_to_speak(token: str) -> str:
 
     # Multi-word English entities
     if " " in t:
-        return " ".join(english_word_to_devanagari(p) for p in t.split())
+        return " ".join(english_word_to_devanagari(p, fallback_transliterate=fallback_transliterate) for p in t.split())
+
+    # International dial code (+92, +88, +1)
+    if t.startswith("+") and t[1:].isdigit():
+        return f"प्लस {number_str_to_hindi(t[1:], is_year=False)}"
 
     # Plain digits / year (special case for 1930 National Cyber Crime Helpline)
     if t == "1930":
@@ -261,11 +344,15 @@ def _convert_grouped_token_to_speak(token: str) -> str:
         return number_str_to_hindi(t)
 
     # Plain English word / acronym (or Dr.)
-    return english_word_to_devanagari(t)
+    return english_word_to_devanagari(t, fallback_transliterate=fallback_transliterate)
 
 
-def to_tts_tagged_text(tagged_text: str) -> str:
-    """Normalize text for TTS while keeping [pause:Xs] and [emotion]...[/emotion] markup intact."""
+def to_tts_tagged_text(tagged_text: str, preserve_unknown: bool = True) -> str:
+    """Normalize text for TTS while keeping [pause:Xs] and [emotion]...[/emotion] markup intact.
+
+    When preserve_unknown=True (default for neural multilingual TTS like Sarvam Bulbul v3),
+    unknown English words stay natural English instead of broken letter-by-letter transliteration.
+    """
     if not tagged_text:
         return ""
     tag_re = re.compile(r"(\[/?[a-zA-Z0-9_:.]+\])")
@@ -277,7 +364,10 @@ def to_tts_tagged_text(tagged_text: str) -> str:
         if tag_re.fullmatch(part):
             out.append(part)
         else:
-            converted = _GROUP_TOKEN_RE.sub(lambda m: _convert_grouped_token_to_speak(m.group(0)), part)
+            converted = _GROUP_TOKEN_RE.sub(
+                lambda m: _convert_grouped_token_to_speak(m.group(0), fallback_transliterate=(not preserve_unknown)),
+                part,
+            )
             out.append(normalize_devanagari(converted))
     return re.sub(r"\s+", " ", " ".join(out)).replace(" [/", "[/").strip()
 

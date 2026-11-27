@@ -172,7 +172,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="doc-run-${{ github.run_number }}"
-          gh release create "$TAG" output/documentary.mp4 output/thumbnail.jpg .workspace/qc_report.json \
+          gh release create "$TAG" output/documentary.mp4 output/thumbnail.jpg .workspace/qc_report.json .workspace/youtube_chapters.txt .workspace/youtube_package.json \
             --title "Documentary #${{ github.run_number }}: ${{ github.event.inputs.topic }}" \
             --notes "Automated mobile-friendly 1-tap download (bypasses Git 100 MB limit)."
 
@@ -189,6 +189,8 @@ jobs:
             .workspace/2d_script.md
             .workspace/subtitles.srt
             .workspace/subtitles.ass
+            .workspace/youtube_chapters.txt
+            .workspace/youtube_package.json
           if-no-files-found: ignore
           retention-days: 14
 

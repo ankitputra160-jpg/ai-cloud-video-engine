@@ -62,6 +62,43 @@ class TestVisualAssets(unittest.TestCase):
         dur = get_duration(out_clip)
         self.assertAlmostEqual(dur, 3.0, delta=0.3)
 
+    def test_mixkit_slug_picker_and_live_card_templates(self):
+        from unittest.mock import patch
+        from engine.assets.mixkit import MixkitVideoProvider
+        from engine.assets.news_card import InvestigativeCardGenerator
+
+        slugs = MixkitVideoProvider._pick_slugs(["CBI officer police arrest court"])
+        self.assertIn("police", slugs)
+        self.assertIn("court", slugs)
+
+        class _Resp:
+            status = 200
+            def read(self, *_a):
+                return (b'<a href="https://assets.mixkit.co/videos/4915/4915-1080.mp4"></a>'
+                        b'<a href="https://assets.mixkit.co/videos/41638/41638-720.mp4"></a>')
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+
+        mk = MixkitVideoProvider()
+        with patch("urllib.request.urlopen", return_value=_Resp()):
+            urls = mk._fetch_slug_mp4s("smartphone")
+        self.assertEqual(urls, [
+            "https://assets.mixkit.co/videos/41638/41638-720.mp4",
+            "https://assets.mixkit.co/videos/4915/4915-720.mp4",
+        ])
+
+        gen = InvestigativeCardGenerator()
+        html_call = gen._build_html_document(
+            "phone_call_card", "CBI Video Call", "Cyber Cell", "COLD OPEN"
+        )
+        self.assertIn("pulse-ring", html_call)
+        self.assertIn("CBI", html_call)
+        html_wave = gen._build_html_document(
+            "waveform_card", "3s AI Voice Clone", "McAfee", "AI TECH"
+        )
+        self.assertIn("class=\"wave\"", html_wave)
+        self.assertIn("--phase", html_wave)
+
 
 if __name__ == "__main__":
     unittest.main()

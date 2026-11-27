@@ -165,10 +165,81 @@ class InvestigativeCardGenerator:
             <div><div class="qmark">“</div><div class="quote">{esc_h}</div><div class="src">— {esc_s} {('• ' + esc_d) if esc_d else ''}</div></div>
             </div></body></html>"""
 
+        if card_type == "phone_call_card":
+            return f"""<!DOCTYPE html><html><head><meta charset="utf-8"><style>{font_css}
+            body {{ background: radial-gradient(circle at 50% 40%, #1e1b4b 0%, #050811 100%); color: #f8fafc; }}
+            .phone {{
+                width: 470px; height: 860px; border-radius: 46px; background: #0b1220;
+                border: 6px solid #334155; box-shadow: 0 36px 90px rgba(0,0,0,0.85);
+                padding: 52px 34px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+                position: relative;
+            }}
+            .top {{ text-align: center; }}
+            .tag {{ display: inline-block; background: #dc2626; color: #fff; font-size: 20px; font-weight: 700;
+                padding: 8px 20px; border-radius: 999px; letter-spacing: 1px; margin-bottom: 24px; }}
+            .caller {{ font-size: 42px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }}
+            .sub {{ font-size: 24px; color: #94a3b8; }}
+            .ring-wrap {{ position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }}
+            .pulse-ring {{
+                position: absolute; width: 170px; height: 170px; border-radius: 50%;
+                border: 4px solid rgba(239, 68, 68, 0.7);
+                transform: scale(calc(1 + var(--pulse, 0) * 0.45));
+                opacity: calc(1 - var(--pulse, 0) * 0.85);
+            }}
+            .avatar-circle {{
+                width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #1d4ed8, #b91c1c);
+                display: flex; align-items: center; justify-content: center; font-size: 46px; font-weight: 700;
+                border: 4px solid #f8fafc; z-index: 2;
+            }}
+            .actions {{ display: flex; gap: 68px; margin-bottom: 18px; }}
+            .btn {{ width: 92px; height: 92px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                font-size: 22px; font-weight: 700; color: #fff; }}
+            .decline {{ background: #dc2626; }}
+            .accept {{ background: #16a34a; transform: scale(calc(1 + (1 - var(--pulse, 0)) * 0.08)); }}
+            </style></head><body><div class="phone">
+              <div class="top">
+                <div class="tag">{esc_d or 'INCOMING VIDEO CALL'}</div>
+                <div class="caller">{esc_h}</div>
+                <div class="sub">{esc_s}</div>
+              </div>
+              <div class="ring-wrap">
+                <div class="pulse-ring"></div>
+                <div class="avatar-circle">CBI</div>
+              </div>
+              <div class="actions">
+                <div class="btn decline">CUT</div>
+                <div class="btn accept">VIDEO</div>
+              </div>
+            </div></body></html>"""
+
+        if card_type == "waveform_card":
+            bars = "".join(
+                f'<div class="bar" style="--i:{i}; height: calc(28px + 130px * abs(sin(var(--phase, 0.5) * 6.283 + {i * 0.45:.2f})));"></div>'
+                for i in range(28)
+            )
+            return f"""<!DOCTYPE html><html><head><meta charset="utf-8"><style>{font_css}
+            body {{ background: radial-gradient(circle at 50% 35%, #172554 0%, #060913 100%); color: #f8fafc; }}
+            .panel {{ width: 82%; padding: 62px 68px; border-radius: 24px; background: rgba(15,23,42,0.92);
+                border: 3px solid #38bdf8; box-shadow: 0 32px 80px rgba(0,0,0,0.75); text-align: center; }}
+            .badge {{ display: inline-block; background: #0284c7; color: #fff; font-size: 24px; font-weight: 700;
+                padding: 10px 26px; border-radius: 999px; margin-bottom: 24px; }}
+            .title {{ font-size: 52px; font-weight: 700; line-height: 1.38; margin-bottom: 42px; color: #f8fafc; }}
+            .wave {{ height: 190px; display: flex; align-items: center; justify-content: center; gap: 14px; }}
+            .bar {{ width: 16px; border-radius: 999px; background: linear-gradient(180deg, #38bdf8, #f59e0b);
+                min-height: 24px; transition: none; }}
+            .src {{ margin-top: 28px; font-size: 26px; color: #94a3b8; }}
+            </style></head><body><div class="panel">
+              <div class="badge">{esc_d or 'AI VOICE CLONING'}</div>
+              <div class="title">{esc_h}</div>
+              <div class="wave">{bars}</div>
+              <div class="src">{esc_s}</div>
+            </div></body></html>"""
+
         if card_type == "map_card":
             return f"""<!DOCTYPE html><html><head><meta charset="utf-8"><style>{font_css}
             body {{ background: #091526; color: #f8fafc; position: relative; }}
             svg {{ width: 92%; height: 84%; }}
+            .radar {{ transform-origin: 555px 215px; transform: scale(calc(0.8 + var(--pulse, 0.3) * 1.1)); opacity: calc(1 - var(--pulse, 0.3) * 0.75); }}
             .label {{ position: absolute; bottom: 88px; left: 96px; background: rgba(15,23,42,0.92);
                 border-left: 8px solid #ef4444; padding: 24px 36px; border-radius: 10px; font-size: 42px; font-weight: 700; }}
             </style></head><body>
@@ -178,20 +249,22 @@ class InvestigativeCardGenerator:
               <rect width="1200" height="650" fill="url(#g)"/>
               <path d="M510,95 L590,110 L655,190 L705,230 L680,320 L620,440 L575,555 L540,460 L470,350 L435,245 Z"
                     fill="#1d4ed8" fill-opacity="0.35" stroke="#60a5fa" stroke-width="4"/>
-              <circle cx="555" cy="215" r="28" fill="none" stroke="#ef4444" stroke-width="5" opacity="0.75"/>
-              <circle cx="555" cy="215" r="11" fill="#ef4444"/>
+              <circle class="radar" cx="555" cy="215" r="34" fill="none" stroke="#ef4444" stroke-width="5"/>
+              <circle cx="555" cy="215" r="12" fill="#ef4444"/>
             </svg>
             <div class="label">{esc_h} {('(' + esc_d + ')') if esc_d else ''}</div></body></html>"""
 
-        # Default: bold stat_card
+        # Default: bold animated stat_card
         return f"""<!DOCTYPE html><html><head><meta charset="utf-8"><style>{font_css}
         body {{ background: linear-gradient(145deg, #111827 0%, #1f2937 100%); color: #f9fafb; }}
         .stat {{ width: 78%; padding: 72px; border: 3px solid #f59e0b; border-radius: 24px; text-align: center;
-            background: rgba(17,24,39,0.9); box-shadow: 0 30px 75px rgba(0,0,0,0.65); }}
+            background: rgba(17,24,39,0.92); box-shadow: 0 30px 75px rgba(0,0,0,0.65); position: relative; overflow: hidden; }}
+        .bar {{ position: absolute; top: 0; left: 0; height: 10px; width: var(--sweep-pct, 100%); background: linear-gradient(90deg, #f59e0b, #ef4444); }}
         .badge {{ display: inline-block; background: #f59e0b; color: #111827; font-weight: 700; font-size: 28px;
             padding: 10px 28px; border-radius: 999px; margin-bottom: 32px; }}
         .val {{ font-size: 62px; line-height: 1.38; font-weight: 700; }}
         </style></head><body><div class="stat">
+        <div class="bar"></div>
         <div class="badge">{esc_d or esc_s}</div><div class="val">{esc_h}</div>
         </div></body></html>"""
 
@@ -229,25 +302,28 @@ class InvestigativeCardGenerator:
                 page = browser.new_page(viewport={"width": self.width, "height": self.height})
                 page.set_content(html_doc, wait_until="load")
 
-                # Live animated yellow marker highlighter sweep for news_card
-                if card_type == "news_card":
-                    sweep_sec = min(1.2, max(0.6, duration * 0.4))
-                    n_sweep_frames = max(12, int(round(sweep_sec * self.fps)))
+                # Live animated Playwright motion graphics across card types
+                if card_type in ("news_card", "stat_card", "phone_call_card", "waveform_card", "map_card"):
+                    is_loop = card_type in ("phone_call_card", "waveform_card", "map_card")
+                    anim_sec = 1.2 if is_loop else min(1.2, max(0.6, duration * 0.4))
+                    n_frames = max(12, int(round(anim_sec * self.fps)))
                     with tempfile.TemporaryDirectory() as frame_dir:
                         page.add_style_tag(content=".highlight { animation: none !important; }")
-                        for f_idx in range(n_sweep_frames):
-                            t_norm = f_idx / max(1, n_sweep_frames - 1)
+                        for f_idx in range(n_frames):
+                            t_norm = f_idx / max(1, n_frames - 1)
                             eased = 1.0 - (1.0 - t_norm) ** 2.2
                             pct = round(eased * 100.0, 2)
                             page.evaluate(
                                 f"document.documentElement.style.setProperty('--sweep-pct', '{pct}%');"
+                                f"document.documentElement.style.setProperty('--pulse', '{t_norm:.3f}');"
+                                f"document.documentElement.style.setProperty('--phase', '{t_norm:.3f}');"
                             )
                             page.screenshot(path=os.path.join(frame_dir, f"frame_{f_idx:04d}.png"))
 
-                        last_frame = os.path.join(frame_dir, f"frame_{n_sweep_frames - 1:04d}.png")
+                        last_frame = os.path.join(frame_dir, f"frame_{n_frames - 1:04d}.png")
                         head_mp4 = output_path + ".sweep_head.mp4"
                         tail_mp4 = output_path + ".sweep_tail.mp4"
-                        rem_dur = max(0.0, duration - (n_sweep_frames / float(self.fps)))
+                        rem_dur = max(0.0, duration - (n_frames / float(self.fps)))
 
                         head_cmd = [
                             "ffmpeg", "-y", "-loglevel", "error",
@@ -255,13 +331,28 @@ class InvestigativeCardGenerator:
                             "-i", os.path.join(frame_dir, "frame_%04d.png"),
                             "-vf", "vignette=PI/5:mode=backward,noise=alls=4:allf=t,format=yuv420p",
                             "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
-                            "-pix_fmt", "yuv420p",
+                            "-pix_fmt", "yuv420p", "-color_range", "tv",
                             head_mp4,
                         ]
                         res_h = subprocess.run(head_cmd, capture_output=True)
                         ok_anim = False
                         if res_h.returncode == 0 and os.path.exists(head_mp4):
-                            if rem_dur >= 0.4 and animate_image_to_video(
+                            if is_loop:
+                                res_l = subprocess.run(
+                                    [
+                                        "ffmpeg", "-y", "-loglevel", "error",
+                                        "-stream_loop", "-1", "-i", head_mp4,
+                                        "-t", f"{duration:.3f}",
+                                        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
+                                        "-pix_fmt", "yuv420p", "-color_range", "tv",
+                                        output_path,
+                                    ],
+                                    capture_output=True,
+                                )
+                                if os.path.exists(head_mp4):
+                                    os.remove(head_mp4)
+                                ok_anim = (res_l.returncode == 0 and os.path.exists(output_path) and os.path.getsize(output_path) > 5000)
+                            elif rem_dur >= 0.4 and animate_image_to_video(
                                 last_frame, tail_mp4, duration=rem_dur, width=self.width, height=self.height,
                                 fps=self.fps, camera=camera, add_film_grain=True,
                             ):
@@ -271,7 +362,7 @@ class InvestigativeCardGenerator:
                                         "-i", head_mp4, "-i", tail_mp4,
                                         "-filter_complex", f"[0:v][1:v]concat=n=2:v=1:a=0,fps={self.fps},format=yuv420p[v]",
                                         "-map", "[v]", "-t", f"{duration:.3f}",
-                                        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22", "-pix_fmt", "yuv420p",
+                                        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22", "-pix_fmt", "yuv420p", "-color_range", "tv",
                                         output_path,
                                     ],
                                     capture_output=True,
@@ -286,7 +377,6 @@ class InvestigativeCardGenerator:
                         if ok_anim:
                             browser.close()
                             return output_path
-                        # Fallback to static screenshot before closing browser
                         page.screenshot(path=png_tmp)
                         browser.close()
                 else:

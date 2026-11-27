@@ -67,6 +67,7 @@ class StoryboardManifest:
     target_duration: int
     scenes: List[SceneDefinition] = field(default_factory=list)
     style: str = "Documentary"
+    thumbnail_hook: str = ""
 
     @property
     def total_duration(self) -> float:
@@ -77,6 +78,7 @@ class StoryboardManifest:
             "topic": self.topic,
             "language": self.language,
             "style": self.style,
+            "thumbnail_hook": self.thumbnail_hook,
             "target_duration": self.target_duration,
             "total_duration": self.total_duration,
             "scene_count": len(self.scenes),
@@ -101,6 +103,7 @@ class StoryboardManifest:
             language=data["language"],
             target_duration=data["target_duration"],
             style=data.get("style", "Documentary"),
+            thumbnail_hook=data.get("thumbnail_hook", ""),
             scenes=scenes,
         )
 

@@ -84,6 +84,7 @@ class VoiceEngine:
         self._ref_bank: Dict[str, str] = {}
         self._ref_texts: Dict[str, str] = {}
         self._cloned_elevenlabs_voice_id: Optional[str] = None
+        self._cloned_cartesia_voice_id: Optional[str] = None
 
     def _has_cuda_gpu(self) -> bool:
         try:
@@ -93,24 +94,28 @@ class VoiceEngine:
             return False
 
     def _prepare_custom_ref_clip(self, src_path: str, dest_wav: str, max_sec: float = 9.5) -> bool:
-        """Convert any custom .mp3/.m4a/.wav voice sample into a clean 24kHz mono <=9.5s reference WAV."""
+        """Convert any custom .mp3/.m4a/.wav sample into a denoised Dry Vocal 24kHz mono <=9.5s WAV."""
         if not src_path or not os.path.exists(src_path):
             return False
         os.makedirs(os.path.dirname(dest_wav) or ".", exist_ok=True)
         dur = self._probe_duration(src_path, fallback=0.0)
         needs_trim = dur > max_sec or not src_path.lower().endswith(".wav")
-        af = "silenceremove=start_periods=1:start_silence=0.15:start_threshold=-40dB"
-        cmd = [
-            "ffmpeg", "-y", "-loglevel", "error",
-            "-i", src_path,
-            "-af", af,
-            "-t", f"{max_sec:.2f}",
-            "-ar", "24000", "-ac", "1", "-c:a", "pcm_s16le",
-            dest_wav,
-        ]
-        res = subprocess.run(cmd, capture_output=True)
-        if res.returncode == 0 and os.path.exists(dest_wav) and os.path.getsize(dest_wav) > 2000:
-            return True
+        filter_candidates = (
+            "highpass=f=85,afftdn=nf=-25,silenceremove=start_periods=1:start_silence=0.15:start_threshold=-40dB",
+            "highpass=f=85,silenceremove=start_periods=1:start_silence=0.15:start_threshold=-40dB",
+        )
+        for af in filter_candidates:
+            cmd = [
+                "ffmpeg", "-y", "-loglevel", "error",
+                "-i", src_path,
+                "-af", af,
+                "-t", f"{max_sec:.2f}",
+                "-ar", "24000", "-ac", "1", "-c:a", "pcm_s16le",
+                dest_wav,
+            ]
+            res = subprocess.run(cmd, capture_output=True)
+            if res.returncode == 0 and os.path.exists(dest_wav) and os.path.getsize(dest_wav) > 2000:
+                return True
         if not needs_trim and src_path.lower().endswith(".wav"):
             shutil.copy2(src_path, dest_wav)
             return os.path.exists(dest_wav)
@@ -445,18 +450,138 @@ class VoiceEngine:
             logger.warning(f"Qwen3-TTS synthesis failed: {e}")
             return False
 
+    @staticmethod
+    def _pack_msgpack(obj: Any) -> bytes:
+        """Pure-Python MessagePack serializer (supports Fish Audio inline zero-shot `references` without extra deps)."""
+        try:
+            import ormsgpack
+            return ormsgpack.packb(obj)
+        except ImportError:
+            pass
+
+        out = bytearray()
+
+        def _pack_item(v: Any) -> None:
+            if v is None:
+                out.append(0xC0)
+            elif isinstance(v, bool):
+                out.append(0xC3 if v else 0xC2)
+            elif isinstance(v, int):
+                if 0 <= v <= 0x7F:
+                    out.append(v)
+                elif -32 <= v < 0:
+                    out.append(v & 0xFF)
+                elif 0 <= v <= 0xFFFFFFFF:
+                    out.append(0xCE)
+                    out.extend(struct.pack(">I", v))
+                else:
+                    out.append(0xD3)
+                    out.extend(struct.pack(">q", v))
+            elif isinstance(v, float):
+                out.append(0xCB)
+                out.extend(struct.pack(">d", v))
+            elif isinstance(v, (bytes, bytearray)):
+                n = len(v)
+                if n <= 0xFF:
+                    out.extend(b"\xC4" + struct.pack("B", n))
+                elif n <= 0xFFFF:
+                    out.extend(b"\xC5" + struct.pack(">H", n))
+                else:
+                    out.extend(b"\xC6" + struct.pack(">I", n))
+                out.extend(v)
+            elif isinstance(v, str):
+                b = v.encode("utf-8")
+                n = len(b)
+                if n <= 31:
+                    out.append(0xA0 | n)
+                elif n <= 0xFF:
+                    out.extend(b"\xD9" + struct.pack("B", n))
+                elif n <= 0xFFFF:
+                    out.extend(b"\xDA" + struct.pack(">H", n))
+                else:
+                    out.extend(b"\xDB" + struct.pack(">I", n))
+                out.extend(b)
+            elif isinstance(v, (list, tuple)):
+                n = len(v)
+                if n <= 15:
+                    out.append(0x90 | n)
+                elif n <= 0xFFFF:
+                    out.extend(b"\xDC" + struct.pack(">H", n))
+                else:
+                    out.extend(b"\xDD" + struct.pack(">I", n))
+                for elem in v:
+                    _pack_item(elem)
+            elif isinstance(v, dict):
+                n = len(v)
+                if n <= 15:
+                    out.append(0x80 | n)
+                elif n <= 0xFFFF:
+                    out.extend(b"\xDE" + struct.pack(">H", n))
+                else:
+                    out.extend(b"\xDF" + struct.pack(">I", n))
+                for k, val in v.items():
+                    _pack_item(str(k) if not isinstance(k, (str, bytes, int)) else k)
+                    _pack_item(val)
+            else:
+                _pack_item(str(v))
+
+        _pack_item(obj)
+        return bytes(out)
+
+    @staticmethod
+    def _build_multipart_form(
+        fields: List[Tuple[str, str]],
+        file_field: str,
+        file_path: str,
+    ) -> Tuple[bytes, str]:
+        """Build standard multipart/form-data payload cleanly for voice cloning REST APIs."""
+        boundary = "----AIDocEngineBoundary7f3a9c"
+        filename = os.path.basename(file_path)
+        mime = "audio/wav" if filename.lower().endswith(".wav") else "audio/mpeg"
+        with open(file_path, "rb") as f:
+            audio_bytes = f.read()
+        body = bytearray()
+        for fname, val in fields:
+            body.extend(
+                f"--{boundary}\r\nContent-Disposition: form-data; name=\"{fname}\"\r\n\r\n{val}\r\n".encode("utf-8")
+            )
+        body.extend(
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"{file_field}\"; filename=\"{filename}\"\r\n"
+            f"Content-Type: {mime}\r\n\r\n".encode("utf-8")
+        )
+        body.extend(audio_bytes)
+        body.extend(f"\r\n--{boundary}--\r\n".encode("utf-8"))
+        return bytes(body), f"multipart/form-data; boundary={boundary}"
+
+    def _save_audio_bytes_to_wav(self, audio_bytes: bytes, suffix: str, out_wav: str) -> bool:
+        if not audio_bytes or len(audio_bytes) < 400:
+            return False
+        tmp = f"{out_wav}{suffix}"
+        try:
+            with open(tmp, "wb") as f:
+                f.write(audio_bytes)
+            self._convert_to_wav(tmp, out_wav)
+        finally:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+        return os.path.exists(out_wav) and os.path.getsize(out_wav) > 1000
+
     def _generate_sarvam_speech(self, text: str, out_wav: str, emotion: str = "neutral") -> bool:
         api_key = getattr(self.config, "sarvam_api_key", None) or os.environ.get("SARVAM_API_KEY", "").strip()
         if not api_key:
             return False
         pace_map = {"fear": 0.90, "slow": 0.88, "angry": 1.06, "fast": 1.12, "neutral": 0.98}
+        lang_code = "hi-IN" if self.config.language == "hi" else "en-IN"
+        is_fem = "female" in self.voice_name.lower()
         try:
+            # Official Sarvam Bulbul v3 REST schema
             body = {
-                "inputs": [text[:490]],
-                "target_language_code": "hi-IN" if self.config.language == "hi" else "en-IN",
-                "speaker": "meera" if "female" in self.voice_name.lower() else "arvind",
+                "text": text[:2400],
+                "language_code": lang_code,
+                "model": "bulbul:v3",
+                "speaker": "simran" if is_fem else "shubh",
                 "pace": pace_map.get(emotion, 0.98),
-                "model": "bulbul:v2",
+                "speech_sample_rate": 24000,
                 "enable_preprocessing": True,
             }
             req = urllib.request.Request(
@@ -468,16 +593,117 @@ class VoiceEngine:
                 data = json.loads(resp.read().decode("utf-8"))
                 audios = data.get("audios") or []
                 if audios:
-                    raw_b = base64.b64decode(audios[0])
-                    tmp = out_wav + ".sarvam.wav"
-                    with open(tmp, "wb") as f:
-                        f.write(raw_b)
-                    self._convert_to_wav(tmp, out_wav)
-                    if os.path.exists(tmp):
-                        os.remove(tmp)
-                    return os.path.exists(out_wav) and os.path.getsize(out_wav) > 1000
+                    return self._save_audio_bytes_to_wav(base64.b64decode(audios[0]), ".sarvam.wav", out_wav)
         except Exception as e:
             logger.debug(f"Sarvam AI TTS skipped: {e}")
+        return False
+
+    def _generate_fish_speech(
+        self, text: str, out_wav: str, ref_audio_path: Optional[str] = None, ref_text: str = ""
+    ) -> bool:
+        """Synthesize expressive or zero-shot cloned speech via Fish Audio REST API (S2.1 Pro)."""
+        api_key = getattr(self.config, "fish_api_key", None) or os.environ.get("FISH_API_KEY", "").strip()
+        if not api_key:
+            return False
+        ref_id = getattr(self.config, "fish_reference_id", None) or os.environ.get("FISH_REFERENCE_ID", "").strip()
+        headers: Dict[str, str] = {
+            "Authorization": f"Bearer {api_key}",
+            "model": "s2.1-pro",
+        }
+        try:
+            if ref_id:
+                payload: Dict[str, Any] = {"text": text, "reference_id": ref_id, "format": "wav"}
+                raw_body = json.dumps(payload).encode("utf-8")
+                headers["Content-Type"] = "application/json"
+            elif ref_audio_path and os.path.exists(ref_audio_path):
+                with open(ref_audio_path, "rb") as f:
+                    ref_bytes = f.read()
+                payload = {
+                    "text": text,
+                    "format": "wav",
+                    "references": [{"audio": ref_bytes, "text": ref_text or MOOD_REF_CAPTIONS["neutral"][1]}],
+                }
+                raw_body = self._pack_msgpack(payload)
+                headers["Content-Type"] = "application/msgpack"
+            else:
+                payload = {"text": text, "format": "wav"}
+                raw_body = json.dumps(payload).encode("utf-8")
+                headers["Content-Type"] = "application/json"
+
+            req = urllib.request.Request("https://api.fish.audio/v1/tts", data=raw_body, headers=headers)
+            with urllib.request.urlopen(req, timeout=35) as resp:
+                return self._save_audio_bytes_to_wav(resp.read(), ".fish.wav", out_wav)
+        except Exception as e:
+            logger.debug(f"Fish Audio TTS skipped cleanly: {e}")
+        return False
+
+    def _clone_cartesia_voice(self, api_key: str, sample_audio_path: str, name: str = "AIDocCartesiaVoice") -> Optional[str]:
+        """Instant-clone custom reference clip via Cartesia POST /voices/clone once per run."""
+        if self._cloned_cartesia_voice_id:
+            return self._cloned_cartesia_voice_id
+        if not api_key or not sample_audio_path or not os.path.exists(sample_audio_path):
+            return None
+        try:
+            body, ctype = self._build_multipart_form(
+                [("name", name), ("description", "Documentary voice clone"), ("access", "private")],
+                file_field="clip",
+                file_path=sample_audio_path,
+            )
+            req = urllib.request.Request(
+                "https://api.cartesia.ai/voices/clone",
+                data=body,
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Cartesia-Version": "2026-08-14",
+                    "Content-Type": ctype,
+                },
+            )
+            with urllib.request.urlopen(req, timeout=45) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+                vid = payload.get("id")
+                if vid:
+                    self._cloned_cartesia_voice_id = str(vid)
+                    logger.info(f"✅ Cartesia Instant Voice Clone ready (voice_id={vid})")
+                    return self._cloned_cartesia_voice_id
+        except Exception as e:
+            logger.warning(f"Cartesia voice cloning skipped cleanly: {e}")
+        return None
+
+    def _generate_cartesia_speech(self, text: str, out_wav: str, ref_audio_path: Optional[str] = None) -> bool:
+        """Synthesize crisp zero-shot cloned Hindi/English audio via Cartesia Sonic REST API."""
+        api_key = getattr(self.config, "cartesia_api_key", None) or os.environ.get("CARTESIA_API_KEY", "").strip()
+        if not api_key:
+            return False
+        voice_id = (
+            getattr(self.config, "cartesia_voice_id", None)
+            or os.environ.get("CARTESIA_VOICE_ID", "").strip()
+            or self._cloned_cartesia_voice_id
+        )
+        if not voice_id and ref_audio_path and os.path.exists(ref_audio_path):
+            voice_id = self._clone_cartesia_voice(api_key, ref_audio_path)
+        if not voice_id:
+            return False
+        try:
+            body = {
+                "model_id": "sonic-3.6",
+                "transcript": text,
+                "language": "hi" if self.config.language == "hi" else "en",
+                "voice": {"mode": "id", "id": voice_id},
+                "output_format": {"container": "wav", "encoding": "pcm_s16le", "sample_rate": 44100},
+            }
+            req = urllib.request.Request(
+                "https://api.cartesia.ai/tts/bytes",
+                data=json.dumps(body).encode("utf-8"),
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Cartesia-Version": "2026-08-14",
+                    "Content-Type": "application/json",
+                },
+            )
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return self._save_audio_bytes_to_wav(resp.read(), ".cartesia.wav", out_wav)
+        except Exception as e:
+            logger.debug(f"Cartesia TTS skipped cleanly: {e}")
         return False
 
     def _clone_elevenlabs_voice(self, api_key: str, sample_audio_path: str, name: str = "AIDocCustomVoice") -> Optional[str]:
@@ -486,25 +712,16 @@ class VoiceEngine:
             return self._cloned_elevenlabs_voice_id
         if not api_key or not sample_audio_path or not os.path.exists(sample_audio_path):
             return None
-        boundary = "----AIDocEngineBoundary7f3a9c"
-        filename = os.path.basename(sample_audio_path)
-        mime = "audio/wav" if filename.lower().endswith(".wav") else "audio/mpeg"
         try:
-            audio_bytes = open(sample_audio_path, "rb").read()
-            body = bytearray()
-            for field_name, val in (("name", name), ("description", "Documentary narrator reference clone")):
-                body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"{field_name}\"\r\n\r\n{val}\r\n".encode("utf-8"))
-            body.extend(
-                f"--{boundary}\r\nContent-Disposition: form-data; name=\"files\"; filename=\"{filename}\"\r\n"
-                f"Content-Type: {mime}\r\n\r\n".encode("utf-8")
+            body, ctype = self._build_multipart_form(
+                [("name", name), ("description", "Documentary narrator reference clone")],
+                file_field="files",
+                file_path=sample_audio_path,
             )
-            body.extend(audio_bytes)
-            body.extend(f"\r\n--{boundary}--\r\n".encode("utf-8"))
-
             req = urllib.request.Request(
                 "https://api.elevenlabs.io/v1/voices/add",
-                data=bytes(body),
-                headers={"xi-api-key": api_key, "Content-Type": f"multipart/form-data; boundary={boundary}"},
+                data=body,
+                headers={"xi-api-key": api_key, "Content-Type": ctype},
             )
             with urllib.request.urlopen(req, timeout=45) as resp:
                 payload = json.loads(resp.read().decode("utf-8"))
@@ -550,13 +767,8 @@ class VoiceEngine:
                 data=json.dumps(body).encode("utf-8"),
                 headers={"xi-api-key": api_key, "Content-Type": "application/json", "Accept": "audio/mpeg"},
             )
-            mp3_tmp = out_wav.replace(".wav", ".el.mp3")
-            with urllib.request.urlopen(req, timeout=30) as resp, open(mp3_tmp, "wb") as f:
-                f.write(resp.read())
-            self._convert_to_wav(mp3_tmp, out_wav)
-            if os.path.exists(mp3_tmp):
-                os.remove(mp3_tmp)
-            return os.path.exists(out_wav) and os.path.getsize(out_wav) > 1000
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return self._save_audio_bytes_to_wav(resp.read(), ".el.mp3", out_wav)
         except Exception as e:
             logger.debug(f"ElevenLabs TTS skipped: {e}")
         return False
@@ -633,33 +845,43 @@ class VoiceEngine:
                     or self._ref_texts.get("neutral")
                     or MOOD_REF_CAPTIONS.get(ref_mood_key, MOOD_REF_CAPTIONS["neutral"])[1]
                 )
+                r_path = ref_file if (ref_file and os.path.exists(ref_file)) else self._ref_bank.get("neutral", "")
 
-                if engine_pref in ("elevenlabs",) or (engine_pref == "auto" and getattr(self.config, "elevenlabs_api_key", None)):
-                    if self._generate_elevenlabs_speech(seg_text, seg_wav):
-                        return True
-                if engine_pref in ("sarvam",) or (engine_pref == "auto" and getattr(self.config, "sarvam_api_key", None)):
-                    if self._generate_sarvam_speech(seg_text, seg_wav, emotion=ref_mood_key):
-                        return True
-                if has_gpu and engine_pref in ("indicf5", "auto") and self._ref_bank:
-                    r_path = ref_file if (ref_file and os.path.exists(ref_file)) else self._ref_bank.get("neutral", "")
-                    if self._synthesize_indicf5_clip(seg_text, r_path, ref_transcript, seg_wav, seed=2026):
-                        return True
-                if has_gpu and engine_pref in ("qwen3_tts", "auto") and self._ref_bank:
-                    r_path = ref_file if (ref_file and os.path.exists(ref_file)) else self._ref_bank.get("neutral", "")
-                    if self._synthesize_qwen_clip(seg_text, r_path, seg_wav, seed=2026, ref_text=ref_transcript):
-                        return True
-                if has_gpu and engine_pref in ("indic_parler", "auto"):
-                    if self._synthesize_parler_clip(seg_text, profile["parler_caption"], seg_wav, seed=2026):
-                        return True
-                if engine_pref in ("piper", "auto"):
-                    if self._generate_piper_speech(seg_text, seg_wav):
-                        return True
-                if engine_pref in ("edge", "auto", "piper"):
-                    ok_edge, wt = self._generate_edge_speech(seg_text, seg_wav)
-                    if ok_edge:
-                        if wt:
-                            profile["_word_timings"] = wt
-                        return True
+                # Valid Multi-Provider Waterfall (preferred engine first, graceful cascade on failure/quota)
+                default_chain = ["fish", "sarvam", "cartesia", "elevenlabs", "indicf5", "qwen3_tts", "indic_parler", "piper", "edge"]
+                order = [engine_pref] + [p for p in default_chain if p != engine_pref] if engine_pref in default_chain else default_chain
+
+                for provider in order:
+                    if provider == "fish" and getattr(self.config, "fish_api_key", None):
+                        if self._generate_fish_speech(seg_text, seg_wav, ref_audio_path=r_path, ref_text=ref_transcript):
+                            return True
+                    elif provider == "sarvam" and getattr(self.config, "sarvam_api_key", None):
+                        if self._generate_sarvam_speech(seg_text, seg_wav, emotion=ref_mood_key):
+                            return True
+                    elif provider == "cartesia" and getattr(self.config, "cartesia_api_key", None):
+                        if self._generate_cartesia_speech(seg_text, seg_wav, ref_audio_path=r_path):
+                            return True
+                    elif provider == "elevenlabs" and getattr(self.config, "elevenlabs_api_key", None):
+                        if self._generate_elevenlabs_speech(seg_text, seg_wav):
+                            return True
+                    elif provider == "indicf5" and has_gpu and self._ref_bank:
+                        if self._synthesize_indicf5_clip(seg_text, r_path, ref_transcript, seg_wav, seed=2026):
+                            return True
+                    elif provider == "qwen3_tts" and has_gpu and self._ref_bank:
+                        if self._synthesize_qwen_clip(seg_text, r_path, seg_wav, seed=2026, ref_text=ref_transcript):
+                            return True
+                    elif provider == "indic_parler" and has_gpu:
+                        if self._synthesize_parler_clip(seg_text, profile["parler_caption"], seg_wav, seed=2026):
+                            return True
+                    elif provider == "piper":
+                        if self._generate_piper_speech(seg_text, seg_wav):
+                            return True
+                    elif provider == "edge":
+                        ok_edge, wt = self._generate_edge_speech(seg_text, seg_wav)
+                        if ok_edge:
+                            if wt:
+                                profile["_word_timings"] = wt
+                            return True
                 return False
 
             # Run Emotion Tag Router if inline tags or GPU TTS present, else direct clean call

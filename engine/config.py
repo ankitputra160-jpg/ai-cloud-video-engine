@@ -27,11 +27,13 @@ SUPPORTED_SUBTITLE_STYLES: Tuple[str, ...] = (
 
 SUPPORTED_VOICE_ENGINES: Tuple[str, ...] = (
     "auto",
+    "fish",
+    "sarvam",
+    "cartesia",
+    "elevenlabs",
     "indicf5",
     "indic_parler",
     "qwen3_tts",
-    "sarvam",
-    "elevenlabs",
     "piper",
     "edge",
 )
@@ -118,6 +120,10 @@ class PipelineConfig:
     groq_api_key: Optional[str] = field(default=None)
     hf_token: Optional[str] = field(default=None)
     sarvam_api_key: Optional[str] = field(default=None)
+    fish_api_key: Optional[str] = field(default=None)
+    fish_reference_id: Optional[str] = field(default=None)
+    cartesia_api_key: Optional[str] = field(default=None)
+    cartesia_voice_id: Optional[str] = field(default=None)
     elevenlabs_api_key: Optional[str] = field(default=None)
 
     # Network & Retry limits
@@ -159,6 +165,10 @@ class PipelineConfig:
             ("groq_api_key", "GROQ_API_KEY"),
             ("hf_token", "HF_TOKEN"),
             ("sarvam_api_key", "SARVAM_API_KEY"),
+            ("fish_api_key", "FISH_API_KEY"),
+            ("fish_reference_id", "FISH_REFERENCE_ID"),
+            ("cartesia_api_key", "CARTESIA_API_KEY"),
+            ("cartesia_voice_id", "CARTESIA_VOICE_ID"),
             ("elevenlabs_api_key", "ELEVENLABS_API_KEY"),
             ("elevenlabs_voice_id", "ELEVENLABS_VOICE_ID"),
         )

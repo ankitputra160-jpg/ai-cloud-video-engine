@@ -56,10 +56,12 @@ on:
         type: choice
         options:
           - auto
+          - fish
+          - sarvam
+          - cartesia
+          - elevenlabs
           - piper
           - edge
-          - sarvam
-          - elevenlabs
       llm_mode:
         description: 'Script LLM Backend'
         required: false
@@ -123,7 +125,11 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          FISH_API_KEY: ${{ secrets.FISH_API_KEY }}
+          FISH_REFERENCE_ID: ${{ secrets.FISH_REFERENCE_ID }}
           SARVAM_API_KEY: ${{ secrets.SARVAM_API_KEY }}
+          CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
+          CARTESIA_VOICE_ID: ${{ secrets.CARTESIA_VOICE_ID }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
         run: |

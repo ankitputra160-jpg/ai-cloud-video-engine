@@ -160,6 +160,132 @@ class TestVoiceEngine(unittest.TestCase):
         ve = VoiceEngine(cfg)
         self.assertEqual(ve._resolve_elevenlabs_voice_id("test_el_key"), "custom_raju_vid_123")
 
+    def test_fish_cartesia_sarvam_v3_and_waterfall_fallback(self):
+        """Verifies Fish Audio MsgPack cloning, Cartesia clone+TTS, Sarvam bulbul:v3, and clean waterfall."""
+        import base64
+        import io
+        import json
+        import wave
+        from unittest.mock import patch
+
+        # Build minimal valid 1.0s WAV payload bytes in memory
+        wav_buf = io.BytesIO()
+        with wave.open(wav_buf, "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(24000)
+            w.writeframes(b"\x01\x00" * 24000)
+        sample_wav_bytes = wav_buf.getvalue()
+
+        ref_wav = os.path.join(self.temp_dir, "ref_sample.wav")
+        with open(ref_wav, "wb") as f:
+            f.write(sample_wav_bytes)
+
+        # 1. Pure-Python MsgPack serializer packs dict + binary reference audio cleanly
+        packed = VoiceEngine._pack_msgpack({"text": "नमस्ते", "references": [{"audio": b"\x01\x02", "text": "hi"}]})
+        self.assertIsInstance(packed, bytes)
+        self.assertIn("नमस्ते".encode("utf-8"), packed)
+
+        seen_requests = []
+
+        class _FakeResp:
+            def __init__(self, payload: bytes):
+                self._payload = payload
+
+            def read(self):
+                return self._payload
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+        def _fake_urlopen(req, timeout=30):
+            url = req.full_url
+            seen_requests.append((url, dict(req.header_items()), req.data))
+            if "api.fish.audio" in url:
+                return _FakeResp(sample_wav_bytes)
+            if "api.cartesia.ai/voices/clone" in url:
+                return _FakeResp(json.dumps({"id": "cartesia_vid_abc"}).encode("utf-8"))
+            if "api.cartesia.ai/tts/bytes" in url:
+                return _FakeResp(sample_wav_bytes)
+            if "api.sarvam.ai/text-to-speech" in url:
+                b64 = base64.b64encode(sample_wav_bytes).decode("ascii")
+                return _FakeResp(json.dumps({"audios": [b64]}).encode("utf-8"))
+            raise RuntimeError(f"Unexpected URL: {url}")
+
+        cfg = PipelineConfig(
+            topic="Waterfall",
+            language="hi",
+            work_dir=self.temp_dir,
+            fish_api_key="fish_k",
+            cartesia_api_key="cart_k",
+            sarvam_api_key="sarvam_k",
+        )
+        ve = VoiceEngine(cfg)
+
+        with patch("urllib.request.urlopen", side_effect=_fake_urlopen):
+            out_fish = os.path.join(self.temp_dir, "out_fish.wav")
+            self.assertTrue(ve._generate_fish_speech("नमस्ते भारत", out_fish, ref_audio_path=ref_wav, ref_text="राजू"))
+            fish_req = seen_requests[-1]
+            self.assertEqual(fish_req[1].get("Content-type"), "application/msgpack")
+            self.assertEqual(fish_req[1].get("Model"), "s2.1-pro")
+
+            out_cart = os.path.join(self.temp_dir, "out_cart.wav")
+            self.assertTrue(ve._generate_cartesia_speech("सुप्रीम कोर्ट", out_cart, ref_audio_path=ref_wav))
+            self.assertEqual(ve._cloned_cartesia_voice_id, "cartesia_vid_abc")
+
+            out_sarv = os.path.join(self.temp_dir, "out_sarv.wav")
+            self.assertTrue(ve._generate_sarvam_speech("असली सच", out_sarv))
+            sarv_body = json.loads(seen_requests[-1][2].decode("utf-8"))
+            self.assertEqual(sarv_body["model"], "bulbul:v3")
+            self.assertEqual(sarv_body["language_code"], "hi-IN")
+            self.assertEqual(sarv_body["speaker"], "shubh")
+
+        # 2. Verify Multi-Provider Waterfall: if Fish raises 429/error, cascades cleanly to Sarvam
+        manifest = StoryboardManifest(
+            topic="Waterfall E2E",
+            language="hi",
+            target_duration=5,
+            scenes=[
+                SceneDefinition(
+                    scene_id="scene_01",
+                    chapter_index=1,
+                    title="Hook",
+                    narration="यह असली कहानी है।",
+                    visual_description="Court",
+                    footage_queries=["court"],
+                    ai_prompt="court",
+                    duration=3.0,
+                    transition="fade",
+                    bgm_mood="curious",
+                    sfx_tag="soft_whoosh",
+                    subtitle_text="यह असली कहानी है।",
+                )
+            ],
+        )
+        cfg_wf = PipelineConfig(
+            topic="WF",
+            language="hi",
+            work_dir=os.path.join(self.temp_dir, "wf_ws"),
+            voice_engine="fish",
+            fish_api_key="fish_k",
+            sarvam_api_key="sarvam_k",
+        )
+        ve_wf = VoiceEngine(cfg_wf)
+
+        def _fish_fails_then_sarvam(req, timeout=30):
+            if "api.fish.audio" in req.full_url:
+                raise RuntimeError("HTTP 429 quota exceeded")
+            b64 = base64.b64encode(sample_wav_bytes).decode("ascii")
+            return _FakeResp(json.dumps({"audios": [b64]}).encode("utf-8"))
+
+        with patch("urllib.request.urlopen", side_effect=_fish_fails_then_sarvam):
+            out_manifest = ve_wf.synthesize_storyboard_narration(manifest)
+        self.assertTrue(os.path.exists(out_manifest.scenes[0].voice_asset_path))
+        self.assertGreater(os.path.getsize(out_manifest.scenes[0].voice_asset_path), 4000)
+
 
 if __name__ == "__main__":
     unittest.main()

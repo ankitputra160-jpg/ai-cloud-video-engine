@@ -62,12 +62,16 @@ class TestPipelineConfig(unittest.TestCase):
             voice_engine="indicf5",
             hf_token="hf_test_tok",
             sarvam_api_key="srv_test",
+            fish_api_key="fish_test",
+            cartesia_api_key="cart_test",
             elevenlabs_api_key="el_test",
             preview_only=True,
         )
         self.assertEqual(cfg.llm_mode, "local_gemma3")
         self.assertEqual(cfg.voice_engine, "indicf5")
         self.assertEqual(cfg.hf_token, "hf_test_tok")
+        self.assertEqual(cfg.fish_api_key, "fish_test")
+        self.assertEqual(cfg.cartesia_api_key, "cart_test")
         self.assertTrue(cfg.preview_only)
         self.assertTrue(cfg.thumbnail_path.endswith("_thumbnail.jpg"))
 

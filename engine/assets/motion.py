@@ -12,6 +12,7 @@ from typing import Optional, Tuple
 
 from engine.text.devanagari import (
     check_raqm_support,
+    format_ass_timestamp,
     get_fonts_dir,
     normalize_devanagari,
     resolve_devanagari_font,
@@ -54,7 +55,7 @@ def _build_badge_ass(badge_text: str, ass_path: str, dur: float, width: int, hei
         "Style: DateBadge,Noto Sans Devanagari Bold,32,&H00FFFFFF,&H00FFFFFF,&H00000000,&HB80F172A,"
         "-1,0,0,0,100,100,0,0,4,12,0,7,48,48,42,1\n\n"
         "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
-        f"Dialogue: 0,0:00:00.00,0:00:{min(59.9, dur):05.2f},DateBadge,,0,0,0,,{clean}\n"
+        f"Dialogue: 0,0:00:00.00,{format_ass_timestamp(dur)},DateBadge,,0,0,0,,{clean}\n"
     )
     try:
         with open(ass_path, "w", encoding="utf-8-sig") as f:

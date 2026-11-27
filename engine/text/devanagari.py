@@ -167,3 +167,12 @@ def wrap_indic_text(text: str, max_graphemes: int = 38, max_lines: int = 2) -> L
         # Regroup overflow softly into chunk groups for captions rather than truncating silently
         return lines
     return lines
+
+
+def format_ass_timestamp(seconds: float) -> str:
+    """Format seconds accurately into ASS timestamp H:MM:SS.cc (safe past 60s)."""
+    total_cs = max(0, int(round(float(seconds) * 100)))
+    hrs, rem = divmod(total_cs, 360000)
+    mins, rem = divmod(rem, 6000)
+    secs, cs = divmod(rem, 100)
+    return f"{hrs}:{mins:02d}:{secs:02d}.{cs:02d}"

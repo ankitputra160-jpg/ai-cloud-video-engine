@@ -85,9 +85,10 @@ class CinematicMotionVisualProvider(VisualAssetProvider):
             os.remove(card_img)
 
         # Fallback FFmpeg gradient + libass static Devanagari overlay (never drawtext on Hindi!)
-        from engine.text.devanagari import get_fonts_dir
+        from engine.text.devanagari import format_ass_timestamp, get_fonts_dir
         ass_tmp = output_path + ".title.ass"
         lines_txt = "\\N".join(wrap_indic_text(clean_title, max_graphemes=28, max_lines=3)).replace("{", "").replace("}", "")
+        end_ts = format_ass_timestamp(dur)
         ass_body = (
             "[Script Info]\nScriptType: v4.00+\nPlayResX: 1920\nPlayResY: 1080\n\n"
             "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, "
@@ -96,7 +97,7 @@ class CinematicMotionVisualProvider(VisualAssetProvider):
             "Style: CardCenter,Noto Sans Devanagari Bold,56,&H00FFFFFF,&H00FFFFFF,&H00000000,&HAA0F172A,"
             "-1,0,0,0,100,100,0,0,4,18,0,5,100,100,40,1\n\n"
             "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
-            f"Dialogue: 0,0:00:00.00,0:00:{min(59.9, dur):05.2f},CardCenter,,0,0,0,,{lines_txt}\n"
+            f"Dialogue: 0,0:00:00.00,{end_ts},CardCenter,,0,0,0,,{lines_txt}\n"
         )
         with open(ass_tmp, "w", encoding="utf-8-sig") as f:
             f.write(ass_body)

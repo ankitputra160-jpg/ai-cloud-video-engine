@@ -38,6 +38,7 @@ from engine.voice.emotion_router import (
 
 logger = logging.getLogger("voice.tts")
 
+AUDIO_EXTS = (".wav", ".mp3", ".m4a", ".ogg", ".flac")
 MOOD_REF_CAPTIONS: Dict[str, Tuple[str, str]] = {
     "neutral": (
         "ref_neutral.wav",
@@ -81,6 +82,8 @@ class VoiceEngine:
         self._qwen_checked = False
         self._aligner = ForcedAligner()
         self._ref_bank: Dict[str, str] = {}
+        self._ref_texts: Dict[str, str] = {}
+        self._cloned_elevenlabs_voice_id: Optional[str] = None
 
     def _has_cuda_gpu(self) -> bool:
         try:
@@ -89,41 +92,183 @@ class VoiceEngine:
         except Exception:
             return False
 
-    def ensure_mood_reference_bank(self) -> Dict[str, str]:
-        """Load or self-bootstrap 4 copyright-free mood WAV clips via Indic Parler-TTS once."""
-        existing: Dict[str, str] = {}
-        missing: List[str] = []
-        for mood, (fname, _) in MOOD_REF_CAPTIONS.items():
-            path = os.path.join(self.voice_bank_dir, fname)
-            if os.path.exists(path) and os.path.getsize(path) > 4000:
-                existing[mood] = path
-            else:
-                missing.append(mood)
+    def _prepare_custom_ref_clip(self, src_path: str, dest_wav: str, max_sec: float = 9.5) -> bool:
+        """Convert any custom .mp3/.m4a/.wav voice sample into a clean 24kHz mono <=9.5s reference WAV."""
+        if not src_path or not os.path.exists(src_path):
+            return False
+        os.makedirs(os.path.dirname(dest_wav) or ".", exist_ok=True)
+        dur = self._probe_duration(src_path, fallback=0.0)
+        needs_trim = dur > max_sec or not src_path.lower().endswith(".wav")
+        af = "silenceremove=start_periods=1:start_silence=0.15:start_threshold=-40dB"
+        cmd = [
+            "ffmpeg", "-y", "-loglevel", "error",
+            "-i", src_path,
+            "-af", af,
+            "-t", f"{max_sec:.2f}",
+            "-ar", "24000", "-ac", "1", "-c:a", "pcm_s16le",
+            dest_wav,
+        ]
+        res = subprocess.run(cmd, capture_output=True)
+        if res.returncode == 0 and os.path.exists(dest_wav) and os.path.getsize(dest_wav) > 2000:
+            return True
+        if not needs_trim and src_path.lower().endswith(".wav"):
+            shutil.copy2(src_path, dest_wav)
+            return os.path.exists(dest_wav)
+        return False
 
-        if not missing:
+    def _auto_transcribe_ref_clip(self, wav_path: str) -> Optional[str]:
+        """Optional GPU ASR (Whisper / transformers) when user supplies custom audio without a .txt transcript."""
+        if not self._has_cuda_gpu():
+            return None
+        try:
+            from transformers import pipeline as hf_pipeline
+            import torch
+            asr = hf_pipeline(
+                "automatic-speech-recognition",
+                model="openai/whisper-small",
+                device=0,
+                torch_dtype=torch.float16,
+            )
+            res = asr(wav_path, generate_kwargs={"language": "hindi" if self.config.language == "hi" else "english"})
+            txt = normalize_devanagari(str((res or {}).get("text", "")).strip())
+            del asr
+            self._clear_gpu_cache()
+            return txt or None
+        except Exception as e:
+            logger.debug(f"Optional ASR auto-transcript skipped: {e}")
+            return None
+
+    def _resolve_ref_transcript(self, src_path: str, prepared_wav: str, mood: str, cache_txt_path: str) -> str:
+        """Resolve exact spoken words matching `prepared_wav` via config, sidecar .txt, ASR, or default."""
+        explicit_txt = getattr(self.config, "voice_ref_text", None)
+        if explicit_txt and explicit_txt.strip() and mood == "neutral":
+            clean = normalize_devanagari(explicit_txt.strip())
+            with open(cache_txt_path, "w", encoding="utf-8") as f:
+                f.write(clean)
+            return clean
+
+        src_stem = os.path.splitext(src_path)[0]
+        for cand in (f"{src_stem}.txt", cache_txt_path, os.path.join(self.voice_bank_dir, f"ref_{mood}.txt")):
+            if cand and os.path.exists(cand):
+                try:
+                    with open(cand, "r", encoding="utf-8") as f:
+                        raw = f.read().strip()
+                    if raw:
+                        return normalize_devanagari(raw)
+                except OSError:
+                    pass
+
+        transcribed = self._auto_transcribe_ref_clip(prepared_wav)
+        if transcribed:
+            try:
+                with open(cache_txt_path, "w", encoding="utf-8") as f:
+                    f.write(transcribed)
+            except OSError:
+                pass
+            return transcribed
+
+        logger.warning(
+            f"Custom voice '{os.path.basename(src_path)}' has no sidecar .txt transcript; "
+            f"add '{os.path.basename(cache_txt_path)}' for maximum IndicF5 cloning fidelity."
+        )
+        return MOOD_REF_CAPTIONS.get(mood, MOOD_REF_CAPTIONS["neutral"])[1]
+
+    def _discover_custom_voice_sources(self) -> Dict[str, str]:
+        """Discover explicit `--voice-ref` or user audio files (.mp3/.wav/etc.) inside voice_bank_dir."""
+        found: Dict[str, str] = {}
+        explicit = getattr(self.config, "voice_ref_file", None)
+        if explicit and os.path.exists(explicit):
+            found["neutral"] = explicit
+
+        for mood, (wav_name, _) in MOOD_REF_CAPTIONS.items():
+            stem = os.path.splitext(wav_name)[0]
+            for ext in AUDIO_EXTS:
+                cand = os.path.join(self.voice_bank_dir, f"{stem}{ext}")
+                if os.path.exists(cand) and os.path.getsize(cand) > 2000:
+                    found.setdefault(mood, cand)
+                    break
+
+        if "neutral" not in found and os.path.isdir(self.voice_bank_dir):
+            # Support any single custom file uploaded by the user (e.g., raju.mp3 / voice.wav)
+            for fname in sorted(os.listdir(self.voice_bank_dir)):
+                low = fname.lower()
+                if low.endswith(AUDIO_EXTS) and not low.startswith("ref_"):
+                    cand = os.path.join(self.voice_bank_dir, fname)
+                    if os.path.getsize(cand) > 2000:
+                        found["neutral"] = cand
+                        break
+        return found
+
+    def ensure_mood_reference_bank(self) -> Dict[str, str]:
+        """Load custom user voice (.mp3/.wav + .txt) cleanly, or bootstrap 4 Parler-TTS clips once."""
+        existing: Dict[str, str] = {}
+        ref_texts: Dict[str, str] = {}
+        custom_sources = self._discover_custom_voice_sources()
+        has_user_custom_voice = False
+
+        # 1. Convert/register any user-supplied or cached clips cleanly (never mix speakers!)
+        for mood, (wav_name, default_caption) in MOOD_REF_CAPTIONS.items():
+            canonical_wav = os.path.join(self.voice_bank_dir, wav_name)
+            txt_path = os.path.splitext(canonical_wav)[0] + ".txt"
+            src = custom_sources.get(mood)
+
+            if src:
+                if os.path.abspath(src) == os.path.abspath(canonical_wav) and os.path.getsize(canonical_wav) > 4000:
+                    existing[mood] = canonical_wav
+                elif self._prepare_custom_ref_clip(src, canonical_wav):
+                    existing[mood] = canonical_wav
+
+                if mood in existing:
+                    if os.path.exists(txt_path) or os.path.exists(os.path.splitext(src)[0] + ".txt") or not os.path.basename(src).startswith("ref_"):
+                        has_user_custom_voice = True
+                    # Distinguish user custom clip vs auto-bootstrapped Parler clip without .txt
+                    if not os.path.basename(src).startswith("ref_") or (
+                        getattr(self.config, "voice_ref_file", None) and os.path.abspath(src) == os.path.abspath(self.config.voice_ref_file)
+                    ) or os.path.exists(os.path.splitext(src)[0] + ".txt"):
+                        has_user_custom_voice = True
+                        ref_texts[mood] = self._resolve_ref_transcript(src, existing[mood], mood, txt_path)
+                    elif os.path.exists(txt_path):
+                        with open(txt_path, "r", encoding="utf-8") as f:
+                            ref_texts[mood] = normalize_devanagari(f.read().strip()) or default_caption
+                    else:
+                        ref_texts[mood] = default_caption
+
+        # 2. If user provided at least 1 custom clip, clone that SAME speaker across all missing moods
+        #    instead of injecting Parler-TTS's different 'Tapan' voice!
+        if existing and has_user_custom_voice:
+            primary_mood = "neutral" if "neutral" in existing else next(iter(existing))
+            for mood in MOOD_REF_CAPTIONS:
+                if mood not in existing:
+                    existing[mood] = existing[primary_mood]
+                    ref_texts[mood] = ref_texts.get(primary_mood, "")
             self._ref_bank = existing
+            self._ref_texts = ref_texts
             return existing
 
-        if self._has_cuda_gpu() and self._load_indic_parler():
+        missing = [m for m in MOOD_REF_CAPTIONS if m not in existing]
+        if missing and self._has_cuda_gpu() and self._load_indic_parler():
             logger.info(f"Bootstrapping {len(missing)} studio reference clips in {self.voice_bank_dir}...")
             for mood in missing:
                 fname, sample_hi = MOOD_REF_CAPTIONS[mood]
                 out_wav = os.path.join(self.voice_bank_dir, fname)
+                txt_path = os.path.splitext(out_wav)[0] + ".txt"
                 profile_key = "fear" if mood == "suspense" else ("angry" if mood == "angry" else ("fast" if mood == "fast" else "neutral"))
                 caption = EMOTION_PROFILES[profile_key]["parler_caption"]
                 raw_tmp = out_wav + ".raw.wav"
                 if self._synthesize_parler_clip(sample_hi, caption, raw_tmp):
-                    # Clean vocal EQ so reference seed stays crisp across 20-min runs
                     self._master_voice_track(raw_tmp, out_wav)
                     if os.path.exists(raw_tmp):
                         os.remove(raw_tmp)
                     if os.path.exists(out_wav) and os.path.getsize(out_wav) > 4000:
                         existing[mood] = out_wav
-            # Unload Parler-TTS if primary TTS engine will be IndicF5 (Stage-Gate VRAM discipline)
-            if self.config.voice_engine in ("auto", "indicf5"):
+                        ref_texts[mood] = sample_hi
+                        with open(txt_path, "w", encoding="utf-8") as f:
+                            f.write(sample_hi)
+            if self.config.voice_engine in ("auto", "indicf5", "qwen3_tts"):
                 self._unload_parler()
 
         self._ref_bank = existing
+        self._ref_texts = ref_texts
         return existing
 
     def _load_indicf5(self) -> bool:
@@ -273,22 +418,26 @@ class VoiceEngine:
             logger.warning(f"Parler-TTS synthesis failed: {e}")
             return False
 
-    def _synthesize_qwen_clip(self, text: str, ref_audio_path: Optional[str], out_wav: str, seed: int = 2026) -> bool:
+    def _synthesize_qwen_clip(
+        self, text: str, ref_audio_path: Optional[str], out_wav: str, seed: int = 2026, ref_text: Optional[str] = None
+    ) -> bool:
+        if not ref_audio_path or not os.path.exists(ref_audio_path):
+            return False
         if not self._load_qwen_tts():
             return False
         try:
             import soundfile as sf
             import torch
             torch.manual_seed(seed)
+            resolved_ref_text = (ref_text or self._ref_texts.get("neutral") or MOOD_REF_CAPTIONS["neutral"][1]).strip()
             kwargs: Dict[str, Any] = {
                 "text": text,
                 "language": "Auto",
                 "temperature": 0.6,
                 "repetition_penalty": 1.15,
+                "ref_audio": ref_audio_path,
+                "ref_text": resolved_ref_text,
             }
-            if ref_audio_path and os.path.exists(ref_audio_path):
-                kwargs["ref_audio"] = ref_audio_path
-                kwargs["ref_text"] = MOOD_REF_CAPTIONS["neutral"][1]
             wavs, sr = self._qwen_tts.generate_voice_clone(**kwargs)
             sf.write(out_wav, wavs[0], sr)
             return os.path.exists(out_wav) and os.path.getsize(out_wav) > 1000
@@ -331,11 +480,65 @@ class VoiceEngine:
             logger.debug(f"Sarvam AI TTS skipped: {e}")
         return False
 
+    def _clone_elevenlabs_voice(self, api_key: str, sample_audio_path: str, name: str = "AIDocCustomVoice") -> Optional[str]:
+        """Instant-clone a local voice sample via ElevenLabs /v1/voices/add once per run."""
+        if self._cloned_elevenlabs_voice_id:
+            return self._cloned_elevenlabs_voice_id
+        if not api_key or not sample_audio_path or not os.path.exists(sample_audio_path):
+            return None
+        boundary = "----AIDocEngineBoundary7f3a9c"
+        filename = os.path.basename(sample_audio_path)
+        mime = "audio/wav" if filename.lower().endswith(".wav") else "audio/mpeg"
+        try:
+            audio_bytes = open(sample_audio_path, "rb").read()
+            body = bytearray()
+            for field_name, val in (("name", name), ("description", "Documentary narrator reference clone")):
+                body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"{field_name}\"\r\n\r\n{val}\r\n".encode("utf-8"))
+            body.extend(
+                f"--{boundary}\r\nContent-Disposition: form-data; name=\"files\"; filename=\"{filename}\"\r\n"
+                f"Content-Type: {mime}\r\n\r\n".encode("utf-8")
+            )
+            body.extend(audio_bytes)
+            body.extend(f"\r\n--{boundary}--\r\n".encode("utf-8"))
+
+            req = urllib.request.Request(
+                "https://api.elevenlabs.io/v1/voices/add",
+                data=bytes(body),
+                headers={"xi-api-key": api_key, "Content-Type": f"multipart/form-data; boundary={boundary}"},
+            )
+            with urllib.request.urlopen(req, timeout=45) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+                vid = payload.get("voice_id")
+                if vid:
+                    self._cloned_elevenlabs_voice_id = str(vid)
+                    logger.info(f"✅ ElevenLabs Instant Voice Clone ready (voice_id={vid})")
+                    return self._cloned_elevenlabs_voice_id
+        except Exception as e:
+            logger.warning(f"ElevenLabs instant voice cloning skipped cleanly: {e}")
+        return None
+
+    def _resolve_elevenlabs_voice_id(self, api_key: str) -> str:
+        explicit = (
+            getattr(self.config, "elevenlabs_voice_id", None)
+            or os.environ.get("ELEVENLABS_VOICE_ID", "").strip()
+        )
+        if explicit:
+            return explicit
+        if self._cloned_elevenlabs_voice_id:
+            return self._cloned_elevenlabs_voice_id
+        custom_sources = self._discover_custom_voice_sources()
+        sample = self._ref_bank.get("neutral") or custom_sources.get("neutral")
+        if sample and os.path.exists(sample):
+            cloned = self._clone_elevenlabs_voice(api_key, sample)
+            if cloned:
+                return cloned
+        return "pNInz6obpgDQGcFmaJgB"
+
     def _generate_elevenlabs_speech(self, text: str, out_wav: str) -> bool:
         api_key = getattr(self.config, "elevenlabs_api_key", None) or os.environ.get("ELEVENLABS_API_KEY", "").strip()
         if not api_key:
             return False
-        voice_id = os.environ.get("ELEVENLABS_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
+        voice_id = self._resolve_elevenlabs_voice_id(api_key)
         try:
             body = {
                 "text": text,
@@ -371,14 +574,27 @@ class VoiceEngine:
         has_gpu = self._has_cuda_gpu()
         fps = self.config.profile.fps
 
-        if has_gpu and engine_pref in ("auto", "indicf5", "qwen3_tts"):
+        if (has_gpu and engine_pref in ("auto", "indicf5", "qwen3_tts")) or getattr(self.config, "voice_ref_file", None) or self._discover_custom_voice_sources():
             self.ensure_mood_reference_bank()
+
+        clean_voice_paths: Dict[str, str] = {}
+        scene_edge_timings: Dict[str, List[Dict[str, Any]]] = {}
 
         # Pass 1: Synthesize + Master every scene audio track cleanly
         for idx, scene in enumerate(manifest.scenes):
             mastered_audio = os.path.join(self.voice_dir, f"voice_aligned_{scene.scene_id}.wav")
+            clean_voice_paths[scene.scene_id] = mastered_audio
+
+            # Checkpoint resume hit: ALWAYS prefer clean voice_aligned_*.wav (never mixed BGM+SFX!)
+            if os.path.exists(mastered_audio) and os.path.getsize(mastered_audio) > 4000:
+                exact_dur = self._probe_duration(mastered_audio, fallback=scene.duration)
+                if lock_audio_first and exact_dur > 0.5:
+                    scene.duration = round(max(1.0, round(exact_dur * fps) / fps), 3)
+                if not getattr(scene, "voice_asset_path", None) or not os.path.exists(scene.voice_asset_path):
+                    scene.voice_asset_path = mastered_audio
+                continue
+
             if getattr(scene, "voice_asset_path", None) and os.path.exists(scene.voice_asset_path) and os.path.getsize(scene.voice_asset_path) > 4000:
-                # Checkpoint resume hit: already generated on Drive/workspace
                 exact_dur = self._probe_duration(scene.voice_asset_path, fallback=scene.duration)
                 if lock_audio_first and exact_dur > 0.5:
                     scene.duration = round(max(1.0, round(exact_dur * fps) / fps), 3)
@@ -406,14 +622,17 @@ class VoiceEngine:
                     ]
 
             raw_audio = os.path.join(self.voice_dir, f"voice_raw_{scene.scene_id}.wav")
-            edge_timings: List[Dict[str, Any]] = []
+            stitched_edge_timings: List[Dict[str, Any]] = []
             success = False
 
             def _backend_synthesize(seg_text: str, profile: Dict[str, Any], seg_wav: str) -> bool:
-                nonlocal edge_timings
                 ref_file = profile.get("ref_audio")
                 ref_mood_key = "suspense" if "suspense" in str(ref_file) else ("angry" if "angry" in str(ref_file) else ("fast" if "fast" in str(ref_file) else "neutral"))
-                ref_transcript = MOOD_REF_CAPTIONS.get(ref_mood_key, MOOD_REF_CAPTIONS["neutral"])[1]
+                ref_transcript = (
+                    self._ref_texts.get(ref_mood_key)
+                    or self._ref_texts.get("neutral")
+                    or MOOD_REF_CAPTIONS.get(ref_mood_key, MOOD_REF_CAPTIONS["neutral"])[1]
+                )
 
                 if engine_pref in ("elevenlabs",) or (engine_pref == "auto" and getattr(self.config, "elevenlabs_api_key", None)):
                     if self._generate_elevenlabs_speech(seg_text, seg_wav):
@@ -425,11 +644,12 @@ class VoiceEngine:
                     r_path = ref_file if (ref_file and os.path.exists(ref_file)) else self._ref_bank.get("neutral", "")
                     if self._synthesize_indicf5_clip(seg_text, r_path, ref_transcript, seg_wav, seed=2026):
                         return True
+                if has_gpu and engine_pref in ("qwen3_tts", "auto") and self._ref_bank:
+                    r_path = ref_file if (ref_file and os.path.exists(ref_file)) else self._ref_bank.get("neutral", "")
+                    if self._synthesize_qwen_clip(seg_text, r_path, seg_wav, seed=2026, ref_text=ref_transcript):
+                        return True
                 if has_gpu and engine_pref in ("indic_parler", "auto"):
                     if self._synthesize_parler_clip(seg_text, profile["parler_caption"], seg_wav, seed=2026):
-                        return True
-                if has_gpu and engine_pref in ("qwen3_tts",):
-                    if self._synthesize_qwen_clip(seg_text, self._ref_bank.get("neutral"), seg_wav, seed=2026):
                         return True
                 if engine_pref in ("piper", "auto"):
                     if self._generate_piper_speech(seg_text, seg_wav):
@@ -437,8 +657,8 @@ class VoiceEngine:
                 if engine_pref in ("edge", "auto", "piper"):
                     ok_edge, wt = self._generate_edge_speech(seg_text, seg_wav)
                     if ok_edge:
-                        if not edge_timings:
-                            edge_timings = wt
+                        if wt:
+                            profile["_word_timings"] = wt
                         return True
                 return False
 
@@ -450,7 +670,10 @@ class VoiceEngine:
                     out_wav=raw_audio,
                     ref_bank=self._ref_bank,
                     sample_rate=STANDARD_OUTPUT_SR,
+                    out_timings=stitched_edge_timings,
                 )
+            if stitched_edge_timings:
+                scene_edge_timings[scene.scene_id] = stitched_edge_timings
 
             if not success or not os.path.exists(raw_audio):
                 logger.warning(f"Fallback speech synthesis for scene {scene.scene_id}")
@@ -490,16 +713,29 @@ class VoiceEngine:
         # Unload all TTS models cleanly before running MMS-300M CTC alignment
         self.unload_all_tts()
 
-        # Pass 2: CTC Forced Alignment (MMS-300M) -> Speak-to-Show Span Mapping
+        # Pass 2: CTC Forced Alignment (MMS-300M) or real Edge-TTS WordBoundary sync -> Speak-to-Show Mapping
+        use_ctc = self._aligner.is_ctc_available()
         for scene in manifest.scenes:
-            if not scene.voice_asset_path or not os.path.exists(scene.voice_asset_path):
+            # Always align against clean isolated voice track, never BGM+SFX mixed track
+            clean_wav = clean_voice_paths.get(scene.scene_id)
+            align_audio = clean_wav if (clean_wav and os.path.exists(clean_wav)) else scene.voice_asset_path
+            if not align_audio or not os.path.exists(align_audio):
                 continue
-            speak_timings = self._aligner.align_speak_words(
-                scene.voice_asset_path,
-                scene.speak_words or scene.narration.split(),
-                audio_duration=scene.duration,
-                language="hin" if self.config.language == "hi" else "eng",
-            )
+
+            words_to_align = scene.speak_words or scene.narration.split()
+            edge_wt = scene_edge_timings.get(scene.scene_id)
+            if (not use_ctc) and edge_wt:
+                speak_timings = ForcedAligner.align_with_word_boundaries(
+                    words_to_align, edge_wt, audio_duration=scene.duration
+                )
+            else:
+                speak_timings = self._aligner.align_speak_words(
+                    align_audio,
+                    words_to_align,
+                    audio_duration=scene.duration,
+                    language="hin" if self.config.language == "hi" else "eng",
+                )
+
             if scene.display_spans and self.config.language == "hi":
                 scene.word_timings = ForcedAligner.map_speak_timings_to_show_spans(
                     speak_timings,

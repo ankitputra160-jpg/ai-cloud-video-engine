@@ -74,7 +74,11 @@ class ForcedAligner:
         language: str = "hin",
     ) -> List[Dict[str, Any]]:
         """Return exact [{text, start, end}, ...] for every word in `speak_words`."""
-        clean_words = [normalize_devanagari(w) for w in speak_words if w and w.strip()]
+        clean_words = [
+            normalize_devanagari(re.sub(r"\[/?[a-zA-Z0-9_:.]+\]", "", w))
+            for w in speak_words if w and w.strip()
+        ]
+        clean_words = [w for w in clean_words if w]
         if not clean_words:
             return []
 
@@ -101,18 +105,79 @@ class ForcedAligner:
                 spans = get_spans(tokens_starred, segments, blank_token)
                 raw_results = postprocess_results(text_starred, spans, stride, scores)
 
-                if len(raw_results) >= len(clean_words):
-                    aligned = []
-                    for idx, orig_word in enumerate(clean_words):
-                        item = raw_results[idx]
-                        st = float(item.get("start", 0.0))
-                        en = max(st + 0.06, float(item.get("end", st + 0.15)))
-                        aligned.append({"text": orig_word, "start": round(st, 3), "end": round(en, 3)})
-                    return aligned
+                if raw_results:
+                    return self.map_ctc_results_to_words(clean_words, raw_results, audio_duration)
             except Exception as e:
                 logger.warning(f"CTC alignment fallback for {audio_path}: {e}")
 
         return self.estimate_proportional_timings(clean_words, audio_duration)
+
+    @staticmethod
+    def map_ctc_results_to_words(
+        clean_words: List[str],
+        raw_results: List[Dict[str, Any]],
+        audio_duration: float,
+    ) -> List[Dict[str, Any]]:
+        """Map CTC spans safely onto `clean_words`, handling split/merged tokenizer spans without drift."""
+        n_w = len(clean_words)
+        n_r = len(raw_results)
+        if n_w == 0 or n_r == 0:
+            return ForcedAligner.estimate_proportional_timings(clean_words, audio_duration)
+
+        if n_r == n_w:
+            aligned = []
+            for orig_word, item in zip(clean_words, raw_results):
+                st = float(item.get("start", 0.0))
+                en = max(st + 0.06, float(item.get("end", st + 0.15)))
+                aligned.append({"text": orig_word, "start": round(st, 3), "end": round(min(audio_duration, en), 3)})
+            return aligned
+
+        if n_r > n_w:
+            # Distribute extra split sub-tokens proportionally across words so boundaries stay anchored
+            aligned = []
+            for idx, orig_word in enumerate(clean_words):
+                r_start = min(n_r - 1, int(round(idx * n_r / n_w)))
+                r_end = min(n_r - 1, max(r_start, int(round((idx + 1) * n_r / n_w)) - 1))
+                st = float(raw_results[r_start].get("start", 0.0))
+                en = max(st + 0.06, float(raw_results[r_end].get("end", st + 0.15)))
+                aligned.append({"text": orig_word, "start": round(st, 3), "end": round(min(audio_duration, en), 3)})
+            return aligned
+
+        # Fewer raw results than clean_words: scale spans over clean_words without drifting tail off audio
+        return ForcedAligner.estimate_proportional_timings(clean_words, audio_duration)
+
+    @staticmethod
+    def align_with_word_boundaries(
+        speak_words: List[str],
+        boundary_timings: List[Dict[str, Any]],
+        audio_duration: float,
+    ) -> List[Dict[str, Any]]:
+        """Anchor `speak_words` onto captured TTS WordBoundary timings when CTC GPU isn't active."""
+        clean_words = [normalize_devanagari(w) for w in speak_words if w and w.strip()]
+        if not clean_words:
+            return []
+        if not boundary_timings:
+            return ForcedAligner.estimate_proportional_timings(clean_words, audio_duration)
+
+        n_w = len(clean_words)
+        n_b = len(boundary_timings)
+        # If boundary count closely matches spoken words, span-map monotonically without truncation drift
+        if n_b >= max(1, int(n_w * 0.55)):
+            aligned: List[Dict[str, Any]] = []
+            prev_end = 0.0
+            for idx, word in enumerate(clean_words):
+                b_start = min(n_b - 1, int(idx * n_b / n_w))
+                b_end = min(n_b - 1, max(b_start, int(((idx + 1) * n_b / n_w) - 1e-6)))
+                st = max(prev_end, float(boundary_timings[b_start].get("start", prev_end)))
+                en = max(st + 0.06, float(boundary_timings[b_end].get("end", st + 0.12)))
+                en = min(max(0.1, float(audio_duration) - 0.02), en)
+                if st >= en:
+                    st = max(0.0, en - 0.06)
+                aligned.append({"text": word, "start": round(st, 3), "end": round(en, 3)})
+                prev_end = en
+            return aligned
+
+        return ForcedAligner.estimate_proportional_timings(clean_words, audio_duration)
 
     @staticmethod
     def estimate_proportional_timings(words: List[str], audio_duration: float) -> List[Dict[str, Any]]:

@@ -219,6 +219,7 @@ def stitch_emotional_segments(
     out_wav: str,
     ref_bank: Optional[Dict[str, str]] = None,
     sample_rate: int = STANDARD_OUTPUT_SR,
+    out_timings: Optional[List[Dict[str, Any]]] = None,
 ) -> bool:
     """Synthesize every parsed segment with matching emotion/pause, apply DSP, and stitch cleanly."""
     segments = parse_emotion_script(tagged_text)
@@ -262,6 +263,7 @@ def stitch_emotional_segments(
                 active = raw_clip
 
             try:
+                seg_offset_s = len(combined_frames) / float(sample_rate)
                 frames = _read_stereo_float_frames(active)
                 n_fr = len(frames)
                 if n_fr > fade_samples * 2:
@@ -271,6 +273,21 @@ def stitch_emotional_segments(
                         frames[k] = (frames[k][0] * g_in, frames[k][1] * g_in)
                         idx_out = n_fr - fade_samples + k
                         frames[idx_out] = (frames[idx_out][0] * g_out, frames[idx_out][1] * g_out)
+
+                if out_timings is not None and profile.get("_word_timings"):
+                    seg_dur_s = n_fr / float(sample_rate)
+                    raw_frames_n = len(_read_stereo_float_frames(raw_clip)) if active != raw_clip else n_fr
+                    raw_dur_s = max(0.1, raw_frames_n / float(sample_rate))
+                    scale = seg_dur_s / raw_dur_s
+                    for wt in profile["_word_timings"]:
+                        st = seg_offset_s + float(wt.get("start", 0.0)) * scale
+                        en = seg_offset_s + float(wt.get("end", 0.1)) * scale
+                        out_timings.append({
+                            "text": wt.get("text", ""),
+                            "start": round(st, 3),
+                            "end": round(max(st + 0.06, en), 3),
+                        })
+
                 combined_frames.extend(frames)
             except Exception as e:
                 logger.warning(f"Failed stitching segment {i}: {e}")

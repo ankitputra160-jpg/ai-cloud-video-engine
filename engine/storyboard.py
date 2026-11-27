@@ -183,6 +183,7 @@ class StoryboardEngine:
                     "sfx_tag": beat_sfx,
                     "headline": chapter.news_headline or chapter.title,
                     "source": chapter.news_source or "Archival Desk",
+                    "quote_speaker": chapter.quote_speaker,
                     "date_badge": chapter.on_screen_date,
                     "asset_path": None,
                 })

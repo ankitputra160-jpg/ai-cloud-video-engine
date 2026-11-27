@@ -15,9 +15,8 @@ class TestAudioProduction(unittest.TestCase):
         self.temp_dir = tempfile.mkdtemp()
 
     def tearDown(self):
-        for f in os.listdir(self.temp_dir):
-            os.remove(os.path.join(self.temp_dir, f))
-        os.rmdir(self.temp_dir)
+        import shutil
+        shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_bgm_generation_and_stereo_properties_bug2(self):
         """Verifies Bug 2 fix: consistent BGM generation and valid stereo WAV structure."""
@@ -62,6 +61,21 @@ class TestAudioProduction(unittest.TestCase):
         self.assertTrue(os.path.exists(out_mix))
         dur = get_duration(out_mix)
         self.assertAlmostEqual(dur, 4.0, delta=0.3)
+
+    def test_continuous_bgm_acrossfade_mood_blocks(self):
+        from types import SimpleNamespace
+        import shutil
+        scenes = [
+            SimpleNamespace(scene_id="scene_01", duration=3.0, bgm_mood="mysterious"),
+            SimpleNamespace(scene_id="scene_02", duration=3.0, bgm_mood="mysterious"),
+            SimpleNamespace(scene_id="scene_03", duration=3.5, bgm_mood="inspiring"),
+        ]
+        bgm_dir = os.path.join(self.temp_dir, "cont_bgm")
+        res = BackgroundMusicEngine.build_continuous_scene_bgms(scenes, bgm_dir, crossfade_sec=1.0)
+        self.assertEqual(set(res.keys()), {"scene_01", "scene_02", "scene_03"})
+        self.assertAlmostEqual(get_duration(res["scene_01"]), 3.0, delta=0.25)
+        self.assertAlmostEqual(get_duration(res["scene_03"]), 3.5, delta=0.25)
+        shutil.rmtree(bgm_dir, ignore_errors=True)
 
 if __name__ == "__main__":
     unittest.main()

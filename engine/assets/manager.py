@@ -135,6 +135,11 @@ class VisualAssetManager:
 
                 # 2. Playwright / libass 2D Investigative Cards (25%)
                 if vtype in ("news_card", "quote_card", "map_card", "stat_card"):
+                    portrait_file = None
+                    if vtype == "quote_card":
+                        speaker_q = str(beat.get("quote_speaker") or getattr(scene, "quote_speaker", "") or scene.title)
+                        portrait_tmp = beat_raw + ".portrait.jpg"
+                        portrait_file = self.wikimedia.fetch_portrait_image(speaker_q, portrait_tmp)
                     card_res = self.card_gen.render_card_video(
                         beat_raw,
                         card_type=vtype,
@@ -143,7 +148,10 @@ class VisualAssetManager:
                         date_badge=str(beat.get("date_badge") or scene.on_screen_date),
                         duration=b_dur,
                         camera=beat.get("camera", scene.camera),
+                        portrait_path=portrait_file,
                     )
+                    if portrait_file:
+                        self._safe_remove(portrait_file)
                     if card_res and os.path.exists(card_res):
                         self._normalize_clip(card_res, beat_norm, b_dur)
                         self._safe_remove(card_res)
@@ -209,7 +217,9 @@ class VisualAssetManager:
                     date_badge=str(beat.get("date_badge") or scene.on_screen_date),
                 )
             if res and os.path.exists(res):
-                self._normalize_clip(res, norm_path, b_dur)
+                # Smoothly slow down 3.0s LTX I2V clip to match beat duration (avoid abrupt loop cut)
+                raw_dur = get_duration(res) or 3.0
+                self._normalize_clip(res, norm_path, b_dur, smooth_stretch_from=raw_dur)
                 self._safe_remove(res)
                 beat["asset_path"] = norm_path
 
@@ -245,7 +255,9 @@ class VisualAssetManager:
                     camera="push_in", date_badge=scene.on_screen_date,
                 )
             if res and os.path.exists(res):
-                self._normalize_clip(res, norm_path, b_dur)
+                # Smoothly slow down 3.0s LTX I2V clip to match beat duration (avoid abrupt loop cut)
+                raw_dur = get_duration(res) or 3.0
+                self._normalize_clip(res, norm_path, b_dur, smooth_stretch_from=raw_dur)
                 self._safe_remove(res)
                 beat["asset_path"] = norm_path
         self.ltx_gen.unload()
@@ -355,23 +367,35 @@ class VisualAssetManager:
         if res.returncode != 0 or not os.path.exists(output_path) or os.path.getsize(output_path) < 5000:
             self._normalize_clip(beat_files[0], output_path, exact_duration)
 
-    def _normalize_clip(self, input_path: str, output_path: str, target_duration: float):
+    def _normalize_clip(
+        self, input_path: str, output_path: str, target_duration: float, smooth_stretch_from: Optional[float] = None
+    ):
         """Normalize resolution, exact FPS, pixel format, and 0.001s Audio-First target duration."""
         prof = self.config.profile
+        pts_prefix = ""
+        use_loop = True
+        if smooth_stretch_from and smooth_stretch_from > 0.5 and target_duration > smooth_stretch_from + 0.05:
+            ratio = min(2.0, target_duration / smooth_stretch_from)
+            pts_prefix = f"setpts={ratio:.4f}*PTS,"
+            if ratio * smooth_stretch_from >= target_duration - 0.05:
+                use_loop = False
+
         vf = (
+            f"{pts_prefix}"
             f"scale={prof.width}:{prof.height}:force_original_aspect_ratio=decrease,"
             f"pad={prof.width}:{prof.height}:(ow-iw)/2:(oh-ih)/2:#0F172A,"
             f"fps={prof.fps},setsar=1,format=yuv420p"
         )
-        cmd = [
-            "ffmpeg", "-y", "-loglevel", "error",
-            "-stream_loop", "-1",
+        cmd = ["ffmpeg", "-y", "-loglevel", "error"]
+        if use_loop:
+            cmd.extend(["-stream_loop", "-1"])
+        cmd.extend([
             "-i", input_path,
             "-vf", vf,
             "-t", f"{target_duration:.3f}",
             "-c:v", "libx264", "-preset", "ultrafast", "-crf", str(prof.crf),
             "-an", output_path,
-        ]
+        ])
         res = subprocess.run(cmd, capture_output=True, text=True)
         if res.returncode != 0:
             logger.error(f"FFmpeg normalization failed for {input_path}: {res.stderr[-250:]}")

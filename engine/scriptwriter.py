@@ -248,13 +248,25 @@ class ScriptWriter:
                 )
 
             payload = self.llm.generate_json(prompt, temperature=0.6, max_tokens=3600)
-            items = None
-            if isinstance(payload, dict):
-                items = payload.get("beats") or payload.get("chapters") or payload.get("scenes")
-            elif isinstance(payload, list):
-                items = payload
-            if not isinstance(items, list) or not items:
-                return None
+            items = self._extract_batch_beats(payload)
+            if not items:
+                # Retry once at lower temperature before falling back only for THIS batch
+                retry_payload = self.llm.generate_json(prompt, temperature=0.45, max_tokens=3600)
+                items = self._extract_batch_beats(retry_payload)
+
+            if not items:
+                if b_idx == 0 and not chapters:
+                    return None
+                logger.warning(f"LLM batch {b_idx + 1}/{total_batches} failed; synthesizing deterministic beats for this batch only.")
+                batch_fallback = (
+                    self._generate_hindi_script(dossier, max(10, int(round(count * sec_per_scene))), count, sec_per_scene)
+                    if self.language == "hi"
+                    else self._generate_english_script(dossier, max(10, int(round(count * sec_per_scene))), count, sec_per_scene)
+                )
+                for offset_i, fb_ch in enumerate(batch_fallback.chapters[:count]):
+                    fb_ch.chapter_index = start_i + offset_i + 1
+                    chapters.append(fb_ch)
+                continue
 
             for local_i in range(count):
                 item = items[local_i % len(items)]
@@ -308,6 +320,24 @@ class ScriptWriter:
             conclusion=chapters[-1].narration,
             estimated_duration=sum(ch.target_seconds for ch in chapters),
         )
+
+    @staticmethod
+    def _extract_batch_beats(payload: Any) -> Optional[List[Dict[str, Any]]]:
+        if isinstance(payload, dict):
+            items = payload.get("beats") or payload.get("chapters") or payload.get("scenes")
+        elif isinstance(payload, list):
+            items = payload
+        else:
+            items = None
+        return items if (isinstance(items, list) and len(items) > 0) else None
+
+    @staticmethod
+    def _pick_deterministic_scene_type(idx: int, dossier: ResearchDossier) -> str:
+        if idx > 0 and idx % 5 == 2 and getattr(dossier, "verified_quotes", None):
+            return "quote_card"
+        if idx % 4 == 1 and getattr(dossier, "news_items", None):
+            return "news_card"
+        return "real_photo"
 
     def _finalize_chapter(
         self,
@@ -460,7 +490,7 @@ class ScriptWriter:
                     mood=ch_meta[1],
                     visual_intent=v_intent,
                     on_screen_date=date_tag,
-                    scene_type=("news_card" if (i % 4 == 1 and dossier.news_items) else "real_photo"),
+                    scene_type=self._pick_deterministic_scene_type(i, dossier),
                     dossier=dossier,
                     is_interrupt=is_interrupt,
                     is_hero_hook=(i == 0 or i % 12 == 0),
@@ -558,7 +588,7 @@ class ScriptWriter:
                     mood=ch_meta[1],
                     visual_intent=v_intent,
                     on_screen_date=date_tag,
-                    scene_type=("news_card" if (i % 4 == 1 and dossier.news_items) else "real_photo"),
+                    scene_type=self._pick_deterministic_scene_type(i, dossier),
                     dossier=dossier,
                     is_interrupt=is_interrupt,
                     is_hero_hook=(i == 0 or i % 12 == 0),

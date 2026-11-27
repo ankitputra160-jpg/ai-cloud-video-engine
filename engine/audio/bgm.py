@@ -115,20 +115,26 @@ class BackgroundMusicEngine:
         mood: str = "inspiring",
         bgm_bank_dir: Optional[str] = None,
         chapter_index: int = 0,
+        start_offset: Optional[float] = None,
+        edge_fades: bool = True,
     ) -> str:
         """Prepare chapter BGM from CC0 Drive bank (preferred) or soft warm stereo sub-pad."""
         os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
-        dur = max(2.0, float(duration))
+        dur = max(1.0, float(duration))
 
         track = cls.pick_cc0_track(bgm_bank_dir, mood=mood, chapter_index=chapter_index)
         if track and os.path.exists(track):
-            # Rotate start offset every chapter so continuous documentaries stay fresh
-            offset = (chapter_index * 18) % 60
+            offset = ((chapter_index * 18) % 60) if start_offset is None else max(0.0, float(start_offset))
+            af = (
+                f"afade=t=in:st=0:d=0.8,afade=t=out:st={max(0.2, dur - 0.8):.3f}:d=0.8"
+                if edge_fades
+                else "anull"
+            )
             cmd = [
                 "ffmpeg", "-y", "-loglevel", "error",
-                "-stream_loop", "-1", "-ss", str(offset), "-i", track,
+                "-stream_loop", "-1", "-ss", f"{offset:.2f}", "-i", track,
                 "-t", f"{dur:.3f}",
-                "-af", f"afade=t=in:st=0:d=0.8,afade=t=out:st={max(0.2, dur - 0.8):.3f}:d=0.8",
+                "-af", af,
                 "-ar", str(SAMPLE_RATE), "-ac", "2", "-c:a", "pcm_s16le",
                 output_path,
             ]
@@ -136,10 +142,121 @@ class BackgroundMusicEngine:
             if res.returncode == 0 and os.path.exists(output_path) and os.path.getsize(output_path) > 2000:
                 return output_path
 
-        return cls._synthesize_soft_sub_pad(output_path, dur, mood)
+        return cls._synthesize_soft_sub_pad(output_path, dur, mood, edge_fades=edge_fades)
 
     @classmethod
-    def _synthesize_soft_sub_pad(cls, output_path: str, dur: float, mood: str) -> str:
+    def build_continuous_scene_bgms(
+        cls,
+        scenes: List,
+        output_dir: str,
+        bgm_bank_dir: Optional[str] = None,
+        crossfade_sec: float = 2.0,
+    ) -> Dict[str, str]:
+        """Build seamless full-length BGM across mood blocks using FFmpeg `acrossfade=d=2`, then slice per scene."""
+        os.makedirs(output_dir, exist_ok=True)
+        result_map: Dict[str, str] = {}
+        if not scenes:
+            return result_map
+
+        # Group contiguous scenes sharing the same mood bucket so playback stays uninterrupted
+        blocks: List[Dict[str, object]] = []
+        for s in scenes:
+            mood = getattr(s, "bgm_mood", "curious") or "curious"
+            folder = MOOD_FOLDER_MAP.get(mood, "neutral_explainer")
+            dur = max(1.0, float(getattr(s, "duration", 5.0)))
+            if blocks and blocks[-1]["folder"] == folder:
+                blocks[-1]["dur"] = float(blocks[-1]["dur"]) + dur
+            else:
+                blocks.append({"mood": mood, "folder": folder, "dur": dur})
+
+        # Short videos (<4s block) safely clamp crossfade below half of shortest block
+        min_block = min(float(b["dur"]) for b in blocks)
+        cf = round(min(crossfade_sec, max(0.0, (min_block - 0.2) * 0.45)), 3) if len(blocks) > 1 else 0.0
+
+        block_wavs: List[str] = []
+        for b_idx, blk in enumerate(blocks):
+            b_wav = os.path.join(output_dir, f"_bgm_blk_{b_idx}.wav")
+            extra = cf if b_idx < len(blocks) - 1 else 0.0
+            cls.generate_thematic_bgm(
+                b_wav,
+                duration=float(blk["dur"]) + extra,
+                mood=str(blk["mood"]),
+                bgm_bank_dir=bgm_bank_dir,
+                chapter_index=b_idx,
+                edge_fades=False,
+            )
+            block_wavs.append(b_wav)
+
+        full_bed = os.path.join(output_dir, "_bgm_full_continuous.wav")
+        if len(block_wavs) == 1:
+            os.replace(block_wavs[0], full_bed)
+        else:
+            # Stitch adjacent mood blocks cleanly with acrossfade
+            cur_wav = block_wavs[0]
+            for nxt_idx, nxt_wav in enumerate(block_wavs[1:], start=1):
+                merged = os.path.join(output_dir, f"_bgm_merge_{nxt_idx}.wav")
+                if cf >= 0.2:
+                    fc = f"[0:a][1:a]acrossfade=d={cf:.3f}:c1=tri:c2=tri[aout]"
+                else:
+                    fc = "[0:a][1:a]concat=n=2:v=0:a=1[aout]"
+                res = subprocess.run(
+                    [
+                        "ffmpeg", "-y", "-loglevel", "error",
+                        "-i", cur_wav, "-i", nxt_wav,
+                        "-filter_complex", fc, "-map", "[aout]",
+                        "-ar", str(SAMPLE_RATE), "-ac", "2", "-c:a", "pcm_s16le",
+                        merged,
+                    ],
+                    capture_output=True,
+                )
+                for p in (cur_wav, nxt_wav):
+                    if os.path.exists(p):
+                        os.remove(p)
+                if res.returncode == 0 and os.path.exists(merged):
+                    cur_wav = merged
+                else:
+                    cur_wav = merged if os.path.exists(merged) else cur_wav
+            if os.path.exists(cur_wav):
+                os.replace(cur_wav, full_bed)
+
+        # Apply subtle intro fade-in and outro fade-out on the master bed, then slice per scene
+        total_dur = sum(max(1.0, float(getattr(s, "duration", 5.0))) for s in scenes)
+        cursor = 0.0
+        for s_idx, scene in enumerate(scenes):
+            dur = max(1.0, float(getattr(scene, "duration", 5.0)))
+            out_scene_bgm = os.path.join(output_dir, f"bgm_{scene.scene_id}.wav")
+            if os.path.exists(full_bed):
+                af_parts = []
+                if s_idx == 0:
+                    af_parts.append(f"afade=t=in:st=0:d={min(0.6, dur * 0.25):.2f}")
+                if s_idx == len(scenes) - 1:
+                    fade_out_d = min(1.2, dur * 0.35)
+                    af_parts.append(f"afade=t=out:st={max(0.1, dur - fade_out_d):.2f}:d={fade_out_d:.2f}")
+                cmd = [
+                    "ffmpeg", "-y", "-loglevel", "error",
+                    "-ss", f"{cursor:.3f}", "-t", f"{dur:.3f}", "-i", full_bed,
+                ]
+                if af_parts:
+                    cmd.extend(["-af", ",".join(af_parts)])
+                cmd.extend(["-ar", str(SAMPLE_RATE), "-ac", "2", "-c:a", "pcm_s16le", out_scene_bgm])
+                subprocess.run(cmd, capture_output=True)
+
+            if not os.path.exists(out_scene_bgm) or os.path.getsize(out_scene_bgm) < 1000:
+                cls.generate_thematic_bgm(
+                    out_scene_bgm, dur, mood=getattr(scene, "bgm_mood", "curious"), bgm_bank_dir=bgm_bank_dir, chapter_index=s_idx
+                )
+            result_map[scene.scene_id] = out_scene_bgm
+            cursor += dur
+
+        if os.path.exists(full_bed):
+            try:
+                os.remove(full_bed)
+            except OSError:
+                pass
+        return result_map
+
+    @classmethod
+    def _synthesize_soft_sub_pad(cls, output_path: str, dur: float, mood: str, edge_fades: bool = True) -> str:
         """Generate subtle low-passed documentary sub-pad (unobtrusive beneath speech)."""
         num_samples = int(SAMPLE_RATE * dur)
         samples = [0.0] * num_samples
@@ -162,7 +279,7 @@ class BackgroundMusicEngine:
                 samples[idx] += val * env
 
         max_val = max((abs(x) for x in samples), default=1.0) or 1.0
-        fade_samples = min(num_samples // 4, int(SAMPLE_RATE * 1.0))
+        fade_samples = min(num_samples // 4, int(SAMPLE_RATE * 1.0)) if edge_fades else 0
 
         with wave.open(output_path, "wb") as w:
             w.setnchannels(2)
@@ -171,10 +288,11 @@ class BackgroundMusicEngine:
             raw_bytes = bytearray()
             for i, s in enumerate(samples):
                 gain = 1.0
-                if i < fade_samples:
-                    gain = i / max(1, fade_samples)
-                elif i > num_samples - fade_samples:
-                    gain = (num_samples - i) / max(1, fade_samples)
+                if fade_samples > 0:
+                    if i < fade_samples:
+                        gain = i / max(1, fade_samples)
+                    elif i > num_samples - fade_samples:
+                        gain = (num_samples - i) / max(1, fade_samples)
                 val = int(max(-32767, min(32767, ((s / max_val) * 0.28 * gain) * 32767)))
                 packed = struct.pack("<h", val)
                 raw_bytes.extend(packed)

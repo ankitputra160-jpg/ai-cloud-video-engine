@@ -70,6 +70,36 @@ class TestScriptWriter(unittest.TestCase):
         total_time = sum(ch.target_seconds for ch in script_10s.chapters)
         self.assertAlmostEqual(total_time, 10.0, delta=0.5)
 
+    def test_archive_quote_trigger_and_partial_llm_batch_recovery(self):
+        from unittest.mock import MagicMock
+        from engine.research import ResearchDossier
+
+        dossier_q = ResearchDossier(
+            topic="Court Case",
+            title="सुप्रीम कोर्ट मामला",
+            english_title="Supreme Court Case",
+            summary="सुनवाई में ऐतिहासिक टिप्पणी हुई।",
+            key_facts=["फैक्ट एक।", "फैक्ट दो।", "फैक्ट तीन।", "फैक्ट चार।", "फैक्ट पांच।", "फैक्ट छह।"],
+            verified_quotes=[{"speaker": "Justice", "quote": "यह संवैधानिक मुद्दा है।"}],
+            news_items=[{"headline": "SC Order", "source": "LiveLaw", "date": "2026"}],
+        )
+        writer_det = ScriptWriter(language="hi", llm_mode="deterministic")
+        s_det = writer_det.generate_script(dossier_q, target_duration=75)
+        self.assertTrue(any(ch.visual_type == "quote_card" and ch.is_archive_quote for ch in s_det.chapters))
+
+        # Mock LLM: batch 1 returns valid JSON, batch 2 fails -> must keep batch 1 LLM beats!
+        fake_llm = MagicMock()
+        fake_llm.is_llm_available.return_value = True
+        fake_llm.generate_json.side_effect = [
+            {"beats": [{"title": f"LLM Beat {i}", "tagged_narration": f"असल कहानी बीट {i}।", "visual_prompt_en": f"Courtroom {i}"} for i in range(12)]},
+            None,
+            None,
+        ]
+        writer_llm = ScriptWriter(language="hi", llm_client=fake_llm)
+        s_long = writer_llm.generate_script(dossier_q, target_duration=240)
+        self.assertGreaterEqual(len(s_long.chapters), 14)
+        self.assertEqual(s_long.chapters[0].title, "LLM Beat 0")
+
 
 if __name__ == "__main__":
     unittest.main()

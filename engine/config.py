@@ -101,6 +101,9 @@ class PipelineConfig:
     # v3.0 Modular & Cloud GPU parameters (all optional with clean defaults)
     llm_mode: str = "auto"
     voice_bank_dir: Optional[str] = None
+    voice_ref_file: Optional[str] = None
+    voice_ref_text: Optional[str] = None
+    elevenlabs_voice_id: Optional[str] = None
     bgm_bank_dir: Optional[str] = None
     enable_ai_video: bool = True
     preview_only: bool = False
@@ -157,6 +160,7 @@ class PipelineConfig:
             ("hf_token", "HF_TOKEN"),
             ("sarvam_api_key", "SARVAM_API_KEY"),
             ("elevenlabs_api_key", "ELEVENLABS_API_KEY"),
+            ("elevenlabs_voice_id", "ELEVENLABS_VOICE_ID"),
         )
         for attr_name, env_key in env_map:
             if not getattr(self, attr_name, None):

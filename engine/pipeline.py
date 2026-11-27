@@ -170,22 +170,31 @@ class DocumentaryPipeline:
         # -------------------------------------------------------------
         logger.info("\n--- STAGE F: Foley SFX & Broadcast -14 LUFS LRA=6 Mixing ---")
         audio_dir = os.path.join(self.work_dir, "mastered_audio")
+        voice_dir = os.path.join(self.work_dir, "voice_tracks")
         os.makedirs(audio_dir, exist_ok=True)
         bgm_bank_dir = getattr(self.config, "bgm_bank_dir", None)
+        bgm_scene_map = BackgroundMusicEngine.build_continuous_scene_bgms(
+            manifest.scenes, audio_dir, bgm_bank_dir=bgm_bank_dir, crossfade_sec=2.0
+        )
 
         for idx, scene in enumerate(manifest.scenes):
             mixed_audio_path = os.path.join(audio_dir, f"mixed_{scene.scene_id}.wav")
+            clean_voice_path = os.path.join(voice_dir, f"voice_aligned_{scene.scene_id}.wav")
             if os.path.exists(mixed_audio_path) and os.path.getsize(mixed_audio_path) > 4000 and scene.voice_asset_path == mixed_audio_path:
+                bgm_tmp = bgm_scene_map.get(scene.scene_id)
+                if bgm_tmp and os.path.exists(bgm_tmp):
+                    os.remove(bgm_tmp)
                 continue
 
-            bgm_scene_path = os.path.join(audio_dir, f"bgm_{scene.scene_id}.wav")
-            BackgroundMusicEngine.generate_thematic_bgm(
-                bgm_scene_path,
-                scene.duration,
-                mood=scene.bgm_mood,
-                bgm_bank_dir=bgm_bank_dir,
-                chapter_index=idx,
-            )
+            bgm_scene_path = bgm_scene_map.get(scene.scene_id) or os.path.join(audio_dir, f"bgm_{scene.scene_id}.wav")
+            if not os.path.exists(bgm_scene_path):
+                BackgroundMusicEngine.generate_thematic_bgm(
+                    bgm_scene_path,
+                    scene.duration,
+                    mood=scene.bgm_mood,
+                    bgm_bank_dir=bgm_bank_dir,
+                    chapter_index=idx,
+                )
 
             sfx_scene_path = os.path.join(audio_dir, f"sfx_{scene.scene_id}.wav")
             SoundEffectsEngine.generate_sfx(
@@ -196,8 +205,10 @@ class DocumentaryPipeline:
             )
             scene.sfx_asset_path = sfx_scene_path
 
+            # Always prefer clean unmixed voice track if available (safe on resume/re-mix)
+            source_voice = clean_voice_path if os.path.exists(clean_voice_path) else scene.voice_asset_path
             AudioProductionMixer.mix_scene_audio(
-                voice_path=scene.voice_asset_path,
+                voice_path=source_voice,
                 sfx_path=sfx_scene_path,
                 bgm_path=bgm_scene_path,
                 output_path=mixed_audio_path,
@@ -277,7 +288,10 @@ def main():
     parser.add_argument("--voice-engine", default="auto", choices=list(SUPPORTED_VOICE_ENGINES), help="Voice synthesizer")
     parser.add_argument("--llm-mode", default="auto", choices=list(SUPPORTED_LLM_MODES), help="LLM script backend")
     parser.add_argument("--storyboard-file", default=None, help="Optional pre-curated storyboard JSON path")
-    parser.add_argument("--voice-bank-dir", default=None, help="Directory holding ref_neutral/suspense/angry/fast WAVs")
+    parser.add_argument("--voice-bank-dir", default=None, help="Directory holding ref_neutral/suspense/angry/fast WAVs or custom MP3")
+    parser.add_argument("--voice-ref", default=None, help="Path to custom voice reference .mp3/.wav for zero-shot cloning")
+    parser.add_argument("--voice-ref-text", default=None, help="Exact spoken transcript matching --voice-ref audio")
+    parser.add_argument("--elevenlabs-voice-id", default=None, help="Optional ElevenLabs Voice ID (skips IVC clone)")
     parser.add_argument("--bgm-bank-dir", default=None, help="Directory holding 4-mood CC0 BGM folders")
     parser.add_argument("--preview-only", action="store_true", help="Render fast 3-beat Hook preview before full 25m render")
     parser.add_argument("--no-ai-video", action="store_true", help="Skip LTX-Video I2V hook generation")
@@ -297,6 +311,9 @@ def main():
         llm_mode=args.llm_mode,
         storyboard_file=args.storyboard_file,
         voice_bank_dir=args.voice_bank_dir,
+        voice_ref_file=args.voice_ref,
+        voice_ref_text=args.voice_ref_text,
+        elevenlabs_voice_id=args.elevenlabs_voice_id,
         bgm_bank_dir=args.bgm_bank_dir,
         enable_ai_video=(not args.no_ai_video),
         preview_only=args.preview_only,

@@ -125,6 +125,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           SARVAM_API_KEY: ${{ secrets.SARVAM_API_KEY }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
         run: |
           EXTRA_FLAGS=""
           if [ -n "${{ github.event.inputs.storyboard_file }}" ]; then

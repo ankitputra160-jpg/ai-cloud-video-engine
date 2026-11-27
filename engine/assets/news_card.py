@@ -17,6 +17,7 @@ from engine.assets.motion import animate_image_to_video
 from engine.text.devanagari import (
     check_raqm_support,
     contains_devanagari,
+    format_ass_timestamp,
     get_fonts_dir,
     normalize_devanagari,
     resolve_devanagari_font,
@@ -76,7 +77,7 @@ class InvestigativeCardGenerator:
 
         # High-craft Pillow + libraqm fallback (animate to MP4)
         png_tmp = output_path + ".card.png"
-        if self._render_via_pillow(png_tmp, card_type, clean_head, clean_src, clean_date):
+        if self._render_via_pillow(png_tmp, card_type, clean_head, clean_src, clean_date, portrait_path=portrait_path):
             ok = animate_image_to_video(
                 png_tmp,
                 output_path,
@@ -103,6 +104,8 @@ class InvestigativeCardGenerator:
     ) -> str:
         bold_uri = _font_file_uri("NotoSansDevanagari-Bold.ttf")
         reg_uri = _font_file_uri("NotoSansDevanagari-Regular.ttf")
+        baloo_uri = _font_file_uri("Baloo2-Bold.ttf")
+        khand_uri = _font_file_uri("Khand-Bold.ttf")
         esc_h = _html.escape(headline)
         esc_s = _html.escape(source)
         esc_d = _html.escape(date_badge)
@@ -110,10 +113,12 @@ class InvestigativeCardGenerator:
         font_css = f"""
         @font-face {{ font-family: 'NotoDeva'; src: url('{reg_uri}'); font-weight: 400; }}
         @font-face {{ font-family: 'NotoDeva'; src: url('{bold_uri}'); font-weight: 700; }}
+        @font-face {{ font-family: 'BalooDual'; src: url('{baloo_uri}'); font-weight: 700; }}
+        @font-face {{ font-family: 'KhandDual'; src: url('{khand_uri}'); font-weight: 700; }}
         * {{ box-sizing: border-box; margin: 0; padding: 0; }}
         body {{
             width: {self.width}px; height: {self.height}px; overflow: hidden;
-            font-family: 'NotoDeva', 'Noto Sans Devanagari', sans-serif;
+            font-family: 'NotoDeva', 'BalooDual', 'KhandDual', 'Noto Sans Devanagari', sans-serif;
             display: flex; align-items: center; justify-content: center;
         }}
         """
@@ -236,7 +241,13 @@ class InvestigativeCardGenerator:
         return None
 
     def _render_via_pillow(
-        self, png_path: str, card_type: str, headline: str, source: str, date_badge: str
+        self,
+        png_path: str,
+        card_type: str,
+        headline: str,
+        source: str,
+        date_badge: str,
+        portrait_path: Optional[str] = None,
     ) -> bool:
         try:
             from PIL import Image, ImageDraw, ImageFont
@@ -255,23 +266,43 @@ class InvestigativeCardGenerator:
             px, py = int(self.width * 0.11), int(self.height * 0.18)
             draw.rounded_rectangle([px, py, self.width - px, self.height - py], radius=20, fill=card_bg, outline=accent, width=6)
 
+            text_left = px + 56
+            if card_type == "quote_card" and portrait_path and os.path.exists(portrait_path):
+                try:
+                    import io
+                    raw_bytes = open(portrait_path, "rb").read()
+                    try:
+                        from rembg import remove
+                        raw_bytes = remove(raw_bytes)
+                    except Exception:
+                        pass
+                    av = Image.open(io.BytesIO(raw_bytes)).convert("RGBA")
+                    av_sz = min(240, int(self.height * 0.28))
+                    av = av.resize((av_sz, av_sz))
+                    img.paste(av, (px + 48, py + 72), av)
+                    draw.rounded_rectangle([px + 46, py + 70, px + 50 + av_sz, py + 74 + av_sz], radius=12, outline=accent, width=4)
+                    text_left = px + 76 + av_sz
+                except Exception:
+                    pass
+
             # Use dual-script TTF (Baloo2-Bold / Khand-Bold cover BOTH Latin A-Z and Devanagari + ₹!)
             font_path = resolve_devanagari_font("Baloo2-Bold.ttf") or resolve_devanagari_font("Khand-Bold.ttf")
             use_raqm = check_raqm_support()
             kw = {"layout_engine": ImageFont.Layout.RAQM} if use_raqm else {}
-            title_f = ImageFont.truetype(font_path, max(38, self.height // 19), **kw) if font_path else ImageFont.load_default()
+            title_f = ImageFont.truetype(font_path, max(36, self.height // 20), **kw) if font_path else ImageFont.load_default()
             meta_f = ImageFont.truetype(font_path, max(24, self.height // 36), **kw) if font_path else ImageFont.load_default()
 
             header_txt = f"{source}   |   {date_badge or 'RECORD'}"
-            draw.text((px + 56, py + 44), header_txt, font=meta_f, fill=accent)
+            draw.text((text_left, py + 44), header_txt, font=meta_f, fill=accent)
 
-            lines = wrap_indic_text(headline, max_graphemes=32, max_lines=3)
+            max_g = 24 if text_left > px + 100 else 32
+            lines = wrap_indic_text(headline, max_graphemes=max_g, max_lines=3)
             y_cur = py + 140
             for ln in lines:
                 if is_news:
-                    bbox = draw.textbbox((px + 56, y_cur), ln, font=title_f)
+                    bbox = draw.textbbox((text_left, y_cur), ln, font=title_f)
                     draw.rectangle([bbox[0] - 8, bbox[1] - 4, bbox[2] + 8, bbox[3] + 6], fill="#fde047")
-                draw.text((px + 56, y_cur), ln, font=title_f, fill=fg)
+                draw.text((text_left, y_cur), ln, font=title_f, fill=fg)
                 y_cur += int(self.height * 0.085)
 
             img.save(png_path)
@@ -298,8 +329,8 @@ class InvestigativeCardGenerator:
             f"Style: CardMain,Noto Sans Devanagari Bold,58,&H00FFFFFF,&H00FFFFFF,{border_col},&HE61E293B,-1,0,0,0,100,100,0,0,4,24,0,5,120,120,40,1\n"
             "Style: CardMeta,Noto Sans Devanagari Bold,32,&H000BD7FA,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,2,0,8,80,80,140,1\n\n"
             "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
-            f"Dialogue: 0,0:00:00.00,0:00:{dur:05.2f},CardMeta,,0,0,0,,{header}\n"
-            f"Dialogue: 0,0:00:00.00,0:00:{dur:05.2f},CardMain,,0,0,0,,{body}\n"
+            f"Dialogue: 0,0:00:00.00,{format_ass_timestamp(dur)},CardMeta,,0,0,0,,{header}\n"
+            f"Dialogue: 0,0:00:00.00,{format_ass_timestamp(dur)},CardMain,,0,0,0,,{body}\n"
         )
         with open(ass_tmp, "w", encoding="utf-8-sig") as f:
             f.write(ass_content)

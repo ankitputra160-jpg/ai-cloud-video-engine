@@ -95,6 +95,71 @@ class TestVoiceEngine(unittest.TestCase):
         self.assertIn("\\kf", ass_content)
         self.assertIn("आर्यभट्ट", ass_content)
 
+    def test_custom_single_mp3_voice_bank_and_no_speaker_mixing(self):
+        """Custom voice file + .txt auto-converts cleanly and blocks synthetic Tapan speaker mixing."""
+        import subprocess
+        from unittest.mock import patch
+        from engine.voice.aligner import ForcedAligner
+
+        bank = os.path.join(self.temp_dir, "custom_bank")
+        os.makedirs(bank, exist_ok=True)
+        custom_mp3 = os.path.join(bank, "raju.mp3")
+        custom_txt = os.path.join(bank, "raju.txt")
+        with open(custom_txt, "w", encoding="utf-8") as f:
+            f.write("यह राजू की असली आवाज़ का नमूना है।")
+        subprocess.run([
+            "ffmpeg", "-y", "-loglevel", "error",
+            "-f", "lavfi", "-i", "sine=frequency=210:duration=12",
+            "-ar", "44100", "-ac", "1", custom_mp3,
+        ], check=True)
+
+        cfg = PipelineConfig(topic="Clone Check", language="hi", work_dir=self.temp_dir, voice_bank_dir=bank)
+        ve = VoiceEngine(cfg)
+        with patch.object(ve, "_load_indic_parler") as mock_parler:
+            refs = ve.ensure_mood_reference_bank()
+            mock_parler.assert_not_called()
+
+        self.assertEqual(set(refs.keys()), {"neutral", "suspense", "angry", "fast"})
+        # Single custom voice propagated uniformly across all 4 moods with exact user transcript
+        self.assertEqual(refs["suspense"], refs["neutral"])
+        self.assertEqual(ve._ref_texts["neutral"], "यह राजू की असली आवाज़ का नमूना है।")
+        self.assertEqual(ve._ref_texts["angry"], "यह राजू की असली आवाज़ का नमूना है।")
+        # Long 12s MP3 converted cleanly to <=9.5s 24kHz mono WAV
+        dur = get_duration(refs["neutral"])
+        self.assertLessEqual(dur, 9.6)
+        self.assertGreater(dur, 2.0)
+
+        # Verify ForcedAligner word-count mismatch & WordBoundary mapping safety
+        mapped_ctc = ForcedAligner.map_ctc_results_to_words(
+            ["सुप्रीम", "कोर्ट"],
+            [{"start": 0.1, "end": 0.4}, {"start": 0.4, "end": 0.7}, {"start": 0.8, "end": 1.4}],
+            audio_duration=2.0,
+        )
+        self.assertEqual(len(mapped_ctc), 2)
+        self.assertAlmostEqual(mapped_ctc[1]["end"], 1.4, delta=0.05)
+
+        wb_mapped = ForcedAligner.align_with_word_boundaries(
+            ["भारत", "और", "विज्ञान"],
+            [
+                {"text": "भारत", "start": 0.1, "end": 0.5},
+                {"text": "और", "start": 0.55, "end": 0.8},
+                {"text": "विज्ञान", "start": 0.85, "end": 1.6},
+            ],
+            audio_duration=2.0,
+        )
+        self.assertEqual(len(wb_mapped), 3)
+        self.assertAlmostEqual(wb_mapped[2]["start"], 0.85, delta=0.02)
+
+    def test_elevenlabs_custom_voice_id_and_clone_resolution(self):
+        cfg = PipelineConfig(
+            topic="EL Check",
+            work_dir=self.temp_dir,
+            elevenlabs_api_key="test_el_key",
+            elevenlabs_voice_id="custom_raju_vid_123",
+        )
+        ve = VoiceEngine(cfg)
+        self.assertEqual(ve._resolve_elevenlabs_voice_id("test_el_key"), "custom_raju_vid_123")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -138,6 +138,32 @@ class TestVisualsCheckpointThumb(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(work, "fact_sheet.json")))
         self.assertTrue(os.path.exists(os.path.join(work, "checkpoint_state.json")))
 
+    def test_ass_timestamp_past_60s_and_quote_portrait_card_and_stretch(self):
+        from engine.assets.manager import VisualAssetManager
+        from engine.text.devanagari import format_ass_timestamp
+
+        self.assertEqual(format_ass_timestamp(75.5), "0:01:15.50")
+
+        gen = InvestigativeCardGenerator(width=1280, height=720, fps=25)
+        html_doc = gen._build_html_document("quote_card", "ऐतिहासिक बयान", "LiveLaw", "2026")
+        self.assertIn("BalooDual", html_doc)
+
+        # Render quote_card with a temporary portrait PNG via Pillow/FFmpeg fallback cleanly
+        portrait_png = os.path.join(self.tmp, "portrait.png")
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=orange:s=200x200", "-vframes", "1", portrait_png], check=True)
+        q_mp4 = os.path.join(self.tmp, "quote_with_portrait.mp4")
+        res = gen.render_card_video(q_mp4, card_type="quote_card", headline="यह लोकतंत्र का सवाल है", source="CJI", date_badge="2026", duration=2.0, portrait_path=portrait_png)
+        self.assertIsNotNone(res)
+        self.assertTrue(os.path.exists(q_mp4))
+
+        # Test smooth LTX stretch normalization without abrupt loop
+        raw_clip = os.path.join(self.tmp, "ltx3s.mp4")
+        norm_clip = os.path.join(self.tmp, "ltx_norm.mp4")
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i", "testsrc=s=640x360:r=24:d=2.0", "-c:v", "libx264", "-pix_fmt", "yuv420p", raw_clip], check=True)
+        mgr = VisualAssetManager(PipelineConfig(topic="Test", resolution="720p", work_dir=self.tmp))
+        mgr._normalize_clip(raw_clip, norm_clip, target_duration=3.0, smooth_stretch_from=2.0)
+        self.assertAlmostEqual(get_duration(norm_clip), 3.0, delta=0.25)
+
 
 if __name__ == "__main__":
     unittest.main()

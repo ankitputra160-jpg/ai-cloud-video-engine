@@ -136,6 +136,26 @@ class WikimediaCommonsProvider(VisualAssetProvider):
             return self._search_media(queries, target_path, "video", used, min_duration, camera, date_badge)
         return None
 
+    def fetch_portrait_image(self, query: str, out_img_path: str) -> Optional[str]:
+        """Download a speaker/subject portrait still from Wikipedia pageimages for quote_card cutouts."""
+        if not query:
+            return None
+        enc = urllib.parse.quote(query[:120])
+        url = (
+            f"https://en.wikipedia.org/w/api.php?action=query&generator=search"
+            f"&gsrsearch={enc}&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=600&format=json"
+        )
+        data = self._throttled_get_json(url)
+        if not data:
+            return None
+        pages = data.get("query", {}).get("pages", {})
+        for page in pages.values():
+            img_url = page.get("thumbnail", {}).get("source")
+            if img_url and not img_url.lower().endswith(".svg"):
+                if self._download_file(img_url, out_img_path, min_bytes=4000):
+                    return out_img_path
+        return None
+
     def _search_wiki_pageimages(
         self,
         queries: List[str],
